@@ -1,24 +1,55 @@
 package com.dosug.app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by radmir on 23.03.17.
  */
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id @GeneratedValue
+    @Column(name = "id")
     private long id;
-    private String username;
-    private String email;
-    private String password;
-    private String first_name;
-    private String last_name;
-    private String description;
-    private Date birth_date;
-    private String phone;
-    private String create_date;
 
-    private AuthToken authToken;
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "birthDate")
+    private java.sql.Date birthDate;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @OneToMany(targetEntity = AuthToken.class,
+            cascade = CascadeType.ALL,
+        mappedBy = "user")
+    private Set<AuthToken> authToken;
+
+    public User() {}
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -50,6 +81,7 @@ public class User {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -58,20 +90,20 @@ public class User {
         this.password = password;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getDescription() {
@@ -82,12 +114,12 @@ public class User {
         this.description = description;
     }
 
-    public Date getBirth_date() {
-        return birth_date;
+    public Date getBirthDate() {
+        return birthDate;
     }
 
-    public void setBirth_date(Date birth_date) {
-        this.birth_date = birth_date;
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = new java.sql.Date(birthDate.getTime());
     }
 
     public String getPhone() {
@@ -98,19 +130,19 @@ public class User {
         this.phone = phone;
     }
 
-    public String getCreate_date() {
-        return create_date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCreate_date(String create_date) {
-        this.create_date = create_date;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
-    public AuthToken getAuthToken() {
+    public Set<AuthToken> getAuthToken() {
         return authToken;
     }
 
-    public void setAuthToken(AuthToken authToken) {
+    public void setAuthToken(Set<AuthToken> authToken) {
         this.authToken = authToken;
     }
 
@@ -121,12 +153,12 @@ public class User {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", description='" + description + '\'' +
-                ", birth_date=" + birth_date +
+                ", birthDate=" + birthDate +
                 ", phone='" + phone + '\'' +
-                ", create_date='" + create_date + '\'' +
+                ", createDate='" + createDate + '\'' +
                 '}';
     }
 }
