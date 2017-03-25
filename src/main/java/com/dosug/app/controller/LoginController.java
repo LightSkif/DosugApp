@@ -16,7 +16,6 @@ import javax.validation.Valid;
 @RestController
 public class LoginController {
 
-    @Autowired
     private AuthentificationService authService;
 
     @PostMapping("/login")
@@ -27,5 +26,10 @@ public class LoginController {
         }
 
         return authService.login(form.getUsername(), form.getPassword());
+    }
+
+    @Autowired
+    public void setAuthService(AuthentificationService authService) {
+        this.authService = authService;
     }
 }
