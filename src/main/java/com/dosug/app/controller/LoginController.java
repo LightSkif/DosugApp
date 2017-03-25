@@ -1,10 +1,9 @@
 package com.dosug.app.controller;
 
 import com.dosug.app.domain.AuthToken;
-import com.dosug.app.form.AuthentificationForm;
-import com.dosug.app.repository.UserRepository;
+import com.dosug.app.form.AuthenticationForm;
+import com.dosug.app.services.AuthentificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,24 +17,15 @@ import javax.validation.Valid;
 public class LoginController {
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthentificationService authService;
 
     @PostMapping("/login")
-    public AuthToken login(@Valid AuthentificationForm form, BindingResult bindingResult) {
-
-        AuthToken authToken = new AuthToken();
+    public AuthToken login(@Valid AuthenticationForm form, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
-            authToken.setToken("error");
-            return authToken;
+            return null;
         }
 
-        if(userRepository.findByUsernameAndPassword(
-                form.getUsername(), form.getPassword()) != null) {
-            authToken.setToken("all ok!");
-            return authToken;
-        }
-
-        return authToken;
+        return authService.login(form.getUsername(), form.getPassword());
     }
 }
