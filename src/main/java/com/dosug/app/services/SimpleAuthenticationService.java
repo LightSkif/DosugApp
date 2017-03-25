@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * Created by radmir on 24.03.17.
  */
 @Service
-public class SimpleAuthentificationService implements AuthentificationService {
+public class SimpleAuthenticationService implements AuthenticationService {
 
     private UserRepository userRepository;
 
