@@ -12,12 +12,12 @@ import javax.validation.constraints.Size;
 public class AuthenticationForm {
 
     @NotNull
-    @Size(max = 256)
+    @Size(min = 1, max = 256)
     private String username;
 
 
     @NotNull
-    @Size(max = 256)
+    @Size(min = 1, max = 256)
     private String password;
 
     public String getUsername() {
