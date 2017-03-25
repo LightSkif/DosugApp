@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
  */
 
 
-public class AuthentificationForm {
+public class AuthenticationForm {
 
     @NotNull
     @Size(max = 256)
