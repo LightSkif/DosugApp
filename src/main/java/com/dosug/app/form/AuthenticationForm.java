@@ -11,13 +11,16 @@ import javax.validation.constraints.Size;
 
 public class AuthenticationForm {
 
+    public static final int USERNAME_MAX_SYMBOLS = 256;
+    public static final int PASSWORD_MAX_SYMBOLS = 256;
+
     @NotNull
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = USERNAME_MAX_SYMBOLS)
     private String username;
 
 
     @NotNull
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = PASSWORD_MAX_SYMBOLS)
     private String password;
 
     public String getUsername() {
