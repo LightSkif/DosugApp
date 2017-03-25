@@ -16,11 +16,13 @@ public class AuthenticationForm {
 
     @NotNull
     @Size(min = 1, max = USERNAME_MAX_SYMBOLS)
+    @Pattern(regexp = "[a-zA-Z0-9-_]*")
     private String username;
 
 
     @NotNull
     @Size(min = 1, max = PASSWORD_MAX_SYMBOLS)
+    @Pattern(regexp = "[0-9a-zA-Z_]*")
     private String password;
 
     public String getUsername() {
