@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SimpleAuthentificationService implements AuthentificationService {
 
-    @Autowired
     private UserRepository userRepository;
 
     @Override
@@ -25,5 +24,10 @@ public class SimpleAuthentificationService implements AuthentificationService {
         }
 
         return authToken;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }
