@@ -21,7 +21,7 @@ public class AuthenticationForm {
 
 
     @NotNull(message = "password field is required")
-    @Size(min = 1, max = PASSWORD_MAX_SYMBOLS, message = "username length from 1 to 256")
+    @Size(min = 1, max = PASSWORD_MAX_SYMBOLS, message = "password length from 1 to 256")
     @Pattern(regexp = "[0-9a-zA-Z_]*", message = "only latin character, digits and hyphen allowed in password")
     private String password;
 
