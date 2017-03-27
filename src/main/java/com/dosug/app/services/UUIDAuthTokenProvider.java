@@ -4,6 +4,7 @@ import com.dosug.app.domain.AuthToken;
 import com.dosug.app.domain.User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -19,6 +20,6 @@ public class UUIDAuthTokenProvider implements AuthTokenProvider{
     @Override
     public AuthToken getToken(User user) {
         String token = UUID.randomUUID().toString();
-        return new AuthToken(token, user, new Date(), null);
+        return new AuthToken(token, user, LocalDateTime.now(), null);
     }
 }

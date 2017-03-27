@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -22,17 +23,17 @@ public class AuthToken {
     private User user;
 
     @Column(name = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * if this null then unlimit
      */
     @Column(name = "expiring_time")
-    private Date expiringTime;
+    private LocalDateTime expiringTime;
 
     public AuthToken() {}
 
-    public AuthToken(String token, User user, Date createTime, Date expiringTime) {
+    public AuthToken(String token, User user, LocalDateTime createTime, LocalDateTime expiringTime) {
         this.token = token;
         this.user = user;
         this.createTime = createTime;
@@ -43,33 +44,31 @@ public class AuthToken {
         return token;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    @JsonIgnore
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    @JsonIgnore
-    public Date getExpiringTime() {
-        return expiringTime;
-    }
-
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
 
-    public void setCreateTime(Date createTime) {
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public void setExpiringTime(Date expiringTime) {
+    public LocalDateTime getExpiringTime() {
+        return expiringTime;
+    }
+
+    public void setExpiringTime(LocalDateTime expiringTime) {
         this.expiringTime = expiringTime;
     }
 
