@@ -24,10 +24,13 @@ public class AuthToken {
     @Column(name = "create_time")
     private Date createTime;
 
+    /**
+     * if this null then unlimit
+     */
     @Column(name = "expiring_time")
     private Date expiringTime;
 
-    public AuthToken() {};
+    public AuthToken() {}
 
     public AuthToken(String token, User user, Date createTime, Date expiringTime) {
         this.token = token;
