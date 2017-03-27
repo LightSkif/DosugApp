@@ -1,9 +1,11 @@
 package com.dosug.app.services;
 
 import com.dosug.app.domain.AuthToken;
+import com.dosug.app.domain.User;
+import com.dosug.app.repository.AuthTokenRepository;
 import com.dosug.app.repository.UserRepository;
-import com.sun.istack.internal.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +16,10 @@ public class SimpleAuthenticationService implements AuthenticationService {
 
     private UserRepository userRepository;
 
+    private AuthTokenRepository authTokenRepository;
+
+    private AuthTokenProvider authTokenProvider;
+
     /**
      * return null if username and password wrong
      * @param username
@@ -22,10 +28,14 @@ public class SimpleAuthenticationService implements AuthenticationService {
      */
     @Override
     public AuthToken login(String username, String password) {
-        AuthToken authToken = new AuthToken();
 
-        if(userRepository.findByUsernameAndPassword(username, password) != null) {
-            authToken.setToken("all ok!");
+        User user = userRepository.findByUsernameAndPassword(username, password);
+        //check is user exist in DB
+        if(user != null) {
+            AuthToken authToken = authTokenProvider.getToken(user);
+
+            authTokenRepository.save(authToken);
+
             return authToken;
         }
         return null;
@@ -34,5 +44,15 @@ public class SimpleAuthenticationService implements AuthenticationService {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setAuthTokenRepository(AuthTokenRepository authTokenRepository) {
+        this.authTokenRepository = authTokenRepository;
+    }
+
+    @Autowired
+    public void setAuthTokenProvider(AuthTokenProvider authTokenProvider) {
+        this.authTokenProvider = authTokenProvider;
     }
 }
