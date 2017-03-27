@@ -3,7 +3,8 @@ package com.dosug.app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -36,13 +37,13 @@ public class User {
     private String description;
 
     @Column(name = "birthDate")
-    private java.sql.Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "phone")
     private String phone;
 
     @Column(name = "create_date")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     @OneToMany(targetEntity = AuthToken.class,
             cascade = CascadeType.ALL,
@@ -114,12 +115,12 @@ public class User {
         this.description = description;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = new java.sql.Date(birthDate.getTime());
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getPhone() {
@@ -130,11 +131,11 @@ public class User {
         this.phone = phone;
     }
 
-    public Date getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
