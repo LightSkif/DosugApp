@@ -1,6 +1,5 @@
 package com.dosug.app.respose.model.code;
 
-import com.dosug.app.respose.model.code.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
@@ -12,14 +11,14 @@ public enum LoginErrorCode implements ErrorCode {
     INVALID_USERNAME(2),
     INVALID_PASSWORD(3);
 
-    private int numVal;
+    private int errorCode;
 
-    LoginErrorCode(int numVal) {
-        this.numVal = numVal;
+    LoginErrorCode(int errorCode) {
+        this.errorCode = errorCode;
     }
 
     @JsonValue
-    public int getNumVal() {
-        return numVal;
+    public int getErrorCode() {
+        return errorCode;
     }
 }
