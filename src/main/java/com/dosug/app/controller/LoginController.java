@@ -8,10 +8,12 @@ import com.dosug.app.respose.model.code.LoginErrorCode;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +27,8 @@ public class LoginController {
 
     private AuthenticationService authService;
 
-    @PostMapping("/login")
-    public Response login(@Valid AuthenticationForm form,
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Response login(@Valid @RequestBody AuthenticationForm form,
                           BindingResult bindingResult) {
 
         Response<String> response = new Response<>();
