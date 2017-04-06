@@ -2,18 +2,17 @@ package com.dosug.app.controller;
 
 import com.dosug.app.domain.AuthToken;
 import com.dosug.app.form.AuthenticationForm;
-import com.dosug.app.respose.model.ErrorForResponse;
-import com.dosug.app.respose.model.code.ErrorCode;
-import com.dosug.app.respose.model.code.LoginErrorCode;
+import com.dosug.app.respose.model.ApiError;
+import com.dosug.app.respose.model.ApiErrorCode;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.services.authentication.AuthenticationService;
+import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
-import java.util.LinkedList;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 /**
@@ -25,14 +24,16 @@ public class LoginController {
 
     private AuthenticationService authService;
 
+    private ValidationService validationService;
+
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response login(@Valid @RequestBody AuthenticationForm form,
-                          BindingResult bindingResult) {
+    public Response login(@RequestBody AuthenticationForm form) {
 
         Response<String> response = new Response<>();
 
-        if(bindingResult.hasErrors()) {
-            return response.failure(getErrors(bindingResult));
+        List<ApiError> validateErrors = validationService.validate(form);
+        if (!validateErrors.isEmpty()) {
+            return response.failure(validateErrors);
         }
 
         AuthToken token = authService.login(form.getUsername(), form.getPassword());
@@ -40,40 +41,20 @@ public class LoginController {
         if(token == null) {
             //wrong login or password
             return response.failure(
-                    new ErrorForResponse(LoginErrorCode.WRONG_LOGIN_AND_PASSWORD,
+                    new ApiError(ApiErrorCode.WRONG_LOGIN_AND_PASSWORD,
                             "Login or/and password not found"));
         }
 
         return response.success(token.getToken());
     }
 
-    /**
-     * Return Errors for invalid data
-     * @return Errors for Response
-     */
-    private List<ErrorForResponse> getErrors(BindingResult bindingResult) {
-        //TODO: убрать куда нибудь в другое место этот метод
-
-        List<ErrorForResponse> errorsForResponse =
-                new LinkedList<>();
-
-        for (FieldError error : bindingResult.getFieldErrors()) {
-            ErrorCode errorCode;
-            if(error.getField().equals("username")) {
-                errorCode = LoginErrorCode.INVALID_USERNAME;
-            } else {
-                errorCode = LoginErrorCode.INVALID_PASSWORD;
-            }
-
-            errorsForResponse.add(
-                    new ErrorForResponse(errorCode, error.getDefaultMessage()));
-        }
-
-        return errorsForResponse;
-    }
-
     @Autowired
     public void setAuthService(AuthenticationService authService) {
         this.authService = authService;
+    }
+
+    @Autowired
+    public void setValidationService(ValidationService validationService) {
+        this.validationService = validationService;
     }
 }
