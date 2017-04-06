@@ -6,17 +6,15 @@ import com.dosug.app.respose.model.ErrorForResponse;
 import com.dosug.app.respose.model.code.ErrorCode;
 import com.dosug.app.respose.model.code.LoginErrorCode;
 import com.dosug.app.respose.model.Response;
-import com.dosug.app.services.AuthenticationService;
+import com.dosug.app.services.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
-import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by radmir on 22.03.17.

@@ -1,11 +1,10 @@
-package com.dosug.app.services;
+package com.dosug.app.services.authentication;
 
 import com.dosug.app.domain.AuthToken;
 import com.dosug.app.domain.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 

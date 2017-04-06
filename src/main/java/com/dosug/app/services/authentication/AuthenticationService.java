@@ -1,4 +1,4 @@
-package com.dosug.app.services;
+package com.dosug.app.services.authentication;
 
 import com.dosug.app.domain.AuthToken;
 

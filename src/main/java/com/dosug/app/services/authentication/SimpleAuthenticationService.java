@@ -1,11 +1,10 @@
-package com.dosug.app.services;
+package com.dosug.app.services.authentication;
 
 import com.dosug.app.domain.AuthToken;
 import com.dosug.app.domain.User;
 import com.dosug.app.repository.AuthTokenRepository;
 import com.dosug.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
