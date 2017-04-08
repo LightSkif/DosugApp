@@ -4,10 +4,8 @@ import com.dosug.app.domain.AuthToken;
 import com.dosug.app.domain.User;
 import com.dosug.app.repository.AuthTokenRepository;
 import com.dosug.app.repository.UserRepository;
-import com.dosug.app.services.AuthTokenProvider;
-import com.dosug.app.services.SimpleAuthenticationService;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonEncoding;
+import com.dosug.app.services.authentication.AuthTokenProvider;
+import com.dosug.app.services.authentication.SimpleAuthenticationService;
 import org.junit.Before;
 import org.junit.Test;
 
