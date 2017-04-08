@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * и в случае невалидного поля мы знаем
  * какой код ошибки для этого поля можно отправить клиенту
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ErrorCode {
     ApiErrorCode code();
