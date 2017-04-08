@@ -1,11 +1,11 @@
-package com.dosug.app.respose.model.code;
+package com.dosug.app.respose.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Created by radmir on 26.03.17.
+ * all error codes for rest api
  */
-public enum LoginErrorCode implements ErrorCode {
+public enum ApiErrorCode {
 
     WRONG_LOGIN_AND_PASSWORD(1),
     INVALID_USERNAME(2),
@@ -13,7 +13,7 @@ public enum LoginErrorCode implements ErrorCode {
 
     private int errorCode;
 
-    LoginErrorCode(int errorCode) {
+    ApiErrorCode(int errorCode) {
         this.errorCode = errorCode;
     }
 

@@ -21,7 +21,7 @@ public class Response<ResultData> {
     private ResultData resultData;
 
     @JsonProperty
-    private List<ErrorForResponse> errors;
+    private List<ApiError> errors;
 
     // чтобы не было открытого конструктора
     public Response() {}
@@ -32,13 +32,13 @@ public class Response<ResultData> {
         return this;
     }
 
-    public Response failure(List<ErrorForResponse> errors) {
+    public Response failure(List<ApiError> errors) {
         this.result = FAILURE;
         this.errors = errors;
         return this;
     }
 
-    public Response failure(ErrorForResponse error) {
+    public Response failure(ApiError error) {
         return failure(Arrays.asList(error));
     }
 }
