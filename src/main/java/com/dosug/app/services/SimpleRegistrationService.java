@@ -37,6 +37,8 @@ public class SimpleRegistrationService implements RegistrationService {
             return apiErrors;
         }
 
+        format(user);
+
         try {
             userRepository.save(user);
         } catch (Exception e) {
@@ -50,6 +52,17 @@ public class SimpleRegistrationService implements RegistrationService {
         }
 
         return apiErrors;
+    }
+
+    /**
+     * приводим к нижему регистру добавляем всякие нужные плюшки
+     * @param user пользователь которого форматируем
+     */
+    private void format(User user) {
+        //username to lower
+        user.setUsername(user.getUsername().toLowerCase());
+        //email to lower
+        user.setEmail(user.getEmail().toLowerCase());
     }
 
 
