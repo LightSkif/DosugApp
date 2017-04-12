@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * all error codes for rest api
+ * возможно далее предстоит разбить на ошибки валидации и
+ * ошибки в логике(Например: USERNAME_ALREADY_USER)
  */
 public enum ApiErrorCode {
 
