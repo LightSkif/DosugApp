@@ -7,6 +7,7 @@ import com.dosug.app.respose.model.ApiErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,6 +39,9 @@ public class SimpleRegistrationService implements RegistrationService {
         }
 
         format(user);
+
+        //дата создания
+        user.setCreateDate(LocalDateTime.now());
 
         try {
             userRepository.save(user);
