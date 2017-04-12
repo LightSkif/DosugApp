@@ -1,6 +1,7 @@
 package com.dosug.app.form;
 
 import com.dosug.app.respose.model.ApiErrorCode;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -35,6 +36,7 @@ public class RegistrationForm {
     @Pattern(regexp = "[a-zA-Z0-9_]*", message = "only latin character, digits and underscore allowed in password")
     private String password;
 
+    @JsonProperty("passwordConfirmation")
     private String passwordRetry;
 
     @ErrorCode(code = ApiErrorCode.INVALID_PASSWORD_RETRY)
