@@ -12,6 +12,8 @@ import javax.persistence.Table;
 @Table(name = "roles")
 public class  Role {
 
+    private static final String ADMIN_ROLE_NAME = "ADMIN";
+
     @Id
     @Column(name = "id")
     private int id;
@@ -19,12 +21,18 @@ public class  Role {
     @Column(name = "role")
     private String roleName;
 
-    public Role() {
+    /**
+     * Возвращает роль идентичную админу
+     */
+    public static Role admin() {
+        Role role = new Role();
+        // так как равенство роли мы проверяем только по названию
+        // то id проставлять смысла нет
+        role.setRoleName(ADMIN_ROLE_NAME);
+        return role;
     }
 
-    public Role(int id, String roleName) {
-        this.id = id;
-        this.roleName = roleName;
+    public Role() {
     }
 
     public int getId() {
@@ -41,5 +49,20 @@ public class  Role {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Role)) return false;
+
+        Role role = (Role) o;
+
+        return roleName != null ? roleName.equals(role.roleName) : role.roleName == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return roleName != null ? roleName.hashCode() : 0;
     }
 }
