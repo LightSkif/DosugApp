@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -33,6 +34,9 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "description")
     private String description;
 
@@ -49,6 +53,26 @@ public class User {
             cascade = CascadeType.ALL,
         mappedBy = "user")
     private Set<AuthToken> authToken;
+
+    @OneToMany(targetEntity = Event.class,
+            cascade = CascadeType.ALL)
+    private Collection<Event> createdEvents;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "event_participant",
+            joinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk")),
+            inverseJoinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk"))
+    )
+    private Collection<Event> events;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_tag",
+            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_tag_user_id_fk")),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "user_tag_tag_id_fk"))
+    )
+    private Collection<Tag> tags;
 
     public User() {}
 
@@ -145,6 +169,38 @@ public class User {
 
     public void setAuthToken(Set<AuthToken> authToken) {
         this.authToken = authToken;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public Collection<Event> getCreatedEvents() {
+        return createdEvents;
+    }
+
+    public void setCreatedEvents(Collection<Event> createdEvents) {
+        this.createdEvents = createdEvents;
+    }
+
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
+    }
+
+    public Collection<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Collection<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override
