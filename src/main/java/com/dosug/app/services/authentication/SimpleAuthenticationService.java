@@ -40,6 +40,16 @@ public class SimpleAuthenticationService implements AuthenticationService {
         return null;
     }
 
+    @Override
+    public User authenticate(String authKey) {
+        AuthToken authToken = authTokenRepository.findOne(authKey);
+        if(authToken == null) {
+            return null;
+        }
+
+        return authToken.getUser();
+    }
+
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
