@@ -33,7 +33,7 @@
               p:driverClassName="org.postgresql.Driver"
               p:url="jdbc:postgresql://localhost:5432/dosug"
               p:username="postgres"
-              p:password="sa"/>
+              p:password="SA"/>
 
         <util:properties id="hibernateProperties">
             <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL95Dialect</prop>

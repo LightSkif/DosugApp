@@ -2,6 +2,8 @@ package com.dosug.app.domain;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "images")
 public class Image {
 
     @Id @GeneratedValue

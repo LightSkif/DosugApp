@@ -22,6 +22,22 @@ public class Event {
     @Column(name = "event_name")
     private String eventName;
 
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public boolean isAllowed() {
+        return allowed;
+    }
+
+    public void setAllowed(boolean allowed) {
+        this.allowed = allowed;
+    }
+
     @Column(name = "content")
     private String content;
 
@@ -34,11 +50,15 @@ public class Event {
     @Column(name = "latitude")
     private double latitude;
 
+    @Column(name = "allowed")
+    private boolean allowed;
+
     @OneToMany(targetEntity = Image.class,
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL,
+            mappedBy = "event")
     private Collection<Image> images;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "event_participant",
             joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk")),
@@ -54,14 +74,16 @@ public class Event {
     )
     private Collection<Tag> tags;
 
+    public Event() {}
 
-    public Event(User creator, String eventName, String content, LocalDateTime date, double altitude, double latitude) {
+    public Event(User creator, String eventName, String content, LocalDateTime date, double altitude, double latitude, Collection<Tag> tags) {
         this.creator = creator;
         this.eventName = eventName;
         this.content = content;
         this.date = date;
         this.altitude = altitude;
         this.latitude = latitude;
+        this.tags = tags;
     }
 
     public long getId() {
@@ -141,10 +163,12 @@ public class Event {
         return "Event{" +
                 "id=" + id +
                 ", creator=" + creator +
+                ", eventName='" + eventName + '\'' +
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", altitude=" + altitude +
                 ", latitude=" + latitude +
+                ", allowed=" + allowed +
                 '}';
     }
 }

@@ -9,8 +9,6 @@ import javax.validation.constraints.Size;
 /**
  * Created by radmir on 24.03.17.
  */
-
-
 public class AuthenticationForm {
 
     public static final int USERNAME_MAX_SYMBOLS = 256;

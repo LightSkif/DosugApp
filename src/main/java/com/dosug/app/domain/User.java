@@ -54,7 +54,7 @@ public class User {
         mappedBy = "user")
     private Set<AuthToken> authToken;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_role_users_id_fk")),
@@ -63,7 +63,8 @@ public class User {
     private Collection<Role> roles;
 
     @OneToMany(targetEntity = Event.class,
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL,
+            mappedBy = "creator")
     private Collection<Event> createdEvents;
 
     @ManyToMany(fetch = FetchType.LAZY)

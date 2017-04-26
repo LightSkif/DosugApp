@@ -30,6 +30,10 @@ public class Tag {
     )
     private Collection<User> users;
 
+    public Tag(String tag) {
+        this.tag = tag;
+    }
+
     public long getId() {
         return id;
     }
