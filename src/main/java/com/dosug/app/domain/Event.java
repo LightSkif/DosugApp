@@ -1,5 +1,10 @@
 package com.dosug.app.domain;
 
+import com.dosug.app.form.LocalDateTimeDeserializer;
+import com.dosug.app.form.LocalDateTimeSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -21,6 +26,48 @@ public class Event {
 
     @Column(name = "event_name")
     private String eventName;
+    @Column(name = "content")
+    private String content;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Column(name = "event_date")
+    private LocalDateTime date;
+    @Column(name = "longitude")
+    private double longitude;
+    @Column(name = "latitude")
+    private double latitude;
+    @Column(name = "allowed")
+    private boolean allowed;
+    @OneToMany(targetEntity = Image.class,
+            cascade = CascadeType.ALL,
+            mappedBy = "event")
+    private Collection<Image> images;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "event_participant",
+            joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk")),
+            inverseJoinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk"))
+    )
+    private Collection<User> participants;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "event_tag",
+            joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_tag_event_id_fk")),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "event_tag_tag_id_fk"))
+    )
+    private Collection<Tag> tags;
+
+    public Event() {}
+
+    public Event(User creator, String eventName, String content, LocalDateTime date, double longitude, double latitude, Collection<Tag> tags) {
+        this.creator = creator;
+        this.eventName = eventName;
+        this.content = content;
+        this.date = date;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.tags = tags;
+    }
 
     public String getEventName() {
         return eventName;
@@ -36,54 +83,6 @@ public class Event {
 
     public void setAllowed(boolean allowed) {
         this.allowed = allowed;
-    }
-
-    @Column(name = "content")
-    private String content;
-
-    @Column(name = "event_date")
-    private LocalDateTime date;
-
-    @Column(name = "altitude")
-    private double altitude;
-
-    @Column(name = "latitude")
-    private double latitude;
-
-    @Column(name = "allowed")
-    private boolean allowed;
-
-    @OneToMany(targetEntity = Image.class,
-            cascade = CascadeType.ALL,
-            mappedBy = "event")
-    private Collection<Image> images;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "event_participant",
-            joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk"))
-    )
-    private Collection<User> participants;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "event_tag",
-            joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_tag_event_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "event_tag_tag_id_fk"))
-    )
-    private Collection<Tag> tags;
-
-    public Event() {}
-
-    public Event(User creator, String eventName, String content, LocalDateTime date, double altitude, double latitude, Collection<Tag> tags) {
-        this.creator = creator;
-        this.eventName = eventName;
-        this.content = content;
-        this.date = date;
-        this.altitude = altitude;
-        this.latitude = latitude;
-        this.tags = tags;
     }
 
     public long getId() {
@@ -118,12 +117,12 @@ public class Event {
         this.date = date;
     }
 
-    public double getAltitude() {
-        return altitude;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public double getLatitude() {
@@ -166,7 +165,7 @@ public class Event {
                 ", eventName='" + eventName + '\'' +
                 ", content='" + content + '\'' +
                 ", date=" + date +
-                ", altitude=" + altitude +
+                ", longitude=" + longitude +
                 ", latitude=" + latitude +
                 ", allowed=" + allowed +
                 '}';

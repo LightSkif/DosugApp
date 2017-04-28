@@ -1,10 +1,13 @@
 package com.dosug.app.form;
 
 import com.dosug.app.respose.model.ApiErrorCode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class CreateEventForm {
 
@@ -25,15 +28,17 @@ public class CreateEventForm {
     @NotNull(message = "content is required")
     private String content;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_DATE)
     @NotNull(message = "date field is required")
-    @Future
+    //@Future
     private LocalDateTime date;
 
     @ErrorCode(code = ApiErrorCode.INVALID_ALTITUDE)
-    @Min (value = MIN_ALTITUDE, message = "altitude is lower than {value}")
-    @Max (value = MAX_ALTITUDE, message = "altitude is higher than {value}")
-    private double altitude;
+    @Min(value = MIN_ALTITUDE, message = "longitude is lower than {value}")
+    @Max(value = MAX_ALTITUDE, message = "longitude is higher than {value}")
+    private double longitude;
 
     @ErrorCode(code = ApiErrorCode.INVALID_LATITUDE)
     @Min (value = MIN_LATITUDE, message = "latitude is lower than {value}")
@@ -42,15 +47,23 @@ public class CreateEventForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAGS)
     @NotNull(message = "tags is required")
+    @Size(min = 1, max = 10, message = "from one to ten tag is required")
     private ArrayList<String> tags;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAG)
     @AssertTrue(message = "wrong tag")
     public boolean isRightSizeTag() {
 
-        String tag = tags.stream().filter(s -> ((s.length() > 256) || (s.length() < 1))).findFirst().toString();
+        if (tags != null) {
+            Pattern regexPattern = Pattern.compile("[a-zA-Z0-9-_]*");
+            String tag = tags.stream()
+                    .filter(s -> ((s.length() > 256) ||
+                            (s.length() < 1) || regexPattern.matcher(s).matches()))
+                    .findFirst().toString();
+            return tag == null;
+        }
 
-        return tag == null ? true : false;
+        return true;
     }
 
 
@@ -86,12 +99,12 @@ public class CreateEventForm {
         this.tags = tags;
     }
 
-    public double getAltitude() {
-        return altitude;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public double getLatitude() {

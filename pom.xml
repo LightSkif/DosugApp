@@ -20,7 +20,6 @@
         <mockito.version>2.2.21</mockito.version>
         <junit.version>4.12</junit.version>
         <postgresql.version>9.1-901.jdbc3</postgresql.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -149,6 +148,5 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 </project>

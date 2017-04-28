@@ -119,6 +119,6 @@ public class EventController {
 
     @Autowired
     private void setEventService(EventService eventService) {
-        this.validationService = validationService;
+        this.eventService = eventService;
     }
 }

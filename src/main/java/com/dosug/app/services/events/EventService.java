@@ -2,10 +2,11 @@ package com.dosug.app.services.events;
 
 
 import com.dosug.app.domain.Event;
+import com.dosug.app.domain.User;
 
 public interface EventService {
 
-    public Long createEvent(Event event);
+    Long createEvent(Event event);
 
-    public Boolean deleteEvent(Long eventId);
+    Boolean deleteEvent(Long eventId, User currentUser);
 }

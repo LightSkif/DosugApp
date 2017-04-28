@@ -164,7 +164,7 @@ CREATE TABLE events (
 	event_name character varying(256) NOT NULL,
 	content text,
 	event_date date NOT NULL,
-	altitude double precision,
+	longitude double precision,
 	latitude double precision,
 	allowed boolean,
 	
