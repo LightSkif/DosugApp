@@ -48,15 +48,37 @@ public class EventController {
 
         // Преобразуем массив строк из формы в массив тегов.
         List<Tag> tags = form.getTags().stream().map(s -> tagService.getTag(s)).collect(Collectors.toList());
-        Event event = new Event(user, form.getEventName(),
-                          form.getContent(), form.getDate(),
-                          form.getAltitude(), form.getLatitude(),
-                          tags);
 
-        Long eventId = eventService.createEvent(event);
+        Event event = new Event();
+        event.setCreator(user);
+        event.setEventName(form.getEventName());
+        event.setContent(form.getContent());
+        event.setDate(form.getDate());
+        event.setLongitude(form.getLongitude());
+        event.setLatitude(form.getLatitude());
+        event.setTags(tags);
 
-        return response.success(eventId);
+        try {
+            Long eventId = eventService.createEvent(event);
+
+            return response.success(eventId);
+        }
+        catch (Exception e) {
+            throw e;
+        }
     }
+
+//    @GetMapping(value = "/test")
+//    public Response test() {
+//        Response<Event> response = new Response<>();
+//        return response.success(new Event(new User("serg", "t@t.ru","Ra"), "concert", "powerwolf", LocalDateTime.now(), 5, 5, null));
+//    }
+//
+//    @GetMapping(value = "/test2")
+//    public Response test2() {
+//        Response<String> response = new Response<>();
+//        return response.success("hey");
+//    }
 
     @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response delete(@RequestBody Long eventId,
@@ -69,9 +91,15 @@ public class EventController {
             throw new NotAuthorizedException();
         }
 
-        boolean result = eventService.deleteEvent(eventId);
+        try {
+            // Передаём авторизованного пользователя для проверки достаточности прав для удаления.
+            boolean result = eventService.deleteEvent(eventId, user);
 
-        return response.success(result);
+            return response.success(result);
+        }
+        catch (Exception e) {
+            throw e;
+        }
     }
 
     @Autowired
@@ -79,12 +107,18 @@ public class EventController {
         this.authService = authService;
     }
 
+    @Autowired
     public void setTagService(TagService tagService) {
         this.tagService = tagService;
     }
 
     @Autowired
     public void setValidationService(ValidationService validationService) {
+        this.validationService = validationService;
+    }
+
+    @Autowired
+    private void setEventService(EventService eventService) {
         this.validationService = validationService;
     }
 }
