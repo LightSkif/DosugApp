@@ -26,22 +26,32 @@ public class Event {
 
     @Column(name = "event_name")
     private String eventName;
+
     @Column(name = "content")
     private String content;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "event_date")
     private LocalDateTime date;
+
     @Column(name = "longitude")
     private double longitude;
+
     @Column(name = "latitude")
     private double latitude;
+
     @Column(name = "allowed")
     private boolean allowed;
+
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
+
     @OneToMany(targetEntity = Image.class,
             cascade = CascadeType.ALL,
             mappedBy = "event")
     private Collection<Image> images;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "event_participant",
@@ -49,6 +59,7 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk"))
     )
     private Collection<User> participants;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "event_tag",
@@ -83,6 +94,14 @@ public class Event {
 
     public void setAllowed(boolean allowed) {
         this.allowed = allowed;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 
     public long getId() {
@@ -167,6 +186,7 @@ public class Event {
                 ", date=" + date +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
+                ", createDate=" + createDate +
                 ", allowed=" + allowed +
                 '}';
     }

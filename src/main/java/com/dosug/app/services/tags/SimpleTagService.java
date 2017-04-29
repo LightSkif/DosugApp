@@ -5,6 +5,8 @@ import com.dosug.app.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SimpleTagService implements TagService {
 
@@ -16,6 +18,8 @@ public class SimpleTagService implements TagService {
     }
 
     private Tag createTag(String tagName) {
+
+        tagName.toLowerCase();
         Tag tag = tagRepository.findByTag(tagName);
 
         // Если не удалось найти тег с таким названием создаём его.
@@ -30,5 +34,11 @@ public class SimpleTagService implements TagService {
     @Override
     public Tag getTag(String tagName) {
         return createTag(tagName);
+    }
+
+    @Override
+    public List<Tag> getTagsWithPart(String tagPart, Integer count) {
+        //    tagRepository.
+        return null;
     }
 }

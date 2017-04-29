@@ -10,6 +10,7 @@ CREATE TABLE events (
 	longitude double precision,
 	latitude double precision,
 	allowed boolean,
+  create_date timestamp without time zone DEFAULT now(),
 
 	CONSTRAINT events_creator_id_fk FOREIGN KEY (creator_id)
       REFERENCES public.users (id) MATCH SIMPLE

@@ -1,1 +1,1 @@
-createdb -U  "postgres" test
+createdb -U  "postgres" dosug

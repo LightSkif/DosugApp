@@ -30,6 +30,9 @@ public class Tag {
     )
     private Collection<User> users;
 
+    public Tag() {
+    }
+
     public Tag(String tag) {
         this.tag = tag;
     }

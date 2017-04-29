@@ -9,7 +9,7 @@ CREATE TABLE users (
     first_name character varying(60),
     last_name character varying(60),
     create_date timestamp without time zone DEFAULT now(),
-	avatar character varying(256),
+	  avatar character varying(256),
     description character varying(1000),
     birthdate date,
     phone character varying(15)

@@ -85,7 +85,7 @@ CREATE TABLE users (
     first_name character varying(60),
     last_name character varying(60),
     create_date timestamp without time zone DEFAULT now(),
-	avatar character varying(256),
+	  avatar character varying(256),
     description character varying(1000),
     birthdate date,
     phone character varying(15)
@@ -167,6 +167,7 @@ CREATE TABLE events (
 	longitude double precision,
 	latitude double precision,
 	allowed boolean,
+	create_date timestamp without time zone DEFAULT now(),
 	
 	CONSTRAINT events_creator_id_fk FOREIGN KEY (creator_id)
       REFERENCES public.users (id) MATCH SIMPLE

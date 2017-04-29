@@ -70,14 +70,46 @@ public class EventController {
 
 //    @GetMapping(value = "/test")
 //    public Response test() {
-//        Response<Event> response = new Response<>();
-//        return response.success(new Event(new User("serg", "t@t.ru","Ra"), "concert", "powerwolf", LocalDateTime.now(), 5, 5, null));
+//
+//        ArrayList<String> tags = new ArrayList<String>();
+//        tags.add("tag1");
+//        tags.add("tag2");
+//        Response<CreateEventForm> response = new Response<>();
+//        return response.success(new CreateEventForm("concert", "powerwolf", LocalDateTime.now(), 5, 5, tags));
 //    }
 //
 //    @GetMapping(value = "/test2")
 //    public Response test2() {
 //        Response<String> response = new Response<>();
 //        return response.success("hey");
+//    }
+
+//    @PostMapping(value = "/getevent", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public Response getEvent(@RequestBody Long eventId,
+//                           @RequestHeader(value = "authKey") String authKey) {
+//
+//        Response<Event> response = new Response<>();
+//
+//        User user = authService.authenticate(authKey);
+//        if (user == null){
+//            throw new NotAuthorizedException();
+//        }
+//
+//        return  eventService.
+//    }
+//
+//    @PostMapping(value = "/getmyevent", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public Response getMyEvent(@RequestBody Long eventId,
+//                             @RequestHeader(value = "authKey") String authKey) {
+//
+//        Response<List<Event>> response = new Response<>();
+//
+//        User user = authService.authenticate(authKey);
+//        if (user == null){
+//            throw new NotAuthorizedException();
+//        }
+//
+//        return  eventService.
 //    }
 
     @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)

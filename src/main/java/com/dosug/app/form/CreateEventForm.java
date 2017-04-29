@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class CreateEventForm {
@@ -22,6 +23,7 @@ public class CreateEventForm {
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_NAME)
     @NotNull(message = "event name is required")
     @Size(min = 1, max = EVENTNAME_MAX_SYMBOLS, message = "event name length from 1 to 256")
+    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9_]*", message = "only latin character, digits and underscore allowed in password")
     private String eventName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_CONTENT)
@@ -32,7 +34,7 @@ public class CreateEventForm {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_DATE)
     @NotNull(message = "date field is required")
-    //@Future
+//    @Future
     private LocalDateTime date;
 
     @ErrorCode(code = ApiErrorCode.INVALID_ALTITUDE)
@@ -50,22 +52,35 @@ public class CreateEventForm {
     @Size(min = 1, max = 10, message = "from one to ten tag is required")
     private ArrayList<String> tags;
 
+    public CreateEventForm() {
+    }
+
+    public CreateEventForm(String eventName, String content, LocalDateTime date, double longitude, double latitude, ArrayList<String> tags) {
+        this.eventName = eventName;
+        this.content = content;
+        this.date = date;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        //this.tags = tags;
+    }
+
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAG)
     @AssertTrue(message = "wrong tag")
     public boolean isRightSizeTag() {
 
         if (tags != null) {
-            Pattern regexPattern = Pattern.compile("[a-zA-Z0-9-_]*");
-            String tag = tags.stream()
+            Pattern regexPattern = Pattern.compile("[a-zA-Zа-яА-Я0-9-_]*");
+            Optional<String> tagMistake = tags.stream()
                     .filter(s -> ((s.length() > 256) ||
-                            (s.length() < 1) || regexPattern.matcher(s).matches()))
-                    .findFirst().toString();
-            return tag == null;
+                            (s.length() < 1) || !regexPattern.matcher(s).matches()))
+                    .findFirst();
+
+            // В случае если ни одной ошибки не найдено, проверка завершена успешно.
+            return tagMistake.equals(Optional.empty());
         }
 
         return true;
     }
-
 
     public String getEventName() {
         return eventName;
