@@ -2,9 +2,13 @@ package com.dosug.app.repository;
 
 
 import com.dosug.app.domain.Tag;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface TagRepository extends CrudRepository<Tag, String> {
+public interface TagRepository extends PagingAndSortingRepository<Tag, String> {
 
     Tag findByTag(String tagName);
+
+    Page<Tag> findByTagStartingWith(String tagName, Pageable pageable);
 }

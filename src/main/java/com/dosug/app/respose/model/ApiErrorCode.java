@@ -24,8 +24,9 @@ public enum ApiErrorCode {
     INVALID_EVENT_DATE(10),
     INVALID_EVENT_TAGS(11),
     INVALID_EVENT_TAG(12),
-    INVALID_ALTITUDE(13),
-    INVALID_LATITUDE(14);
+    INVALID_PLACE_NAME(13),
+    INVALID_LONGITUDE(14),
+    INVALID_LATITUDE(15);
 
     private int errorCode;
 

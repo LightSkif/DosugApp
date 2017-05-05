@@ -163,9 +163,11 @@ CREATE TABLE events (
 	creator_id bigint NOT NULL,
 	event_name character varying(256) NOT NULL,
 	content text,
-	event_date date NOT NULL,
+	event_date timestamp NOT NULL,
+	placeName character varying(256),
 	longitude double precision,
 	latitude double precision,
+	avatar character varying(256),
 	allowed boolean,
 	create_date timestamp without time zone DEFAULT now(),
 	
@@ -220,13 +222,19 @@ ALTER SEQUENCE events_id_seq OWNED BY events.id;
 	
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
+CREATE UNIQUE INDEX event_unique_parametr ON public.events (event_name, creator_id, event_date);
+
 ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 	
 ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
 
+CREATE UNIQUE INDEX tag_uindex ON tags USING btree (tag);
+
 ALTER SEQUENCE images_id_seq OWNED BY images.id;
 	
 ALTER TABLE ONLY images ALTER COLUMN id SET DEFAULT nextval('images_id_seq'::regclass);
+
+CREATE UNIQUE INDEX image_source_uindex ON images USING btree (image_source);
 
 	
 CREATE TABLE  event_tag(

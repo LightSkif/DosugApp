@@ -68,6 +68,7 @@ public class SimpleValidationService implements ValidationService {
 
         return result;
     }
+
     private List<ApiError> getApiErrorsForFields(Object form, Validator validator) {
         List<ApiError> result = new LinkedList<>();
         try {

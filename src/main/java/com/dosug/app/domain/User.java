@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -51,29 +52,29 @@ public class User {
 
     @OneToMany(targetEntity = AuthToken.class,
             cascade = CascadeType.ALL,
-        mappedBy = "user")
+            mappedBy = "user", fetch = FetchType.EAGER)
     private Set<AuthToken> authToken;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_role_users_id_fk")),
             inverseJoinColumns = @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "user_role_roles_id_fk"))
     )
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     @OneToMany(targetEntity = Event.class,
             cascade = CascadeType.ALL,
             mappedBy = "creator")
-    private Collection<Event> createdEvents;
+    private List<Event> createdEvents;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "event_participant",
             joinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk")),
             inverseJoinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk"))
     )
-    private Collection<Event> events;
+    private Set<Event> events;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -81,7 +82,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_tag_user_id_fk")),
             inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "user_tag_tag_id_fk"))
     )
-    private Collection<Tag> tags;
+    private Set<Tag> tags;
 
     public User() {}
 
@@ -188,27 +189,27 @@ public class User {
         this.avatar = avatar;
     }
 
-    public Collection<Event> getCreatedEvents() {
+    public List<Event> getCreatedEvents() {
         return createdEvents;
     }
 
-    public void setCreatedEvents(Collection<Event> createdEvents) {
+    public void setCreatedEvents(List<Event> createdEvents) {
         this.createdEvents = createdEvents;
     }
 
-    public Collection<Event> getEvents() {
+    public Set<Event> getEvents() {
         return events;
     }
 
-    public void setEvents(Collection<Event> events) {
+    public void setEvents(Set<Event> events) {
         this.events = events;
     }
 
-    public Collection<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(Collection<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 
@@ -216,7 +217,7 @@ public class User {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

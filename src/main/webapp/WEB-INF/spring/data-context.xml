@@ -33,12 +33,14 @@
               p:driverClassName="org.postgresql.Driver"
               p:url="jdbc:postgresql://localhost:5432/dosug"
               p:username="postgres"
-              p:password="sa"/>
+              p:password="SA"/>
 
         <util:properties id="hibernateProperties">
             <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL95Dialect</prop>
             <prop key="hibernate.show_sql">true</prop>
             <prop key="hibernate.hbm2ddl.auto">update</prop>
+            <prop key="hibernate.max_fetch_depth">2</prop>
+
         </util:properties>
     </beans>
 
@@ -55,6 +57,8 @@
             <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL95Dialect</prop>
             <prop key="hibernate.show_sql">false</prop>
             <prop key="hibernate.hbm2ddl.auto">update</prop>
+            <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+            <prop key="hibernate.max_fetch_depth">3</prop>
         </util:properties>
     </beans>
 

@@ -2,10 +2,12 @@ package com.dosug.app.services.events;
 
 import com.dosug.app.domain.Event;
 import com.dosug.app.domain.User;
+import com.dosug.app.exception.ConflictException;
+import com.dosug.app.exception.EventNotFoundException;
 import com.dosug.app.exception.InsufficientlyRightsException;
-import com.dosug.app.exception.NullEventException;
 import com.dosug.app.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,7 +22,7 @@ public class SimpleEventService implements EventService {
     public Long createEvent(Event event) {
 
         if (event == null){
-            throw new NullEventException();
+            throw new EventNotFoundException();
         }
 
         format(event);
@@ -30,6 +32,10 @@ public class SimpleEventService implements EventService {
         try {
             eventRepository.save(event);
         } catch (Exception e) {
+
+            if (checkEventDuplicate(event)) {
+                throw new ConflictException();
+            }
             // TODO: Продумать обработку исключения лучше.
             throw e;
         }
@@ -39,29 +45,46 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public Event getEvent(Integer Id) {
-        // TODO: Доделать метод.
-        return null;
+    public Event getEvent(Long Id) {
+
+        return eventRepository.findById(Id);
+    }
+
+    public List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime) {
+
+        return eventRepository.findByCreateDateAfterOrderByCreateDate(dateTime);
+    }
+
+    public List<Event> getEventsBeforeDateTime(int count, LocalDateTime dateTime) {
+
+        PageRequest pageable = new PageRequest(0, count);
+        return eventRepository.findByCreateDateBeforeOrderByCreateDate(dateTime, pageable).getContent();
     }
 
     @Override
-    public List<Event> getEvents(Integer count) {
-        // TODO: Доделать метод.
-        return null;
+    public List<Event> getLastEvents(int count) {
+
+        PageRequest pageable = new PageRequest(0, count);
+        return eventRepository.findByOrderByCreateDate(pageable).getContent();
     }
 
     @Override
     public List<Event> getAllEventsByCreator(User creator) {
-        // TODO: Доделать метод.
+
+        if (creator != null) {
+            return eventRepository.findAllByCreator(creator);
+        }
+
         return null;
     }
 
     @Override
-    public Boolean deleteEvent(Long eventId, User currentUser) {
+    public Boolean deleteEvent(long eventId, User currentUser) {
+
         Event event = eventRepository.findById(eventId);
 
         if (event == null){
-            throw new NullEventException();
+            throw new EventNotFoundException();
         }
 
         // Проверяем, был ли послан запрос на удаления события его создателем.
@@ -81,6 +104,10 @@ public class SimpleEventService implements EventService {
 
     private void format(Event event) {
         event.setEventName(event.getEventName().toLowerCase());
+    }
+
+    private boolean checkEventDuplicate(Event event) {
+        return eventRepository.findByEventName(event.getEventName()) != null;
     }
 
     @Autowired

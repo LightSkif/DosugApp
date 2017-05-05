@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A long time ago in a galaxy far, far away...
@@ -16,30 +17,30 @@ import java.util.Collection;
 @Table(name = "events")
 public class Event {
 
+    @Column(name = "placeName")
+    String placeName;
     @Id @GeneratedValue
     @Column(name = "id")
     private long id;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id")
     private User creator;
-
     @Column(name = "event_name")
     private String eventName;
-
     @Column(name = "content")
     private String content;
-
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "event_date")
     private LocalDateTime date;
-
     @Column(name = "longitude")
     private double longitude;
 
     @Column(name = "latitude")
     private double latitude;
+
+    @Column(name = "avatar")
+    private String avatar;
 
     @Column(name = "allowed")
     private boolean allowed;
@@ -49,32 +50,34 @@ public class Event {
 
     @OneToMany(targetEntity = Image.class,
             cascade = CascadeType.ALL,
-            mappedBy = "event")
-    private Collection<Image> images;
+            mappedBy = "event",
+            fetch = FetchType.EAGER)
+    private List<Image> images;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "event_participant",
             joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk")),
             inverseJoinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk"))
     )
-    private Collection<User> participants;
+    private Set<User> participants;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "event_tag",
             joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_tag_event_id_fk")),
             inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "event_tag_tag_id_fk"))
     )
-    private Collection<Tag> tags;
+    private Set<Tag> tags;
 
     public Event() {}
 
-    public Event(User creator, String eventName, String content, LocalDateTime date, double longitude, double latitude, Collection<Tag> tags) {
+    public Event(User creator, String eventName, String content, LocalDateTime date, String placeName, double longitude, double latitude, Set<Tag> tags) {
         this.creator = creator;
         this.eventName = eventName;
         this.content = content;
         this.date = date;
+        this.placeName = placeName;
         this.longitude = longitude;
         this.latitude = latitude;
         this.tags = tags;
@@ -136,6 +139,14 @@ public class Event {
         this.date = date;
     }
 
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
     public double getLongitude() {
         return longitude;
     }
@@ -152,27 +163,35 @@ public class Event {
         this.latitude = latitude;
     }
 
-    public Collection<Image> getImages() {
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(Collection<Image> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 
-    public Collection<User> getParticipants() {
+    public Set<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(Collection<User> participants) {
+    public void setParticipants(Set<User> participants) {
         this.participants = participants;
     }
 
-    public Collection<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(Collection<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 

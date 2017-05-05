@@ -3,6 +3,7 @@ package com.dosug.app.services.tags;
 import com.dosug.app.domain.Tag;
 import com.dosug.app.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,6 @@ public class SimpleTagService implements TagService {
 
     private Tag createTag(String tagName) {
 
-        tagName.toLowerCase();
         Tag tag = tagRepository.findByTag(tagName);
 
         // Если не удалось найти тег с таким названием создаём его.
@@ -33,12 +33,25 @@ public class SimpleTagService implements TagService {
 
     @Override
     public Tag getTag(String tagName) {
-        return createTag(tagName);
+
+        if (tagName != null) {
+
+            tagName.toLowerCase();
+            return createTag(tagName);
+        }
+
+        return null;
     }
 
     @Override
     public List<Tag> getTagsWithPart(String tagPart, Integer count) {
-        //    tagRepository.
+
+        if (tagPart != null) {
+            tagPart.toLowerCase();
+
+            return tagRepository.findByTagStartingWith(tagPart, new PageRequest(0, count)).getContent();
+        }
+
         return null;
     }
 }

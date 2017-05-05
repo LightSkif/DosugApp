@@ -16,3 +16,5 @@ CREATE SEQUENCE tags_id_seq
 ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 
 ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
+
+CREATE UNIQUE INDEX tag_uindex ON tags USING btree (tag);

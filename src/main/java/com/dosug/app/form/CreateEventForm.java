@@ -19,25 +19,24 @@ public class CreateEventForm {
     public static final int MAX_ALTITUDE = 90;
     public static final int MIN_LATITUDE = -180;
     public static final int MAX_LATITUDE = 180;
-
+    @ErrorCode(code = ApiErrorCode.INVALID_PLACE_NAME)
+    @Size(min = 0, max = 200, message = "placename should be shorter than 200 characters")
+    String placeName;
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_NAME)
     @NotNull(message = "event name is required")
     @Size(min = 1, max = EVENTNAME_MAX_SYMBOLS, message = "event name length from 1 to 256")
-    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9_]*", message = "only latin character, digits and underscore allowed in password")
+    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "only latin character, digits, space and underscore allowed in event name")
     private String eventName;
-
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_CONTENT)
     @NotNull(message = "content is required")
     private String content;
-
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_DATE)
     @NotNull(message = "date field is required")
 //    @Future
     private LocalDateTime date;
-
-    @ErrorCode(code = ApiErrorCode.INVALID_ALTITUDE)
+    @ErrorCode(code = ApiErrorCode.INVALID_LONGITUDE)
     @Min(value = MIN_ALTITUDE, message = "longitude is lower than {value}")
     @Max(value = MAX_ALTITUDE, message = "longitude is higher than {value}")
     private double longitude;
@@ -55,13 +54,14 @@ public class CreateEventForm {
     public CreateEventForm() {
     }
 
-    public CreateEventForm(String eventName, String content, LocalDateTime date, double longitude, double latitude, ArrayList<String> tags) {
+    public CreateEventForm(String eventName, String content, LocalDateTime date, String placeName, double longitude, double latitude, ArrayList<String> tags) {
         this.eventName = eventName;
         this.content = content;
         this.date = date;
+        this.placeName = placeName;
         this.longitude = longitude;
         this.latitude = latitude;
-        //this.tags = tags;
+        this.tags = tags;
     }
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAG)
@@ -110,8 +110,17 @@ public class CreateEventForm {
         return tags;
     }
 
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
+//    public void setTags(ArrayList<String> tags) {
+//        this.tags = tags;
+//    }
+
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public double getLongitude() {
