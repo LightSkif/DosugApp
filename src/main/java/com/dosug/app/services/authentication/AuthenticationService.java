@@ -12,6 +12,7 @@ public interface AuthenticationService {
 
     /**
      * идентификация пользователя
+     *
      * @param authKey ключ аутентификации
      * @return null если таких нет
      */

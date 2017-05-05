@@ -10,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "roles")
-public class  Role {
+public class Role {
 
     private static final String ADMIN_ROLE_NAME = "ADMIN";
 
@@ -21,6 +21,9 @@ public class  Role {
     @Column(name = "role")
     private String roleName;
 
+    public Role() {
+    }
+
     /**
      * Возвращает роль идентичную админу
      */
@@ -30,9 +33,6 @@ public class  Role {
         // то id проставлять смысла нет
         role.setRoleName(ADMIN_ROLE_NAME);
         return role;
-    }
-
-    public Role() {
     }
 
     public int getId() {

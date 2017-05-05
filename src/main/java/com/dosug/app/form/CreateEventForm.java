@@ -13,37 +13,46 @@ import java.util.regex.Pattern;
 public class CreateEventForm {
 
     public static final int EVENTNAME_MAX_SYMBOLS = 256;
+
     public static final int TAG_MAX_SYMBOLS = 256;
 
-    public static final int MIN_ALTITUDE = -90;
-    public static final int MAX_ALTITUDE = 90;
-    public static final int MIN_LATITUDE = -180;
-    public static final int MAX_LATITUDE = 180;
+    public static final int MIN_LONGITUDE = -180;
+
+    public static final int MAX_LONGITUDE = 180;
+
+    public static final int MIN_LATITUDE = -90;
+
+    public static final int MAX_LATITUDE = 90;
+
     @ErrorCode(code = ApiErrorCode.INVALID_PLACE_NAME)
     @Size(min = 0, max = 200, message = "placename should be shorter than 200 characters")
     String placeName;
+
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_NAME)
     @NotNull(message = "event name is required")
     @Size(min = 1, max = EVENTNAME_MAX_SYMBOLS, message = "event name length from 1 to 256")
     @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "only latin character, digits, space and underscore allowed in event name")
     private String eventName;
+
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_CONTENT)
     @NotNull(message = "content is required")
     private String content;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_DATE)
-    @NotNull(message = "date field is required")
+    @NotNull(message = "dateTime field is required")
 //    @Future
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
+
     @ErrorCode(code = ApiErrorCode.INVALID_LONGITUDE)
-    @Min(value = MIN_ALTITUDE, message = "longitude is lower than {value}")
-    @Max(value = MAX_ALTITUDE, message = "longitude is higher than {value}")
+    @Min(value = MIN_LONGITUDE, message = "longitude is lower than {value}")
+    @Max(value = MAX_LONGITUDE, message = "longitude is higher than {value}")
     private double longitude;
 
     @ErrorCode(code = ApiErrorCode.INVALID_LATITUDE)
-    @Min (value = MIN_LATITUDE, message = "latitude is lower than {value}")
-    @Max (value = MAX_LATITUDE, message = "latitude is higher than {value}")
+    @Min(value = MIN_LATITUDE, message = "latitude is lower than {value}")
+    @Max(value = MAX_LATITUDE, message = "latitude is higher than {value}")
     private double latitude;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAGS)
@@ -54,10 +63,10 @@ public class CreateEventForm {
     public CreateEventForm() {
     }
 
-    public CreateEventForm(String eventName, String content, LocalDateTime date, String placeName, double longitude, double latitude, ArrayList<String> tags) {
+    public CreateEventForm(String eventName, String content, LocalDateTime dateTime, String placeName, double longitude, double latitude, ArrayList<String> tags) {
         this.eventName = eventName;
         this.content = content;
-        this.date = date;
+        this.dateTime = dateTime;
         this.placeName = placeName;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -98,21 +107,21 @@ public class CreateEventForm {
         this.content = content;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public ArrayList<String> getTags() {
         return tags;
     }
 
-//    public void setTags(ArrayList<String> tags) {
-//        this.tags = tags;
-//    }
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
 
 
     public String getPlaceName() {

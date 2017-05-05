@@ -15,7 +15,9 @@ import javax.validation.constraints.Size;
  */
 public class RegistrationForm {
     private static final int EMAIL_MAX_LENGTH = 256;
+
     private static final int MAX_PASSWORD_LENGTH = 256;
+
     private static final int USERNAME_MAX_LENGTH = 256;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USERNAME)
@@ -48,6 +50,7 @@ public class RegistrationForm {
         }
         return false;
     }
+
     public String getUsername() {
         return username;
     }

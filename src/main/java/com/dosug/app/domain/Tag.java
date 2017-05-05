@@ -7,7 +7,8 @@ import java.util.Set;
 @Table(name = "tags")
 public class Tag {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "id")
     private long id;
 

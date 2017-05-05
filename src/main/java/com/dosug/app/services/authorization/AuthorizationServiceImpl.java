@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * @author radmirnovii
  */
 @Service
-public class AuthorizationServiceImpl implements AuthorizationService{
+public class AuthorizationServiceImpl implements AuthorizationService {
 
     private AuthenticationService authenticationService;
 
@@ -21,13 +21,13 @@ public class AuthorizationServiceImpl implements AuthorizationService{
 
     @Override
     public boolean haveRight(String authKey, Role role) {
-        if(authKey != null) {
+        if (authKey != null) {
             User user = authenticationService.authenticate(authKey);
-            if(user != null) {
+            if (user != null) {
                 boolean isUserAdmin = user.getRoles().stream()
                         .anyMatch(userRole -> userRole.equals(role));
 
-                if(isUserAdmin) {
+                if (isUserAdmin) {
                     // все получилось
                     return true;
                 }

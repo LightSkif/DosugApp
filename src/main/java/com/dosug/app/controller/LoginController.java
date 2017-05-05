@@ -38,7 +38,7 @@ public class LoginController {
 
         AuthToken token = authService.login(form.getUsername(), form.getPassword());
 
-        if(token == null) {
+        if (token == null) {
             //wrong login or password
             return response.failure(
                     new ApiError(ApiErrorCode.WRONG_LOGIN_AND_PASSWORD,

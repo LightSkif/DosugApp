@@ -6,7 +6,8 @@ import javax.persistence.*;
 @Table(name = "images")
 public class Image {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "id")
     private long id;
 

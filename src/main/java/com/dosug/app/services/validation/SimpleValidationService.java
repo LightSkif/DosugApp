@@ -72,12 +72,12 @@ public class SimpleValidationService implements ValidationService {
     private List<ApiError> getApiErrorsForFields(Object form, Validator validator) {
         List<ApiError> result = new LinkedList<>();
         try {
-            for(Field field: form.getClass().getDeclaredFields()) {
+            for (Field field : form.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 //получаем саму анотацию над полем
                 ErrorCode errorCodeAnnotation = field.getAnnotation(ErrorCode.class);
 
-                if(errorCodeAnnotation == null) {
+                if (errorCodeAnnotation == null) {
                     //тогда нас не интересует это поле
                     //идем к следующему
                     continue;
@@ -101,8 +101,8 @@ public class SimpleValidationService implements ValidationService {
 
     private List<ApiError> violationsToApiErrors(Collection<? extends ConstraintViolation<?>> constraintViolations, ErrorCode errorCodeAnnotation) {
         return constraintViolations.stream()
-                            .map(violation -> new ApiError(errorCodeAnnotation.code(), violation.getMessage()))
-                            .collect(Collectors.toList());
+                .map(violation -> new ApiError(errorCodeAnnotation.code(), violation.getMessage()))
+                .collect(Collectors.toList());
     }
 
 }

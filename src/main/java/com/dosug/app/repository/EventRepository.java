@@ -16,11 +16,11 @@ public interface EventRepository extends CrudRepository<Event, String> {
 
     Event findByEventName(String eventName);
 
-    Page<Event> findByCreateDateBeforeOrderByCreateDate(LocalDateTime dateTime, Pageable pageable);
+    Page<Event> findByCreateDateBeforeOrderByCreateDateDesc(LocalDateTime dateTime, Pageable pageable);
 
-    Page<Event> findByOrderByCreateDate(Pageable pageable);
+    Page<Event> findByOrderByCreateDateDesc(Pageable pageable);
 
-    List<Event> findByCreateDateAfterOrderByCreateDate(LocalDateTime dateTime);
+    List<Event> findByCreateDateAfterOrderByCreateDateDesc(LocalDateTime dateTime);
 
     List<Event> findAllByCreator(User creator);
 }

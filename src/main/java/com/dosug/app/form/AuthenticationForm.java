@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 public class AuthenticationForm {
 
     public static final int USERNAME_MAX_SYMBOLS = 256;
+
     public static final int PASSWORD_MAX_SYMBOLS = 256;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USERNAME)

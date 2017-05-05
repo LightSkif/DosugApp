@@ -7,11 +7,13 @@ import java.util.List;
 
 /**
  * work when we need return SMTH or errors;
+ *
  * @param <ResultData>
  */
 public class Response<ResultData> {
 
     private static final String SUCCESS = "success";
+
     private static final String FAILURE = "failure";
 
     @JsonProperty
@@ -24,7 +26,8 @@ public class Response<ResultData> {
     private List<ApiError> errors;
 
     // чтобы не было открытого конструктора
-    public Response() {}
+    public Response() {
+    }
 
     public Response success(ResultData authToken) {
         this.result = SUCCESS;

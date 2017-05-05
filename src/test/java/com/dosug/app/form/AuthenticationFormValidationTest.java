@@ -16,7 +16,9 @@ import static org.junit.Assert.assertTrue;
 public class AuthenticationFormValidationTest {
 
     public static final String NORMAL_PASSWORD = "password";
+
     public static final String NORMAL_USERNAME = "username";
+
     private Validator validator;
 
     /**
@@ -34,21 +36,24 @@ public class AuthenticationFormValidationTest {
         form.setPassword(NORMAL_PASSWORD);
     }
 
-    @Test public void testUsernameNullability() {
+    @Test
+    public void testUsernameNullability() {
         form.setUsername(null);
 
         //username is null
         notValid();
     }
 
-    @Test public void testPasswordNullability() {
+    @Test
+    public void testPasswordNullability() {
         form.setPassword(null);
 
         //password is null
         notValid();
     }
 
-    @Test public void testOnEmptyFields() {
+    @Test
+    public void testOnEmptyFields() {
         form.setUsername("");
         form.setPassword("");
 
@@ -56,14 +61,16 @@ public class AuthenticationFormValidationTest {
         notValid();
     }
 
-    @Test public void testTooLongUsername() {
+    @Test
+    public void testTooLongUsername() {
         form.setUsername(
                 getStringWithLength(AuthenticationForm.USERNAME_MAX_SYMBOLS + 1));
 
         notValid();
     }
 
-    @Test public void testTooLongPassword() {
+    @Test
+    public void testTooLongPassword() {
         form.setPassword(
                 getStringWithLength(AuthenticationForm.PASSWORD_MAX_SYMBOLS + 1));
 
@@ -71,59 +78,68 @@ public class AuthenticationFormValidationTest {
     }
 
 
-    @Test public void testUsernameHaveNotSpaces() {
+    @Test
+    public void testUsernameHaveNotSpaces() {
         form.setUsername("use r");
 
         notValid();
     }
 
 
-    @Test public void testUsernameCanHaveDigits() {
+    @Test
+    public void testUsernameCanHaveDigits() {
         form.setUsername("username123456789");
 
         valid();
     }
 
-    @Test public void testUsernameCanHaveHyphen() {
+    @Test
+    public void testUsernameCanHaveHyphen() {
         form.setUsername("user-name");
         valid();
     }
 
-    @Test public void testUsernameCanHaveUnderScore() {
+    @Test
+    public void testUsernameCanHaveUnderScore() {
         form.setUsername("user_name");
         valid();
     }
 
-    @Test public void testNotAllowedSymbolsInUsername() {
+    @Test
+    public void testNotAllowedSymbolsInUsername() {
         String username = "username";
 
         char[] notAllowedSymbols = {',', '.', '!', '?', '/', '`', '~', 'ш', 'б', '<', '\''};
 
-        for (char symbol: notAllowedSymbols) {
+        for (char symbol : notAllowedSymbols) {
             form.setUsername(username + symbol);
             notValid();
         }
     }
 
-    @Test public void testPasswordCanHaveDigits() {
+    @Test
+    public void testPasswordCanHaveDigits() {
         form.setPassword("password12886508");
 
         valid();
     }
 
-    @Test public void testPasswordCanHaveUnderScore() {
+    @Test
+    public void testPasswordCanHaveUnderScore() {
         form.setPassword("pass_word");
 
         valid();
     }
 
-    @Test public void testPasswordCanHaveCapitalLetters() {
+    @Test
+    public void testPasswordCanHaveCapitalLetters() {
         form.setPassword("passwordWithCapitalLetters");
 
         valid();
     }
 
-    @Test public void testNotAllowedSymbolsInPassword() {
+    @Test
+    public void testNotAllowedSymbolsInPassword() {
         String password = "password";
 
         char[] notAllowedSymbols = {'-', '/', '\\', ',', '`', 'г', ',', 'ш', '"'};
@@ -135,7 +151,8 @@ public class AuthenticationFormValidationTest {
         }
     }
 
-    @Test public void testPasswordNotHaveSpace() {
+    @Test
+    public void testPasswordNotHaveSpace() {
         form.setPassword("pass word with space");
         notValid();
     }

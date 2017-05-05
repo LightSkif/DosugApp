@@ -1,11 +1,7 @@
 package com.dosug.app.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created by radmir on 22.03.17.
@@ -31,7 +27,8 @@ public class AuthToken {
     @Column(name = "expiring_time")
     private LocalDateTime expiringTime;
 
-    public AuthToken() {}
+    public AuthToken() {
+    }
 
     public AuthToken(String token, User user, LocalDateTime createTime, LocalDateTime expiringTime) {
         this.token = token;

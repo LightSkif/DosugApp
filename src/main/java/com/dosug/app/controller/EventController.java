@@ -5,7 +5,6 @@ import com.dosug.app.domain.Tag;
 import com.dosug.app.domain.User;
 import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.form.CreateEventForm;
-import com.dosug.app.form.LocalDateTimeDeserializer;
 import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.EventPreview;
@@ -14,7 +13,6 @@ import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.events.EventService;
 import com.dosug.app.services.tags.TagService;
 import com.dosug.app.services.validation.ValidationService;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +27,7 @@ import java.util.stream.Collectors;
 public class EventController {
 
     public static final String DEFAULT_EVENT_COUNT = "20";
+
     private AuthenticationService authService;
 
     private TagService tagService;
@@ -39,7 +38,7 @@ public class EventController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response create(@RequestBody CreateEventForm form,
-                          @RequestHeader(value = "authKey") String authKey) {
+                           @RequestHeader(value = "authKey") String authKey) {
 
         Response<Long> response = new Response<>();
 
@@ -49,7 +48,7 @@ public class EventController {
         }
 
         User user = authService.authenticate(authKey);
-        if (user == null){
+        if (user == null) {
             throw new NotAuthorizedException();
         }
 
@@ -60,7 +59,7 @@ public class EventController {
         event.setCreator(user);
         event.setEventName(form.getEventName());
         event.setContent(form.getContent());
-        event.setDate(form.getDate());
+        event.setDate(form.getDateTime());
         event.setEventName(form.getEventName());
         event.setPlaceName(form.getPlaceName());
         event.setLongitude(form.getLongitude());
@@ -71,13 +70,12 @@ public class EventController {
             Long eventId = eventService.createEvent(event);
 
             return response.success(eventId);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
 
-    @GetMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "")
     public Response getEvent(@RequestParam(value = "id") Long eventId,
                              @RequestHeader(value = "authKey") String authKey) {
 
@@ -92,7 +90,7 @@ public class EventController {
         return response.success(eventView);
     }
 
-    @GetMapping(value = "/last", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/last")
     public Response getLastEvents(
             @RequestParam(value = "count") int count,
             @RequestHeader(value = "authKey") String authKey) {
@@ -110,11 +108,9 @@ public class EventController {
                         .collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/last/after", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/last/after")
     public Response getLastEventsAfterDate(
-            @RequestParam(value = "datetime")
-            @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-                    LocalDateTime datetime,
+            @RequestParam(value = "datetime") String dateTime,
             @RequestHeader(value = "authKey") String authKey) {
 
         Response<List<EventPreview>> response = new Response<>();
@@ -125,17 +121,15 @@ public class EventController {
         }
 
         return response.success(
-                eventService.getLastEventsAfterDateTime(datetime).stream()
+                eventService.getLastEventsAfterDateTime(LocalDateTime.parse(dateTime)).stream()
                         .map(EventPreview::new)
                         .collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/last/before", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/last/before")
     public Response getLastEventsBeforeDate(
             @RequestParam(value = "count") int count,
-            @RequestParam(value = "datetime")
-            @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-                    LocalDateTime datetime,
+            @RequestParam(value = "datetime") String dateTime,
             @RequestHeader(value = "authKey") String authKey) {
 
         Response<List<EventPreview>> response = new Response<>();
@@ -146,7 +140,7 @@ public class EventController {
         }
 
         return response.success(
-                eventService.getEventsBeforeDateTime(count, datetime).stream()
+                eventService.getEventsBeforeDateTime(count, LocalDateTime.parse(dateTime)).stream()
                         .map(EventPreview::new)
                         .collect(Collectors.toList()));
     }
@@ -171,7 +165,7 @@ public class EventController {
         Response<Boolean> response = new Response<>();
 
         User user = authService.authenticate(authKey);
-        if (user == null){
+        if (user == null) {
             throw new NotAuthorizedException();
         }
 
@@ -180,8 +174,7 @@ public class EventController {
             boolean result = eventService.deleteEvent(eventId, user);
 
             return response.success(result);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }

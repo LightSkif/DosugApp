@@ -18,7 +18,9 @@ import java.util.List;
 public class SimpleRegistrationService implements RegistrationService {
 
     private static final String USERNAME_ALREADY_USE_MESSAGE = "username already use";
+
     private static final String EMAIL_ALREADY_USE_MESSAGE = "email already use";
+
     private static final String UNKNOWN_PROBLEM_MESSAGE = "unknown service problem";
 
     private UserRepository userRepository;
@@ -33,7 +35,7 @@ public class SimpleRegistrationService implements RegistrationService {
 
         List<ApiError> apiErrors = new LinkedList<>();
 
-        if(user == null) {
+        if (user == null) {
             apiErrors.add(getUnknownServiceProblem());
             return apiErrors;
         }
@@ -48,7 +50,7 @@ public class SimpleRegistrationService implements RegistrationService {
         } catch (Exception e) {
 
             List<ApiError> duplicateErrors = checkOnDuplicated(user);
-            if(!duplicateErrors.isEmpty()) {
+            if (!duplicateErrors.isEmpty()) {
                 return duplicateErrors;
             }
             //Вернем неизвестную проблему
@@ -60,6 +62,7 @@ public class SimpleRegistrationService implements RegistrationService {
 
     /**
      * приводим к нижему регистру добавляем всякие нужные плюшки
+     *
      * @param user пользователь которого форматируем
      */
     private void format(User user) {
@@ -76,6 +79,7 @@ public class SimpleRegistrationService implements RegistrationService {
 
     /**
      * Ищем ошибки ограничений уникальности в бд
+     *
      * @param user пользователь дубликаты полей которого ищем в бд
      * @return ошибки связанные с дубликатами если из нет значит возвращается пустой лист
      */
@@ -83,12 +87,12 @@ public class SimpleRegistrationService implements RegistrationService {
         List<ApiError> apiErrors = new LinkedList<>();
 
         ApiError usernameError = checkUsernameDuplicate(user.getUsername());
-        if(usernameError != null) {
+        if (usernameError != null) {
             apiErrors.add(usernameError);
         }
 
         ApiError emailError = checkEmailDuplicate(user.getEmail());
-        if(emailError != null) {
+        if (emailError != null) {
             apiErrors.add(emailError);
         }
 
@@ -96,24 +100,22 @@ public class SimpleRegistrationService implements RegistrationService {
     }
 
     /**
-     *
      * @param username
      * @return null если нет ошибки
      */
     private ApiError checkEmailDuplicate(String username) {
-        if(userRepository.findByEmail(username) != null) {
+        if (userRepository.findByEmail(username) != null) {
             return new ApiError(ApiErrorCode.EMAIL_ALREADY_USE, EMAIL_ALREADY_USE_MESSAGE);
         }
         return null;
     }
 
     /**
-     *
      * @param email
      * @return null если нет ошибки
      */
     private ApiError checkUsernameDuplicate(String email) {
-        if(userRepository.findByUsername(email) != null) {
+        if (userRepository.findByUsername(email) != null) {
             return new ApiError(ApiErrorCode.USERNAME_ALREADY_USE, USERNAME_ALREADY_USE_MESSAGE);
         }
         return null;

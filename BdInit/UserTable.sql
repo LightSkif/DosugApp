@@ -11,7 +11,7 @@ CREATE TABLE users (
     create_date timestamp without time zone DEFAULT now(),
 	  avatar character varying(256),
     description character varying(1000),
-    birthdate date,
+    birthdate dateTime,
     phone character varying(15)
 );
 
@@ -33,3 +33,6 @@ ALTER TABLE ONLY users
 CREATE UNIQUE INDEX users_email_uindex ON users USING btree (email);
 
 CREATE UNIQUE INDEX users_username_uindex ON users USING btree (username);
+
+INSERT  INTO users VALUE
+(1, "user", "pass", "dosug@test.ru", "power", "wolf", NULL, NULL, NULL, NULL, NULL);

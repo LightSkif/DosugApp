@@ -31,14 +31,14 @@ public class RegistrationController {
         Response<Void> response = new Response<>();
 
         List<ApiError> validationErrors = validationService.validate(form);
-        if( !validationErrors.isEmpty()) {
+        if (!validationErrors.isEmpty()) {
             return response.failure(validationErrors);
         }
 
         User user = new User(form.getUsername(), form.getEmail(), form.getPassword());
 
         List<ApiError> serviceErrors = registrationService.registration(user);
-        if( !serviceErrors.isEmpty()) {
+        if (!serviceErrors.isEmpty()) {
             return response.failure(serviceErrors);
         }
 

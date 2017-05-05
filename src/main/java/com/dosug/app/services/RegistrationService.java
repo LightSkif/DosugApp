@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Сервис для работы с регистрацией который инкапсулирует в себя
  * бизнес-логику чтобы не тащить в контроллер
+ *
  * @author radmirnovii
  */
 public interface RegistrationService {

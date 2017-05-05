@@ -21,6 +21,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
 
     /**
      * return null if username and password wrong
+     *
      * @param username
      * @param password
      * @return
@@ -30,7 +31,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
 
         User user = userRepository.findByUsernameAndPassword(username, password);
         //check is user exist in DB
-        if(user != null) {
+        if (user != null) {
             AuthToken authToken = authTokenProvider.getToken(user);
 
             authTokenRepository.save(authToken);
@@ -43,7 +44,7 @@ public class SimpleAuthenticationService implements AuthenticationService {
     @Override
     public User authenticate(String authKey) {
         AuthToken authToken = authTokenRepository.findOne(authKey);
-        if(authToken == null) {
+        if (authToken == null) {
             return null;
         }
 

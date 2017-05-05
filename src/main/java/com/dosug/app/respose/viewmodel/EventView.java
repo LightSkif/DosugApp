@@ -16,17 +16,23 @@ public class EventView {
 
     @JsonProperty
     String placeName;
+
     @JsonProperty
     private Long eventId;
+
     @JsonProperty
     private Long creatorId;
+
     @JsonProperty
     private String eventName;
+
     @JsonProperty
     private String content;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
+
     @JsonProperty
     private double longitude;
 
@@ -55,7 +61,7 @@ public class EventView {
         creatorId = event.getCreator().getId();
         eventName = event.getEventName();
         content = event.getContent();
-        date = event.getDate();
+        dateTime = event.getDate();
         placeName = event.getPlaceName();
         longitude = event.getLongitude();
         latitude = event.getLatitude();

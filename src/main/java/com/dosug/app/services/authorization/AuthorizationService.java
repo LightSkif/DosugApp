@@ -4,6 +4,7 @@ import com.dosug.app.domain.Role;
 
 /**
  * собственно сервис который обеспечивает авторизацию
+ *
  * @author radmirnovii
  */
 public interface AuthorizationService {

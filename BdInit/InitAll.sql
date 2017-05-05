@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS public.event_participant CASCADE;
 DROP SEQUENCE IF EXISTS public.auth_tokens_auth_token_seq CASCADE;
 DROP TABLE IF EXISTS public.auth_tokens CASCADE;
 
-DROP EXTENSION plpgsql;
-DROP SCHEMA public;
+DROP EXTENSION IF EXISTS plpgsql CASCADE;
+DROP SCHEMA IF EXISTS public CASCADE;
 
 
 
@@ -87,7 +87,7 @@ CREATE TABLE users (
     create_date timestamp without time zone DEFAULT now(),
 	  avatar character varying(256),
     description character varying(1000),
-    birthdate date,
+    birthdate dateTime,
     phone character varying(15)
 );
 
@@ -276,3 +276,7 @@ CREATE TABLE  user_tag(
       REFERENCES public.users (id) MATCH SIMPLE
       ON DELETE CASCADE
 );
+
+INSERT  INTO users VALUE
+(1, "user", "pass", "dosug@test.ru", "power", "wolf", NULL, NULL, NULL, NULL, NULL),
+(2, "admin", "admin", "dosug@test.ru", "sanctus", "lupus", NULL, NULL, NULL, NULL, NULL);

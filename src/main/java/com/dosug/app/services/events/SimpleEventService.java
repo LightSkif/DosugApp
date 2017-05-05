@@ -21,7 +21,7 @@ public class SimpleEventService implements EventService {
     @Override
     public Long createEvent(Event event) {
 
-        if (event == null){
+        if (event == null) {
             throw new EventNotFoundException();
         }
 
@@ -47,25 +47,31 @@ public class SimpleEventService implements EventService {
     @Override
     public Event getEvent(Long Id) {
 
-        return eventRepository.findById(Id);
+        Event event = eventRepository.findById(Id);
+
+        if (event != null) {
+            return event;
+        } else {
+            throw new EventNotFoundException();
+        }
     }
 
     public List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime) {
 
-        return eventRepository.findByCreateDateAfterOrderByCreateDate(dateTime);
+        return eventRepository.findByCreateDateAfterOrderByCreateDateDesc(dateTime);
     }
 
     public List<Event> getEventsBeforeDateTime(int count, LocalDateTime dateTime) {
 
         PageRequest pageable = new PageRequest(0, count);
-        return eventRepository.findByCreateDateBeforeOrderByCreateDate(dateTime, pageable).getContent();
+        return eventRepository.findByCreateDateBeforeOrderByCreateDateDesc(dateTime, pageable).getContent();
     }
 
     @Override
     public List<Event> getLastEvents(int count) {
 
         PageRequest pageable = new PageRequest(0, count);
-        return eventRepository.findByOrderByCreateDate(pageable).getContent();
+        return eventRepository.findByOrderByCreateDateDesc(pageable).getContent();
     }
 
     @Override
@@ -83,7 +89,7 @@ public class SimpleEventService implements EventService {
 
         Event event = eventRepository.findById(eventId);
 
-        if (event == null){
+        if (event == null) {
             throw new EventNotFoundException();
         }
 

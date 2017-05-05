@@ -12,7 +12,7 @@ import java.util.UUID;
  * generate token by using UUID randomUUID
  */
 @Service
-public class UUIDAuthTokenProvider implements AuthTokenProvider{
+public class UUIDAuthTokenProvider implements AuthTokenProvider {
 
     Random random = new Random();
 

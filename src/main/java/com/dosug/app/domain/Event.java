@@ -19,20 +19,27 @@ public class Event {
 
     @Column(name = "placeName")
     String placeName;
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue
     @Column(name = "id")
     private long id;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id")
     private User creator;
+
     @Column(name = "event_name")
     private String eventName;
+
     @Column(name = "content")
     private String content;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "event_date")
     private LocalDateTime date;
+
     @Column(name = "longitude")
     private double longitude;
 
@@ -70,7 +77,8 @@ public class Event {
     )
     private Set<Tag> tags;
 
-    public Event() {}
+    public Event() {
+    }
 
     public Event(User creator, String eventName, String content, LocalDateTime date, String placeName, double longitude, double latitude, Set<Tag> tags) {
         this.creator = creator;

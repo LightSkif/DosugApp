@@ -16,13 +16,17 @@ import static org.junit.Assert.assertTrue;
 public class RegistrationFormValidationTest {
 
 
+    public static final int PASSWORD_MAX_LENGHT = 256;
+
+    public static final int EMAIL_MAX_LENGTH = 256;
+
     private static final int USERNAME_MAX_SYMBOLS = 256;
 
     private static final String NORMAL_PASSWORD = "password";
+
     private static final String NORMAL_USERNAME = "username";
+
     private static final String NORMAL_EMAIL = "email@email.com";
-    public static final int PASSWORD_MAX_LENGHT = 256;
-    public static final int EMAIL_MAX_LENGTH = 256;
 
     private Validator validator;
 
@@ -50,14 +54,16 @@ public class RegistrationFormValidationTest {
         notValid();
     }
 
-    @Test public void testPasswordNullability() {
+    @Test
+    public void testPasswordNullability() {
         form.setPassword(null);
         form.setPasswordRetry(null);
         //password is null
         notValid();
     }
 
-    @Test public void testOnEmptyFields() {
+    @Test
+    public void testOnEmptyFields() {
         form.setUsername("");
         form.setPassword("");
         form.setPasswordRetry("");
@@ -66,14 +72,16 @@ public class RegistrationFormValidationTest {
         notValid();
     }
 
-    @Test public void testTooLongUsername() {
+    @Test
+    public void testTooLongUsername() {
         form.setUsername(
                 getStringWithLength(USERNAME_MAX_SYMBOLS + 1));
 
         notValid();
     }
 
-    @Test public void testTooLongPassword() {
+    @Test
+    public void testTooLongPassword() {
         form.setPassword(
                 getStringWithLength(PASSWORD_MAX_LENGHT + 1));
 
@@ -81,68 +89,78 @@ public class RegistrationFormValidationTest {
     }
 
 
-    @Test public void testUsernameHaveNotSpaces() {
+    @Test
+    public void testUsernameHaveNotSpaces() {
         form.setUsername("use r");
 
         notValid();
     }
 
 
-    @Test public void testUsernameCanHaveDigits() {
+    @Test
+    public void testUsernameCanHaveDigits() {
         form.setUsername("username123456789");
 
         valid();
     }
 
-    @Test public void testUsernameCanHaveHyphen() {
+    @Test
+    public void testUsernameCanHaveHyphen() {
         form.setUsername("user-name");
         valid();
     }
 
-    @Test public void testUsernameCanHaveUnderScore() {
+    @Test
+    public void testUsernameCanHaveUnderScore() {
         form.setUsername("user_name");
         valid();
     }
 
-    @Test public void testNotAllowedSymbolsInUsername() {
+    @Test
+    public void testNotAllowedSymbolsInUsername() {
         String username = "username";
 
         char[] notAllowedSymbols = {',', '.', '!', '?', '/', '`', '~', 'ш', 'б', '<', '\''};
 
-        for (char symbol: notAllowedSymbols) {
+        for (char symbol : notAllowedSymbols) {
             form.setUsername(username + symbol);
             notValid();
         }
     }
 
-    @Test public void testPasswordCanHaveDigits() {
+    @Test
+    public void testPasswordCanHaveDigits() {
         String passwordWithDigits = "password12886508";
         form.setPassword(passwordWithDigits);
         form.setPasswordRetry(passwordWithDigits);
         valid();
     }
 
-    @Test public void testRetryPasswordNullability() {
+    @Test
+    public void testRetryPasswordNullability() {
         form.setPasswordRetry(null);
 
         notValid();
     }
 
-    @Test public void testPasswordCanHaveUnderScore() {
+    @Test
+    public void testPasswordCanHaveUnderScore() {
         String validPassword = "pass_word";
         form.setPassword(validPassword);
         form.setPasswordRetry(validPassword);
         valid();
     }
 
-    @Test public void testPasswordCanHaveCapitalLetters() {
+    @Test
+    public void testPasswordCanHaveCapitalLetters() {
         String passwordWithCapitalLetters = "passwordWithCapitalLetters";
         form.setPassword(passwordWithCapitalLetters);
         form.setPasswordRetry(passwordWithCapitalLetters);
         valid();
     }
 
-    @Test public void testNotAllowedSymbolsInPassword() {
+    @Test
+    public void testNotAllowedSymbolsInPassword() {
         String password = "password";
 
         char[] notAllowedSymbols = {'-', '/', '\\', ',', '`', 'г', ',', 'ш', '"'};
@@ -154,7 +172,8 @@ public class RegistrationFormValidationTest {
         }
     }
 
-    @Test public void testPasswordNotHaveSpace() {
+    @Test
+    public void testPasswordNotHaveSpace() {
         form.setPassword("pass word with space");
         notValid();
     }
@@ -168,26 +187,30 @@ public class RegistrationFormValidationTest {
         return builder.toString();
     }
 
-    @Test public void testPasswordAndRetryNotEquals() {
+    @Test
+    public void testPasswordAndRetryNotEquals() {
         form.setPassword("pass");
         form.setPasswordRetry("otherPass");
 
         notValid();
     }
 
-    @Test public void testEmailNullability() {
+    @Test
+    public void testEmailNullability() {
         form.setEmail(null);
 
         notValid();
     }
 
-    @Test public void testEmailMaxLength() {
+    @Test
+    public void testEmailMaxLength() {
         form.setEmail(getStringWithLength(EMAIL_MAX_LENGTH) + 1);
 
         notValid();
     }
 
-    @Test public void testEmptyEmail() {
+    @Test
+    public void testEmptyEmail() {
         form.setEmail("");
     }
 
@@ -196,7 +219,8 @@ public class RegistrationFormValidationTest {
      * все случаи не тестятся из-за того что я не использовал регулярку,
      * а тестить библиотечную аннотацию @Email не охота
      */
-    @Test public void testNotValidEmail() {
+    @Test
+    public void testNotValidEmail() {
         form.setEmail("email.com");
 
         notValid();

@@ -30,7 +30,7 @@ public class AdminFilter extends GenericFilterBean {
 
         String authKey = httpRequest.getHeader(AUTH_KEY_HEADER);
 
-        if(authKey != null) {
+        if (authKey != null) {
             if (authorizationService.haveRight(authKey, Role.admin())) {
                 filterChain.doFilter(request, response);
                 return;

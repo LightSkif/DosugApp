@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+
 /**
  * Created by radmir on 26.03.17.
  */
@@ -23,7 +24,8 @@ public class SimpleAuthenticationServiceTest {
         this.authenticationService = new SimpleAuthenticationService();
     }
 
-    @Test public void testIfUserNotFound() {
+    @Test
+    public void testIfUserNotFound() {
         String username = "user";
         String password = "pass";
 
@@ -37,7 +39,8 @@ public class SimpleAuthenticationServiceTest {
         assertEquals(authenticationService.login(username, password), null);
     }
 
-    @Test public void testThatWeSaveAuthKeyInDB()  {
+    @Test
+    public void testThatWeSaveAuthKeyInDB() {
         User user = new User("user", "email", "pass");
 
         //userRepository mock
@@ -53,7 +56,7 @@ public class SimpleAuthenticationServiceTest {
         when(authTokenProvider.getToken(user)).thenReturn(token);
         authenticationService.setAuthTokenProvider(authTokenProvider);
 
-        AuthTokenRepository authTokenRepository= mock(AuthTokenRepository.class);
+        AuthTokenRepository authTokenRepository = mock(AuthTokenRepository.class);
 
         authenticationService.setAuthTokenRepository(authTokenRepository);
 

@@ -16,7 +16,8 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "id")
     private long id;
 
@@ -84,7 +85,8 @@ public class User {
     )
     private Set<Tag> tags;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String username, String email, String password) {
         this.username = username;
