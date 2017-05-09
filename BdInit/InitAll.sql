@@ -24,6 +24,9 @@ DROP TABLE IF EXISTS public.event_participant CASCADE;
 DROP SEQUENCE IF EXISTS public.auth_tokens_auth_token_seq CASCADE;
 DROP TABLE IF EXISTS public.auth_tokens CASCADE;
 
+DROP SEQUENCE IF EXISTS public.bans_id_seq CASCADE;
+DROP TABLE IF EXISTS public.bans CASCADE;
+
 DROP EXTENSION IF EXISTS plpgsql CASCADE;
 DROP SCHEMA IF EXISTS public CASCADE;
 
@@ -102,19 +105,23 @@ CREATE SEQUENCE users_id_seq
 
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
-DROP SEQUENCE IF EXISTS public.bans_id_seq CASCADE;
-DROP TABLE IF EXISTS public.users CASCADE;
-
 CREATE TABLE bans (
   id bigint,
   userId bigint,
   duration timestamp NOT NULL
 );
 
+CREATE SEQUENCE bans_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+
 ALTER TABLE ONLY bans
     ADD CONSTRAINT bans_pkey PRIMARY KEY (id);
 
-ALTER SEQUENCE bans_id_seq OWNED BY users.id;
+ALTER SEQUENCE bans_id_seq OWNED BY bans.id;
 
 ALTER TABLE ONLY bans ALTER COLUMN id SET DEFAULT nextval('bans_id_seq'::regclass);
 
