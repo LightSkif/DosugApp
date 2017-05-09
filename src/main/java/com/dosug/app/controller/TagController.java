@@ -24,7 +24,7 @@ public class TagController {
 
     @GetMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response getTags(@RequestParam(value = "tagPart", defaultValue = "") String tagPart,
-                            @RequestParam(value = "count", defaultValue = "0") Integer count,
+                            @RequestParam(value = "count", defaultValue = "0") int count,
                             @RequestHeader(value = "authKey") String authKey) {
 
         Response<List<String>> response = new Response<>();

@@ -9,5 +9,5 @@ public interface TagService {
 
     Tag getTag(String tagName);
 
-    List<Tag> getTagsWithPart(String tagPart, Integer count);
+    List<Tag> getTagsWithPart(String tagPart, int count);
 }

@@ -61,7 +61,7 @@ public class EventView {
         creatorId = event.getCreator().getId();
         eventName = event.getEventName();
         content = event.getContent();
-        dateTime = event.getDate();
+        dateTime = event.getDateTime();
         placeName = event.getPlaceName();
         longitude = event.getLongitude();
         latitude = event.getLatitude();

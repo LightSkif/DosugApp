@@ -3,8 +3,10 @@ package com.dosug.app.controller;
 import com.dosug.app.domain.Event;
 import com.dosug.app.domain.Tag;
 import com.dosug.app.domain.User;
+import com.dosug.app.exception.BadRequestException;
 import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.form.CreateEventForm;
+import com.dosug.app.form.UpdateEventForm;
 import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.EventPreview;
@@ -59,7 +61,7 @@ public class EventController {
         event.setCreator(user);
         event.setEventName(form.getEventName());
         event.setContent(form.getContent());
-        event.setDate(form.getDateTime());
+        event.setDateTime(form.getDateTime());
         event.setEventName(form.getEventName());
         event.setPlaceName(form.getPlaceName());
         event.setLongitude(form.getLongitude());
@@ -73,6 +75,40 @@ public class EventController {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @PostMapping(value = "/update")
+    public Response updatingEvent(@RequestBody UpdateEventForm form,
+                                  @RequestHeader(value = "authKey") String authKey) {
+
+        Response<Long> response = new Response<>();
+
+        List<ApiError> validateErrors = validationService.validate(form);
+        if (!validateErrors.isEmpty()) {
+            return response.failure(validateErrors);
+        }
+
+        User user = authService.authenticate(authKey);
+        if (user == null) {
+            throw new NotAuthorizedException();
+        }
+
+        Event event = new Event();
+
+        // Преобразуем массив строк из формы в массив тегов.
+        Set<Tag> tags = form.getTags().stream().map(s -> tagService.getTag(s)).collect(Collectors.toSet());
+
+        event.setId(form.getEventId());
+        event.setEventName(form.getEventName());
+        event.setContent(form.getContent());
+        event.setDateTime(form.getDateTime());
+        event.setEventName(form.getEventName());
+        event.setPlaceName(form.getPlaceName());
+        event.setLongitude(form.getLongitude());
+        event.setLatitude(form.getLatitude());
+        event.setTags(tags);
+
+        return response.success(eventService.updateEvent(event, user));
     }
 
     @GetMapping(value = "")
@@ -97,6 +133,10 @@ public class EventController {
 
         Response<List<EventPreview>> response = new Response<>();
 
+        if (count <= 0) {
+            throw new BadRequestException();
+        }
+
         User user = authService.authenticate(authKey);
         if (user == null) {
             throw new NotAuthorizedException();
@@ -110,7 +150,7 @@ public class EventController {
 
     @GetMapping(value = "/last/after")
     public Response getLastEventsAfterDate(
-            @RequestParam(value = "datetime") String dateTime,
+            @RequestParam(value = "dateTime") String dateTime,
             @RequestHeader(value = "authKey") String authKey) {
 
         Response<List<EventPreview>> response = new Response<>();
@@ -129,7 +169,52 @@ public class EventController {
     @GetMapping(value = "/last/before")
     public Response getLastEventsBeforeDate(
             @RequestParam(value = "count") int count,
-            @RequestParam(value = "datetime") String dateTime,
+            @RequestParam(value = "dateTime") String dateTime,
+            @RequestHeader(value = "authKey") String authKey) {
+
+        Response<List<EventPreview>> response = new Response<>();
+
+        if (count <= 0) {
+            throw new BadRequestException();
+        }
+
+        User user = authService.authenticate(authKey);
+        if (user == null) {
+            throw new NotAuthorizedException();
+        }
+
+        return response.success(
+                eventService.getLastEventsBeforeDateTime(count, LocalDateTime.parse(dateTime)).stream()
+                        .map(EventPreview::new).collect(Collectors.toList()));
+    }
+
+    @GetMapping(value = "/search")
+    public Response searchEvent(
+            @RequestParam(value = "namePart", defaultValue = "") String namePart,
+            @RequestParam(value = "count") int count,
+            @RequestHeader(value = "authKey") String authKey) {
+
+        Response<List<EventPreview>> response = new Response<>();
+
+        if (count <= 0) {
+            throw new BadRequestException();
+        }
+
+        User user = authService.authenticate(authKey);
+        if (user == null) {
+            throw new NotAuthorizedException();
+        }
+
+        return response.success(
+                eventService.getEventsWithPartOfName(namePart, count).stream()
+                        .map(EventPreview::new)
+                        .collect(Collectors.toList()));
+    }
+
+    @GetMapping(value = "/search/after")
+    public Response searchEvent(
+            @RequestParam(value = "namePart", defaultValue = "") String namePart,
+            @RequestParam(value = "dateTime") String dateTime,
             @RequestHeader(value = "authKey") String authKey) {
 
         Response<List<EventPreview>> response = new Response<>();
@@ -140,7 +225,33 @@ public class EventController {
         }
 
         return response.success(
-                eventService.getEventsBeforeDateTime(count, LocalDateTime.parse(dateTime)).stream()
+                eventService.getEventsWithPartOfNameAfterDateTime(namePart, LocalDateTime.parse(dateTime)).stream()
+                        .map(EventPreview::new)
+                        .collect(Collectors.toList()));
+    }
+
+    @GetMapping(value = "/search/before")
+    public Response searchEvent(
+            @RequestParam(value = "namePart", defaultValue = "") String namePart,
+            @RequestParam(value = "count") int count,
+            @RequestParam(value = "dateTime") String dateTime,
+            @RequestHeader(value = "authKey") String authKey) {
+
+        Response<List<EventPreview>> response = new Response<>();
+
+        if (count <= 0) {
+            throw new BadRequestException();
+        }
+
+        User user = authService.authenticate(authKey);
+        if (user == null) {
+            throw new NotAuthorizedException();
+        }
+
+        return response.success(
+                eventService.getEventsWithPartOfNameBeforeDateTime
+                        (namePart, count, LocalDateTime.parse(dateTime))
+                        .stream()
                         .map(EventPreview::new)
                         .collect(Collectors.toList()));
     }
@@ -162,7 +273,7 @@ public class EventController {
     public Response delete(@RequestBody long eventId,
                            @RequestHeader(value = "authKey") String authKey) {
 
-        Response<Boolean> response = new Response<>();
+        Response<Void> response = new Response<>();
 
         User user = authService.authenticate(authKey);
         if (user == null) {
@@ -171,9 +282,9 @@ public class EventController {
 
         try {
             // Передаём авторизованного пользователя для проверки достаточности прав для удаления.
-            boolean result = eventService.deleteEvent(eventId, user);
+            eventService.deleteEvent(eventId, user);
 
-            return response.success(result);
+            return response.success(null);
         } catch (Exception e) {
             throw e;
         }

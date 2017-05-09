@@ -13,15 +13,24 @@ public interface EventService {
 
     Long createEvent(Event event);
 
+    Long updateEvent(Event event, User currentUser);
+
     Event getEvent(Long Id);
 
     List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime);
 
-    List<Event> getEventsBeforeDateTime(int count, LocalDateTime dateTime);
+    List<Event> getLastEventsBeforeDateTime(int count, LocalDateTime dateTime);
 
     List<Event> getLastEvents(int count);
 
+    List<Event> getEventsWithPartOfName(String partEventName, int count);
+
+    List<Event> getEventsWithPartOfNameAfterDateTime(String partEventName, LocalDateTime dateTime);
+
+    List<Event> getEventsWithPartOfNameBeforeDateTime(String partEventName,
+                                                      int count, LocalDateTime dateTime);
+
     List<Event> getAllEventsByCreator(User creator);
 
-    Boolean deleteEvent(long eventId, User currentUser);
+    void deleteEvent(long eventId, User currentUser);
 }

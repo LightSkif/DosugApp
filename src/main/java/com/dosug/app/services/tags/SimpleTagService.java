@@ -44,7 +44,7 @@ public class SimpleTagService implements TagService {
     }
 
     @Override
-    public List<Tag> getTagsWithPart(String tagPart, Integer count) {
+    public List<Tag> getTagsWithPart(String tagPart, int count) {
 
         if (tagPart != null) {
             tagPart.toLowerCase();

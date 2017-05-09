@@ -30,7 +30,8 @@ public class SimpleEventService implements EventService {
         event.setCreateDate(LocalDateTime.now());
 
         try {
-            eventRepository.save(event);
+            // Возвращаем Id созданного события.
+            return eventRepository.save(event).getId();
         } catch (Exception e) {
 
             if (checkEventDuplicate(event)) {
@@ -39,9 +40,33 @@ public class SimpleEventService implements EventService {
             // TODO: Продумать обработку исключения лучше.
             throw e;
         }
+    }
 
-        // Возвращаем Id созданного события.
-        return eventRepository.findByEventName(event.getEventName()).getId();
+    @Override
+    public Long updateEvent(Event newEvent, User currentUser) {
+        Event updatingEvent = eventRepository.findById(newEvent.getId());
+
+        if (updatingEvent == null) {
+            throw new EventNotFoundException();
+        }
+
+        // Проверяем, был ли послан запрос на обновление события его создателем.
+        if (!currentUser.equals(updatingEvent.getCreator())) {
+            throw new InsufficientlyRightsException();
+        }
+
+        format(newEvent);
+
+        updatingEvent.setEventName(newEvent.getEventName());
+        updatingEvent.setContent(newEvent.getContent());
+        updatingEvent.setDateTime(newEvent.getDateTime());
+        updatingEvent.setEventName(newEvent.getEventName());
+        updatingEvent.setPlaceName(newEvent.getPlaceName());
+        updatingEvent.setLongitude(newEvent.getLongitude());
+        updatingEvent.setLatitude(newEvent.getLatitude());
+        updatingEvent.setTags(newEvent.getTags());
+
+        return eventRepository.save(updatingEvent).getId();
     }
 
     @Override
@@ -56,22 +81,43 @@ public class SimpleEventService implements EventService {
         }
     }
 
-    public List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime) {
-
-        return eventRepository.findByCreateDateAfterOrderByCreateDateDesc(dateTime);
-    }
-
-    public List<Event> getEventsBeforeDateTime(int count, LocalDateTime dateTime) {
-
-        PageRequest pageable = new PageRequest(0, count);
-        return eventRepository.findByCreateDateBeforeOrderByCreateDateDesc(dateTime, pageable).getContent();
-    }
-
     @Override
     public List<Event> getLastEvents(int count) {
 
         PageRequest pageable = new PageRequest(0, count);
         return eventRepository.findByOrderByCreateDateDesc(pageable).getContent();
+    }
+
+    public List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime) {
+
+        return eventRepository.findByCreateDateGreaterThanOrderByCreateDateDesc(dateTime);
+    }
+
+    public List<Event> getLastEventsBeforeDateTime(int count, LocalDateTime dateTime) {
+
+        PageRequest pageable = new PageRequest(0, count);
+        return eventRepository.findByCreateDateLessThanOrderByCreateDateDesc(dateTime, pageable).getContent();
+    }
+
+    @Override
+    public List<Event> getEventsWithPartOfName(String partEventName, int count) {
+
+        PageRequest pageable = new PageRequest(0, count);
+        return eventRepository.findByEventNameContainingOrderByCreateDateDesc(partEventName, pageable).getContent();
+    }
+
+    @Override
+    public List<Event> getEventsWithPartOfNameAfterDateTime(String partEventName, LocalDateTime dateTime) {
+
+        return eventRepository.findByEventNameContainingAndCreateDateGreaterThanOrderByCreateDateDesc(partEventName, dateTime);
+    }
+
+    @Override
+    public List<Event> getEventsWithPartOfNameBeforeDateTime(String partEventName,
+                                                             int count, LocalDateTime dateTime) {
+
+        PageRequest pageable = new PageRequest(0, count);
+        return eventRepository.findByEventNameContainingAndCreateDateLessThanOrderByCreateDateDesc(partEventName, dateTime, pageable).getContent();
     }
 
     @Override
@@ -85,7 +131,7 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public Boolean deleteEvent(long eventId, User currentUser) {
+    public void deleteEvent(long eventId, User currentUser) {
 
         Event event = eventRepository.findById(eventId);
 
@@ -98,14 +144,8 @@ public class SimpleEventService implements EventService {
             throw new InsufficientlyRightsException();
         }
 
-        try {
-            eventRepository.delete(event);
-        } catch (Exception e) {
-            // TODO: Продумать обработку исключения лучше.
-            throw e;
-        }
 
-        return true;
+        eventRepository.delete(event);
     }
 
     private void format(Event event) {

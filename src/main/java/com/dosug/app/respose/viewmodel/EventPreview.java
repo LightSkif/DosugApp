@@ -16,14 +16,10 @@ import java.util.stream.Collectors;
 public class EventPreview {
 
     @JsonProperty
-    String placeName;
-
-    @JsonProperty
     String avatar;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime dateTime;
+    @JsonProperty
+    String placeName;
 
     @JsonProperty
     private Long eventId;
@@ -33,6 +29,14 @@ public class EventPreview {
 
     @JsonProperty
     private String content;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime dateTime;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime createDateTime;
 
     @JsonProperty
     private int participantsCount;
@@ -50,9 +54,10 @@ public class EventPreview {
         eventName = event.getEventName();
         content = event.getContent();
         placeName = event.getPlaceName();
-        dateTime = event.getDate();
+        dateTime = event.getDateTime();
         avatar = event.getAvatar();
         participantsCount = event.getParticipants().size();
+        createDateTime = event.getCreateDate();
         tags = event.getTags().stream().map(s -> s.getTag()).collect(Collectors.toList());
     }
 }

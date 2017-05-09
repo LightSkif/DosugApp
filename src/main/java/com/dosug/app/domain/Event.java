@@ -38,7 +38,7 @@ public class Event {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "event_date")
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
 
     @Column(name = "longitude")
     private double longitude;
@@ -80,11 +80,11 @@ public class Event {
     public Event() {
     }
 
-    public Event(User creator, String eventName, String content, LocalDateTime date, String placeName, double longitude, double latitude, Set<Tag> tags) {
+    public Event(User creator, String eventName, String content, LocalDateTime dateTime, String placeName, double longitude, double latitude, Set<Tag> tags) {
         this.creator = creator;
         this.eventName = eventName;
         this.content = content;
-        this.date = date;
+        this.dateTime = dateTime;
         this.placeName = placeName;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -139,12 +139,12 @@ public class Event {
         this.content = content;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getPlaceName() {
@@ -210,7 +210,7 @@ public class Event {
                 ", creator=" + creator +
                 ", eventName='" + eventName + '\'' +
                 ", content='" + content + '\'' +
-                ", date=" + date +
+                ", dateTime=" + dateTime +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
                 ", createDate=" + createDate +
