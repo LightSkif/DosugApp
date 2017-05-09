@@ -11,10 +11,9 @@ CREATE TABLE users (
     create_date timestamp without time zone DEFAULT now(),
 	  avatar character varying(256),
     description character varying(1000),
-    birthdate dateTime,
+    birthdate date,
     phone character varying(15)
 );
-
 
 
 CREATE SEQUENCE users_id_seq
@@ -27,6 +26,8 @@ CREATE SEQUENCE users_id_seq
 
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
@@ -34,5 +35,8 @@ CREATE UNIQUE INDEX users_email_uindex ON users USING btree (email);
 
 CREATE UNIQUE INDEX users_username_uindex ON users USING btree (username);
 
-INSERT  INTO users VALUE
-(1, "user", "pass", "dosug@test.ru", "power", "wolf", NULL, NULL, NULL, NULL, NULL);
+
+
+INSERT  INTO users VALUES
+(1, 'user', 'pass', 'power@wolf.ru', 'power', 'wolf', NULL, NULL, NULL, NULL, NULL),
+(2, 'admin', 'admin', 'dosug@test.ru', 'sanctus', 'lupus', NULL, NULL, NULL, NULL, NULL);

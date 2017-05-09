@@ -87,7 +87,7 @@ CREATE TABLE users (
     create_date timestamp without time zone DEFAULT now(),
 	  avatar character varying(256),
     description character varying(1000),
-    birthdate dateTime,
+    birthdate date,
     phone character varying(15)
 );
 
@@ -100,9 +100,23 @@ CREATE SEQUENCE users_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
+DROP SEQUENCE IF EXISTS public.bans_id_seq CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
+
+CREATE TABLE bans (
+  id bigint,
+  userId bigint,
+  duration timestamp NOT NULL
+);
+
+ALTER TABLE ONLY bans
+    ADD CONSTRAINT bans_pkey PRIMARY KEY (id);
+
+ALTER SEQUENCE bans_id_seq OWNED BY users.id;
+
+ALTER TABLE ONLY bans ALTER COLUMN id SET DEFAULT nextval('bans_id_seq'::regclass);
 
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
 
@@ -113,7 +127,6 @@ SELECT pg_catalog.setval('auth_tokens_auth_token_seq', 1, false);
 SELECT pg_catalog.setval('roles_id_seq', 2, true);
 
 SELECT pg_catalog.setval('users_id_seq', 1, true);
-
 
 
 ALTER TABLE ONLY auth_tokens
@@ -277,6 +290,6 @@ CREATE TABLE  user_tag(
       ON DELETE CASCADE
 );
 
-INSERT  INTO users VALUE
-(1, "user", "pass", "dosug@test.ru", "power", "wolf", NULL, NULL, NULL, NULL, NULL),
-(2, "admin", "admin", "dosug@test.ru", "sanctus", "lupus", NULL, NULL, NULL, NULL, NULL);
+INSERT  INTO users VALUES
+(1,'user', 'pass', 'power@wolf.ru', 'power', 'wolf', NULL, NULL, NULL, NULL, NULL),
+(2, 'admin', 'admin', 'dosug@test.ru', 'sanctus', 'lupus', NULL, NULL, NULL, NULL, NULL);

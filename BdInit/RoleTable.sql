@@ -6,6 +6,8 @@ CREATE TABLE roles (
     role character varying(20) NOT NULL
 );
 
+ALTER TABLE ONLY roles
+    ADD CONSTRAINT roles_id_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE roles_id_seq
     START WITH 1
@@ -14,11 +16,9 @@ CREATE SEQUENCE roles_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
 ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
 
-ALTER TABLE ONLY roles
-    ADD CONSTRAINT roles_id_pk PRIMARY KEY (id);
+ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
 
 CREATE UNIQUE INDEX roles_id_uindex ON roles USING btree (id);
 

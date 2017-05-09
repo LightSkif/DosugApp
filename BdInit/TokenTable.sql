@@ -15,10 +15,10 @@ CREATE SEQUENCE auth_tokens_auth_token_seq
     NO MAXVALUE
     CACHE 1;
 
-ALTER SEQUENCE auth_tokens_auth_token_seq OWNED BY auth_tokens.auth_token;
-
 ALTER TABLE ONLY auth_tokens
     ADD CONSTRAINT auth_tokens_pkey PRIMARY KEY (auth_token);
+
+ALTER SEQUENCE auth_tokens_auth_token_seq OWNED BY auth_tokens.auth_token;
 
 ALTER TABLE ONLY auth_tokens
     ADD CONSTRAINT auth_tokens_users_id_fk FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;

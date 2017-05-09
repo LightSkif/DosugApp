@@ -1,1 +1,1 @@
-psql -f D:\ASTUWork\Work\InitAll.sql -U postgres -d "dosug"
+psql -f InitAll.sql -U postgres -d "dosug"
