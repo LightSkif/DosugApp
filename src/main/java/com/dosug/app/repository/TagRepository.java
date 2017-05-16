@@ -8,7 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface TagRepository extends PagingAndSortingRepository<Tag, String> {
 
-    Tag findByTag(String tagName);
+    Tag findByTagName(String tagName);
 
-    Page<Tag> findByTagStartingWith(String tagName, Pageable pageable);
+    Page<Tag> findByTagNameStartingWith(String tagName, Pageable pageable);
 }

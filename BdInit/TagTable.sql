@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS public.tags CASCADE;
 
 CREATE TABLE tags (
     id bigint PRIMARY KEY,
-	tag character varying(256) NOT NULL
+	tag_name character varying(256) NOT NULL
 );
 
 CREATE SEQUENCE tags_id_seq
@@ -17,4 +17,4 @@ ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 
 ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
 
-CREATE UNIQUE INDEX tag_uindex ON tags USING btree (tag);
+CREATE UNIQUE INDEX tag_uindex ON tags USING btree (tag_name);

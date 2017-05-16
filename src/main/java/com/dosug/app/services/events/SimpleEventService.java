@@ -11,7 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleEventService implements EventService {
@@ -57,16 +59,12 @@ public class SimpleEventService implements EventService {
 
         format(newEvent);
 
-        updatingEvent.setEventName(newEvent.getEventName());
-        updatingEvent.setContent(newEvent.getContent());
-        updatingEvent.setDateTime(newEvent.getDateTime());
-        updatingEvent.setEventName(newEvent.getEventName());
-        updatingEvent.setPlaceName(newEvent.getPlaceName());
-        updatingEvent.setLongitude(newEvent.getLongitude());
-        updatingEvent.setLatitude(newEvent.getLatitude());
-        updatingEvent.setTags(newEvent.getTags());
+        newEvent.setCreateDate(updatingEvent.getCreateDate());
+        newEvent.setAllowed(null);
+        newEvent.setParticipants(updatingEvent.getParticipants());
+        newEvent.setImages(updatingEvent.getImages());
 
-        return eventRepository.save(updatingEvent).getId();
+        return eventRepository.save(newEvent).getId();
     }
 
     @Override
@@ -81,6 +79,9 @@ public class SimpleEventService implements EventService {
         }
     }
 
+    /**
+     * В случае если в базе не найдено подходящих событий возвращаем пустой список.
+     */
     @Override
     public List<Event> getLastEvents(int count) {
 
@@ -88,38 +89,53 @@ public class SimpleEventService implements EventService {
         return eventRepository.findByOrderByCreateDateDesc(pageable).getContent();
     }
 
+    /**
+     * В случае если в базе не найдено подходящих событий возвращаем пустой список.
+     */
+    @Override
     public List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime) {
 
-        return eventRepository.findByCreateDateGreaterThanOrderByCreateDateDesc(dateTime);
+        return eventRepository.findByCreateDateGreaterThanOrderByCreateDateDesc(dateTime).stream()
+                .limit(20)
+                .collect(Collectors.toList());
     }
 
+    /** В случае если в базе не найдено подходящих событий возвращаем пустой список. */
+    @Override
     public List<Event> getLastEventsBeforeDateTime(int count, LocalDateTime dateTime) {
 
         PageRequest pageable = new PageRequest(0, count);
         return eventRepository.findByCreateDateLessThanOrderByCreateDateDesc(dateTime, pageable).getContent();
     }
 
+    /** В случае если в базе не найдено подходящих событий возвращаем пустой список. */
     @Override
     public List<Event> getEventsWithPartOfName(String partEventName, int count) {
 
         PageRequest pageable = new PageRequest(0, count);
-        return eventRepository.findByEventNameContainingOrderByCreateDateDesc(partEventName, pageable).getContent();
+        return eventRepository.findByEventNameContainingIgnoreCaseOrderByCreateDateDesc(partEventName, pageable).getContent();
     }
 
+    /** В случае если в базе не найдено подходящих событий возвращаем пустой список. */
     @Override
     public List<Event> getEventsWithPartOfNameAfterDateTime(String partEventName, LocalDateTime dateTime) {
 
-        return eventRepository.findByEventNameContainingAndCreateDateGreaterThanOrderByCreateDateDesc(partEventName, dateTime);
+        return eventRepository.findByEventNameContainingIgnoreCaseAndCreateDateGreaterThanOrderByCreateDateDesc(partEventName, dateTime).stream()
+                .limit(20)
+                .collect(Collectors.toList());
     }
 
+    /** В случае если в базе не найдено подходящих событий возвращаем пустой список. */
     @Override
     public List<Event> getEventsWithPartOfNameBeforeDateTime(String partEventName,
-                                                             int count, LocalDateTime dateTime) {
+                                                             int count,
+                                                             LocalDateTime dateTime) {
 
         PageRequest pageable = new PageRequest(0, count);
-        return eventRepository.findByEventNameContainingAndCreateDateLessThanOrderByCreateDateDesc(partEventName, dateTime, pageable).getContent();
+        return eventRepository.findByEventNameContainingIgnoreCaseAndCreateDateLessThanOrderByCreateDateDesc(partEventName, dateTime, pageable).getContent();
     }
 
+    /** В случае если creator равен null возвращаем пустой список. */
     @Override
     public List<Event> getAllEventsByCreator(User creator) {
 
@@ -127,7 +143,7 @@ public class SimpleEventService implements EventService {
             return eventRepository.findAllByCreator(creator);
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -149,11 +165,11 @@ public class SimpleEventService implements EventService {
     }
 
     private void format(Event event) {
-        event.setEventName(event.getEventName().toLowerCase());
+        // TODO: придумать форматирование, если хочется.
     }
 
     private boolean checkEventDuplicate(Event event) {
-        return eventRepository.findByEventName(event.getEventName()) != null;
+        return eventRepository.findByEventNameIgnoreCaseAndCreatorAndEventDateTime(event.getEventName(), event.getCreator(), event.getEventDateTime()) != null;
     }
 
     @Autowired

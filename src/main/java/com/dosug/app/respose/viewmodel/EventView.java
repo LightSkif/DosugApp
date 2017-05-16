@@ -61,7 +61,7 @@ public class EventView {
         creatorId = event.getCreator().getId();
         eventName = event.getEventName();
         content = event.getContent();
-        dateTime = event.getDateTime();
+        dateTime = event.getEventDateTime();
         placeName = event.getPlaceName();
         longitude = event.getLongitude();
         latitude = event.getLatitude();
@@ -69,6 +69,6 @@ public class EventView {
 
         images = event.getImages().stream().map(s -> s.getImage_source()).collect(Collectors.toList());
         participants = event.getParticipants().stream().map(s -> s.getId()).collect(Collectors.toList());
-        tags = event.getTags().stream().map(s -> s.getTag()).collect(Collectors.toList());
+        tags = event.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
     }
 }

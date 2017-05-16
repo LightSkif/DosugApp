@@ -3,13 +3,11 @@ package com.dosug.app.controller;
 import com.dosug.app.domain.Event;
 import com.dosug.app.domain.Tag;
 import com.dosug.app.domain.User;
-import com.dosug.app.exception.BadRequestException;
 import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.form.CreateEventForm;
 import com.dosug.app.form.UpdateEventForm;
 import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.Response;
-import com.dosug.app.respose.viewmodel.EventPreview;
 import com.dosug.app.respose.viewmodel.EventView;
 import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.events.EventService;
@@ -19,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,8 +24,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/events")
 public class EventController {
-
-    public static final String DEFAULT_EVENT_COUNT = "20";
 
     private AuthenticationService authService;
 
@@ -55,31 +50,17 @@ public class EventController {
         }
 
         // Преобразуем массив строк из формы в массив тегов.
-        Set<Tag> tags = form.getTags().stream().map(s -> tagService.getTag(s)).collect(Collectors.toSet());
+        Event event = buildEvent(form, user);
 
-        Event event = new Event();
-        event.setCreator(user);
-        event.setEventName(form.getEventName());
-        event.setContent(form.getContent());
-        event.setDateTime(form.getDateTime());
-        event.setEventName(form.getEventName());
-        event.setPlaceName(form.getPlaceName());
-        event.setLongitude(form.getLongitude());
-        event.setLatitude(form.getLatitude());
-        event.setTags(tags);
 
-        try {
-            Long eventId = eventService.createEvent(event);
+        Long eventId = eventService.createEvent(event);
 
-            return response.success(eventId);
-        } catch (Exception e) {
-            throw e;
-        }
+        return response.success(eventId);
     }
 
     @PostMapping(value = "/update")
-    public Response updatingEvent(@RequestBody UpdateEventForm form,
-                                  @RequestHeader(value = "authKey") String authKey) {
+    public Response update(@RequestBody UpdateEventForm form,
+                           @RequestHeader(value = "authKey") String authKey) {
 
         Response<Long> response = new Response<>();
 
@@ -93,20 +74,8 @@ public class EventController {
             throw new NotAuthorizedException();
         }
 
-        Event event = new Event();
-
-        // Преобразуем массив строк из формы в массив тегов.
-        Set<Tag> tags = form.getTags().stream().map(s -> tagService.getTag(s)).collect(Collectors.toSet());
-
+        Event event = buildEvent(form, user);
         event.setId(form.getEventId());
-        event.setEventName(form.getEventName());
-        event.setContent(form.getContent());
-        event.setDateTime(form.getDateTime());
-        event.setEventName(form.getEventName());
-        event.setPlaceName(form.getPlaceName());
-        event.setLongitude(form.getLongitude());
-        event.setLatitude(form.getLatitude());
-        event.setTags(tags);
 
         return response.success(eventService.updateEvent(event, user));
     }
@@ -126,135 +95,6 @@ public class EventController {
         return response.success(eventView);
     }
 
-    @GetMapping(value = "/last")
-    public Response getLastEvents(
-            @RequestParam(value = "count") int count,
-            @RequestHeader(value = "authKey") String authKey) {
-
-        Response<List<EventPreview>> response = new Response<>();
-
-        if (count <= 0) {
-            throw new BadRequestException();
-        }
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
-
-        return response.success(
-                eventService.getLastEvents(count).stream()
-                        .map(EventPreview::new)
-                        .collect(Collectors.toList()));
-    }
-
-    @GetMapping(value = "/last/after")
-    public Response getLastEventsAfterDate(
-            @RequestParam(value = "dateTime") String dateTime,
-            @RequestHeader(value = "authKey") String authKey) {
-
-        Response<List<EventPreview>> response = new Response<>();
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
-
-        return response.success(
-                eventService.getLastEventsAfterDateTime(LocalDateTime.parse(dateTime)).stream()
-                        .map(EventPreview::new)
-                        .collect(Collectors.toList()));
-    }
-
-    @GetMapping(value = "/last/before")
-    public Response getLastEventsBeforeDate(
-            @RequestParam(value = "count") int count,
-            @RequestParam(value = "dateTime") String dateTime,
-            @RequestHeader(value = "authKey") String authKey) {
-
-        Response<List<EventPreview>> response = new Response<>();
-
-        if (count <= 0) {
-            throw new BadRequestException();
-        }
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
-
-        return response.success(
-                eventService.getLastEventsBeforeDateTime(count, LocalDateTime.parse(dateTime)).stream()
-                        .map(EventPreview::new).collect(Collectors.toList()));
-    }
-
-    @GetMapping(value = "/search")
-    public Response searchEvent(
-            @RequestParam(value = "namePart", defaultValue = "") String namePart,
-            @RequestParam(value = "count") int count,
-            @RequestHeader(value = "authKey") String authKey) {
-
-        Response<List<EventPreview>> response = new Response<>();
-
-        if (count <= 0) {
-            throw new BadRequestException();
-        }
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
-
-        return response.success(
-                eventService.getEventsWithPartOfName(namePart, count).stream()
-                        .map(EventPreview::new)
-                        .collect(Collectors.toList()));
-    }
-
-    @GetMapping(value = "/search/after")
-    public Response searchEvent(
-            @RequestParam(value = "namePart", defaultValue = "") String namePart,
-            @RequestParam(value = "dateTime") String dateTime,
-            @RequestHeader(value = "authKey") String authKey) {
-
-        Response<List<EventPreview>> response = new Response<>();
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
-
-        return response.success(
-                eventService.getEventsWithPartOfNameAfterDateTime(namePart, LocalDateTime.parse(dateTime)).stream()
-                        .map(EventPreview::new)
-                        .collect(Collectors.toList()));
-    }
-
-    @GetMapping(value = "/search/before")
-    public Response searchEvent(
-            @RequestParam(value = "namePart", defaultValue = "") String namePart,
-            @RequestParam(value = "count") int count,
-            @RequestParam(value = "dateTime") String dateTime,
-            @RequestHeader(value = "authKey") String authKey) {
-
-        Response<List<EventPreview>> response = new Response<>();
-
-        if (count <= 0) {
-            throw new BadRequestException();
-        }
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
-
-        return response.success(
-                eventService.getEventsWithPartOfNameBeforeDateTime
-                        (namePart, count, LocalDateTime.parse(dateTime))
-                        .stream()
-                        .map(EventPreview::new)
-                        .collect(Collectors.toList()));
-    }
 
 //    @GetMapping(value = "/byCreator", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    public Response getEventsByCreator(, @RequestHeader(value = "authKey") String authKey) {
@@ -280,14 +120,27 @@ public class EventController {
             throw new NotAuthorizedException();
         }
 
-        try {
-            // Передаём авторизованного пользователя для проверки достаточности прав для удаления.
-            eventService.deleteEvent(eventId, user);
+        // Передаём авторизованного пользователя для проверки достаточности прав для удаления.
+        eventService.deleteEvent(eventId, user);
 
-            return response.success(null);
-        } catch (Exception e) {
-            throw e;
-        }
+        return response.success(null);
+    }
+
+    public Event buildEvent(@RequestBody CreateEventForm form, User user) {
+
+        Set<Tag> tags = form.getTags().stream().map(s -> tagService.getTag(s)).collect(Collectors.toSet());
+
+        Event event = new Event();
+        event.setCreator(user);
+        event.setEventName(form.getEventName());
+        event.setContent(form.getContent());
+        event.setEventDateTime(form.getDateTime());
+        event.setEventName(form.getEventName());
+        event.setPlaceName(form.getPlaceName());
+        event.setLongitude(form.getLongitude());
+        event.setLatitude(form.getLatitude());
+        event.setTags(tags);
+        return event;
     }
 
     @Autowired

@@ -12,8 +12,8 @@ public class Tag {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "tag")
-    private String tag;
+    @Column(name = "tag_name")
+    private String tagName;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
@@ -34,8 +34,8 @@ public class Tag {
     public Tag() {
     }
 
-    public Tag(String tag) {
-        this.tag = tag;
+    public Tag(String tagName) {
+        this.tagName = tagName;
     }
 
     public long getId() {
@@ -46,12 +46,12 @@ public class Tag {
         this.id = id;
     }
 
-    public String getTag() {
-        return tag;
+    public String getTagName() {
+        return tagName;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 
     public Set<Event> getEvents() {
@@ -74,7 +74,7 @@ public class Tag {
     public String toString() {
         return "Tag{" +
                 "id=" + id +
-                ", tag='" + tag + '\'' +
+                ", tagName='" + tagName + '\'' +
                 '}';
     }
 }

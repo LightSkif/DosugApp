@@ -6,7 +6,7 @@ CREATE TABLE events (
 	creator_id bigint NOT NULL,
 	event_name character varying(256) NOT NULL,
 	content text,
-	event_date timestamp NOT NULL,
+	event_date_time timestamp NOT NULL,
 	placeName character varying(256),
 	longitude double precision,
 	latitude double precision,
@@ -30,4 +30,4 @@ ALTER SEQUENCE events_id_seq OWNED BY events.id;
 
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
-CREATE UNIQUE INDEX event_unique_parametr ON public.events (event_name, creator_id, event_date);
+CREATE UNIQUE INDEX event_unique_parametr ON public.events (event_name, creator_id, event_date_time);

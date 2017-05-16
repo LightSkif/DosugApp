@@ -14,6 +14,8 @@ public class CreateEventForm {
 
     public static final int EVENTNAME_MAX_SYMBOLS = 256;
 
+    public static final int TAG_MIN_SYMBOLS = 1;
+
     public static final int TAG_MAX_SYMBOLS = 256;
 
     public static final int MIN_LONGITUDE = -180;
@@ -25,13 +27,13 @@ public class CreateEventForm {
     public static final int MAX_LATITUDE = 90;
 
     @ErrorCode(code = ApiErrorCode.INVALID_PLACE_NAME)
-    @Size(min = 0, max = 200, message = "placename should be shorter than 200 characters")
+    @Size(min = 1, max = 200, message = "name of place should be shorter than 200 characters")
     String placeName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_NAME)
     @NotNull(message = "event name is required")
     @Size(min = 1, max = EVENTNAME_MAX_SYMBOLS, message = "event name length from 1 to 256")
-    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "only latin character, digits, space and underscore allowed in event name")
+    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "only character, digits, space and underscore allowed in event name")
     private String eventName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_CONTENT)
@@ -80,8 +82,8 @@ public class CreateEventForm {
         if (tags != null) {
             Pattern regexPattern = Pattern.compile("[a-zA-Zа-яА-Я0-9-_]*");
             Optional<String> tagMistake = tags.stream()
-                    .filter(s -> ((s.length() > 256) ||
-                            (s.length() < 1) || !regexPattern.matcher(s).matches()))
+                    .filter(s -> ((s.length() > TAG_MAX_SYMBOLS) ||
+                            (s.length() < TAG_MIN_SYMBOLS) || !regexPattern.matcher(s).matches()))
                     .findFirst();
 
             // В случае если ни одной ошибки не найдено, проверка завершена успешно.

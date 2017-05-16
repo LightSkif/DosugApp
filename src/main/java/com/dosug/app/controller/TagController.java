@@ -22,7 +22,7 @@ public class TagController {
 
     private TagService tagService;
 
-    @GetMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response getTags(@RequestParam(value = "tagPart", defaultValue = "") String tagPart,
                             @RequestParam(value = "count", defaultValue = "0") int count,
                             @RequestHeader(value = "authKey") String authKey) {
@@ -38,7 +38,7 @@ public class TagController {
 
         if (tags != null) {
             return response.success(
-                    tags.stream().map(s -> s.getTag()).collect(Collectors.toList()));
+                    tags.stream().map(Tag::getTagName).collect(Collectors.toList()));
         } else {
             throw new UnknownServerException();
         }

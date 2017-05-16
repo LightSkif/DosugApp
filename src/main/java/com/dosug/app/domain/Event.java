@@ -37,8 +37,8 @@ public class Event {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @Column(name = "event_date")
-    private LocalDateTime dateTime;
+    @Column(name = "event_date_time")
+    private LocalDateTime eventDateTime;
 
     @Column(name = "longitude")
     private double longitude;
@@ -50,7 +50,7 @@ public class Event {
     private String avatar;
 
     @Column(name = "allowed")
-    private boolean allowed;
+    private Boolean allowed;
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
@@ -80,11 +80,11 @@ public class Event {
     public Event() {
     }
 
-    public Event(User creator, String eventName, String content, LocalDateTime dateTime, String placeName, double longitude, double latitude, Set<Tag> tags) {
+    public Event(User creator, String eventName, String content, LocalDateTime eventDateTime, String placeName, double longitude, double latitude, Set<Tag> tags) {
         this.creator = creator;
         this.eventName = eventName;
         this.content = content;
-        this.dateTime = dateTime;
+        this.eventDateTime = eventDateTime;
         this.placeName = placeName;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -99,11 +99,11 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public boolean isAllowed() {
+    public Boolean isAllowed() {
         return allowed;
     }
 
-    public void setAllowed(boolean allowed) {
+    public void setAllowed(Boolean allowed) {
         this.allowed = allowed;
     }
 
@@ -139,12 +139,12 @@ public class Event {
         this.content = content;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getEventDateTime() {
+        return eventDateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setEventDateTime(LocalDateTime eventDateTime) {
+        this.eventDateTime = eventDateTime;
     }
 
     public String getPlaceName() {
@@ -210,7 +210,7 @@ public class Event {
                 ", creator=" + creator +
                 ", eventName='" + eventName + '\'' +
                 ", content='" + content + '\'' +
-                ", dateTime=" + dateTime +
+                ", eventDateTime=" + eventDateTime +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
                 ", createDate=" + createDate +

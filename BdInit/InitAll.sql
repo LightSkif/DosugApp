@@ -179,17 +179,17 @@ ALTER TABLE ONLY user_role
 
 	
 CREATE TABLE events (
-  id bigint PRIMARY KEY,
-	creator_id bigint NOT NULL,
-	event_name character varying(256) NOT NULL,
-	content text,
-	event_date timestamp NOT NULL,
-	placeName character varying(256),
-	longitude double precision,
-	latitude double precision,
-	avatar character varying(256),
-	allowed boolean,
-	create_date timestamp without time zone DEFAULT now(),
+  id              bigint PRIMARY KEY,
+  creator_id      bigint                 NOT NULL,
+  event_name      character varying(256) NOT NULL,
+  content         text,
+  event_date_time TIMESTAMP              NOT NULL,
+  placeName       character varying(256),
+  longitude       double precision,
+  latitude        double precision,
+  avatar          character varying(256),
+  allowed         boolean,
+  create_date     timestamp without time zone DEFAULT now(),
 	
 	CONSTRAINT events_creator_id_fk FOREIGN KEY (creator_id)
       REFERENCES public.users (id) MATCH SIMPLE
@@ -206,8 +206,8 @@ CREATE SEQUENCE events_id_seq
 
 
 CREATE TABLE tags (
-    id bigint PRIMARY KEY,
-	tag character varying(256) NOT NULL
+  id       bigint PRIMARY KEY,
+  tag_name CHARACTER VARYING(256) NOT NULL
 );
 
 CREATE SEQUENCE tags_id_seq
@@ -242,13 +242,15 @@ ALTER SEQUENCE events_id_seq OWNED BY events.id;
 	
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
-CREATE UNIQUE INDEX event_unique_parametr ON public.events (event_name, creator_id, event_date);
+CREATE UNIQUE INDEX event_unique_parametr
+  ON public.events (event_name, creator_id, event_date_time);
 
 ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 	
 ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
 
-CREATE UNIQUE INDEX tag_uindex ON tags USING btree (tag);
+CREATE UNIQUE INDEX tag_uindex
+  ON tags USING BTREE (tag_name);
 
 ALTER SEQUENCE images_id_seq OWNED BY images.id;
 	
@@ -298,5 +300,5 @@ CREATE TABLE  user_tag(
 );
 
 INSERT  INTO users VALUES
-(1,'user', 'pass', 'power@wolf.ru', 'power', 'wolf', NULL, NULL, NULL, NULL, NULL),
+  (1, 'user', 'pass', 'test@test.ru', 'power', 'wolf', NULL, NULL, NULL, NULL, NULL),
 (2, 'admin', 'admin', 'dosug@test.ru', 'sanctus', 'lupus', NULL, NULL, NULL, NULL, NULL);

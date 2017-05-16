@@ -14,7 +14,9 @@ public interface EventRepository extends CrudRepository<Event, String> {
 
     Event findById(long eventId);
 
-    Event findByEventName(String eventName);
+    Event findByEventNameIgnoreCase(String eventName);
+
+    Event findByEventNameIgnoreCaseAndCreatorAndEventDateTime(String eventName, User creator, LocalDateTime eventDateTime);
 
     Page<Event> findByOrderByCreateDateDesc(Pageable pageable);
 
@@ -24,16 +26,14 @@ public interface EventRepository extends CrudRepository<Event, String> {
     List<Event> findByCreateDateGreaterThanOrderByCreateDateDesc(LocalDateTime dateTime);
 
 
-    Page<Event> findByEventNameContainingOrderByCreateDateDesc(String eventName,
-                                                               Pageable pageable);
+    Page<Event> findByEventNameContainingIgnoreCaseOrderByCreateDateDesc(String eventName,
+                                                                         Pageable pageable);
 
-    Page<Event> findByEventNameContainingAndCreateDateLessThanOrderByCreateDateDesc(String eventName, LocalDateTime dateTime,
-                                                                                    Pageable pageable);
+    Page<Event> findByEventNameContainingIgnoreCaseAndCreateDateLessThanOrderByCreateDateDesc(String eventName, LocalDateTime dateTime,
+                                                                                              Pageable pageable);
 
-    List<Event> findByEventNameContainingAndCreateDateGreaterThanOrderByCreateDateDesc(String eventName, LocalDateTime dateTime);
+    List<Event> findByEventNameContainingIgnoreCaseAndCreateDateGreaterThanOrderByCreateDateDesc(String eventName, LocalDateTime dateTime);
 
 
     List<Event> findAllByCreator(User creator);
-
-    void flush();
 }

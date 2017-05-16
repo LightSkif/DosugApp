@@ -20,7 +20,7 @@ public class SimpleTagService implements TagService {
 
     private Tag createTag(String tagName) {
 
-        Tag tag = tagRepository.findByTag(tagName);
+        Tag tag = tagRepository.findByTagName(tagName);
 
         // Если не удалось найти тег с таким названием создаём его.
         if (tag == null) {
@@ -49,7 +49,7 @@ public class SimpleTagService implements TagService {
         if (tagPart != null) {
             tagPart.toLowerCase();
 
-            return tagRepository.findByTagStartingWith(tagPart, new PageRequest(0, count)).getContent();
+            return tagRepository.findByTagNameStartingWith(tagPart, new PageRequest(0, count)).getContent();
         }
 
         return null;

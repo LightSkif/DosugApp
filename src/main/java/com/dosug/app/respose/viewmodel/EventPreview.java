@@ -54,10 +54,10 @@ public class EventPreview {
         eventName = event.getEventName();
         content = event.getContent();
         placeName = event.getPlaceName();
-        dateTime = event.getDateTime();
+        dateTime = event.getEventDateTime();
         avatar = event.getAvatar();
         participantsCount = event.getParticipants().size();
         createDateTime = event.getCreateDate();
-        tags = event.getTags().stream().map(s -> s.getTag()).collect(Collectors.toList());
+        tags = event.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
     }
 }

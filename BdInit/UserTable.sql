@@ -38,5 +38,5 @@ CREATE UNIQUE INDEX users_username_uindex ON users USING btree (username);
 
 
 INSERT  INTO users VALUES
-(1, 'user', 'pass', 'power@wolf.ru', 'power', 'wolf', NULL, NULL, NULL, NULL, NULL),
+(1, 'user', 'pass', 'test@test.ru', 'power', 'wolf', NULL, NULL, NULL, NULL, NULL),
 (2, 'admin', 'admin', 'dosug@test.ru', 'sanctus', 'lupus', NULL, NULL, NULL, NULL, NULL);
