@@ -15,7 +15,11 @@ public interface EventService {
 
     Long updateEvent(Event event, User currentUser);
 
-    Event getEvent(Long Id);
+    void addParticipant(long eventId, User user);
+
+    void removeParticipant(long eventId, User user);
+
+    Event getEvent(long Id);
 
     List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime);
 

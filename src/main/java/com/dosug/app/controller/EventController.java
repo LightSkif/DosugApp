@@ -80,8 +80,38 @@ public class EventController {
         return response.success(eventService.updateEvent(event, user));
     }
 
+    @GetMapping(value = "add-participant")
+    public Response addParticipant(@RequestParam(value = "id") long eventId,
+                                   @RequestHeader(value = "authKey") String authKey) {
+        Response<Void> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+        if (user == null) {
+            throw new NotAuthorizedException();
+        }
+
+        eventService.addParticipant(eventId, user);
+
+        return response.success(null);
+    }
+
+    @GetMapping(value = "remove-participant")
+    public Response removeParticipant(@RequestParam(value = "id") long eventId,
+                                      @RequestHeader(value = "authKey") String authKey) {
+        Response<Void> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+        if (user == null) {
+            throw new NotAuthorizedException();
+        }
+
+        eventService.removeParticipant(eventId, user);
+
+        return response.success(null);
+    }
+
     @GetMapping(value = "")
-    public Response getEvent(@RequestParam(value = "id") Long eventId,
+    public Response getEvent(@RequestParam(value = "id") long eventId,
                              @RequestHeader(value = "authKey") String authKey) {
 
         Response<EventView> response = new Response<>();

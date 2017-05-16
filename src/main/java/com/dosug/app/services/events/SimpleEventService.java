@@ -68,7 +68,40 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public Event getEvent(Long Id) {
+    public void addParticipant(long eventId, User user) {
+        Event updatingEvent = eventRepository.findById(eventId);
+        if (updatingEvent == null) {
+            throw new EventNotFoundException();
+        }
+
+        if (updatingEvent.getParticipants().add(user)) {
+            eventRepository.save(updatingEvent);
+        }
+        // Если пользователь уже добавлен в список участников.
+        else {
+            throw new ConflictException();
+        }
+    }
+
+    @Override
+    public void removeParticipant(long eventId, User user) {
+        Event updatingEvent = eventRepository.findById(eventId);
+        if (updatingEvent == null) {
+            throw new EventNotFoundException();
+        }
+
+
+        if (updatingEvent.getParticipants().remove(user)) {
+            eventRepository.save(updatingEvent);
+        }
+        // Если не удалось удалить пользователя из списка участников.
+        else {
+            throw new ConflictException();
+        }
+    }
+
+    @Override
+    public Event getEvent(long Id) {
 
         Event event = eventRepository.findById(Id);
 

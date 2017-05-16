@@ -4,6 +4,7 @@ import com.dosug.app.domain.AuthToken;
 import com.dosug.app.form.AuthenticationForm;
 import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.respose.model.AuthReply;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.validation.ValidationService;
@@ -29,7 +30,7 @@ public class LoginController {
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response login(@RequestBody AuthenticationForm form) {
 
-        Response<String> response = new Response<>();
+        Response<AuthReply> response = new Response<>();
 
         List<ApiError> validateErrors = validationService.validate(form);
         if (!validateErrors.isEmpty()) {
@@ -45,7 +46,9 @@ public class LoginController {
                             "Login or/and password not found"));
         }
 
-        return response.success(token.getToken());
+        return response.success(new AuthReply(
+                authService.authenticate(token.getToken()).getId(),
+                token.getToken()));
     }
 
     @Autowired
