@@ -74,8 +74,7 @@ public class EventController {
     }
 
     @GetMapping(value = "")
-    public Response getEvent(@RequestParam(value = "id") Long eventId,
-                             @RequestHeader(value = "authKey") String authKey) {
+    public Response getEvent(@RequestParam(value = "id") Long eventId) {
 
         Response<EventView> response = new Response<>();
 

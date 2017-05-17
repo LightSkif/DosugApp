@@ -9,7 +9,6 @@ import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,10 +48,6 @@ public class LoginController {
         return response.success(token.getToken());
     }
 
-    @GetMapping(value = "/test")
-    public String test() {
-        return "Hello";
-    }
 
     @Autowired
     public void setAuthService(AuthenticationService authService) {

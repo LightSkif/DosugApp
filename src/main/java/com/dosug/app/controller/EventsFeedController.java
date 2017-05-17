@@ -6,7 +6,10 @@ import com.dosug.app.respose.viewmodel.EventPreview;
 import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.events.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,8 +26,7 @@ public class EventsFeedController {
 
     @GetMapping(value = "/last")
     public Response getLastEvents(
-            @RequestParam(value = "count") int count,
-            @RequestHeader(value = "authKey") String authKey) {
+            @RequestParam(value = "count") int count) {
 
         Response<List<EventPreview>> response = new Response<>();
 
@@ -40,8 +42,7 @@ public class EventsFeedController {
 
     @GetMapping(value = "/after")
     public Response getLastEventsAfterDate(
-            @RequestParam(value = "dateTime") String dateTime,
-            @RequestHeader(value = "authKey") String authKey) {
+            @RequestParam(value = "dateTime") String dateTime) {
 
         Response<List<EventPreview>> response = new Response<>();
 
@@ -54,8 +55,7 @@ public class EventsFeedController {
     @GetMapping(value = "/before")
     public Response getLastEventsBeforeDate(
             @RequestParam(value = "count") int count,
-            @RequestParam(value = "dateTime") String dateTime,
-            @RequestHeader(value = "authKey") String authKey) {
+            @RequestParam(value = "dateTime") String dateTime) {
 
         Response<List<EventPreview>> response = new Response<>();
 
