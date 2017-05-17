@@ -108,7 +108,11 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 CREATE TABLE bans (
   id bigint,
   userId bigint,
-  duration timestamp NOT NULL
+  duration timestamp NOT NULL,
+
+  CONSTRAINT bans_user_id_fk FOREIGN KEY (user_id)
+      REFERENCES public.users (id) MATCH SIMPLE
+      ON DELETE CASCADE
 );
 
 CREATE SEQUENCE bans_id_seq
@@ -184,7 +188,7 @@ CREATE TABLE events (
   event_name      character varying(256) NOT NULL,
   content         text,
   event_date_time TIMESTAMP              NOT NULL,
-  placeName       character varying(256),
+  place_name       character varying(256),
   longitude       double precision,
   latitude        double precision,
   avatar          character varying(256),

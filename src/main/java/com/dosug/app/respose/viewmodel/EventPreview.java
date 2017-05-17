@@ -1,8 +1,8 @@
 package com.dosug.app.respose.viewmodel;
 
 import com.dosug.app.domain.Event;
-import com.dosug.app.form.LocalDateTimeDeserializer;
-import com.dosug.app.form.LocalDateTimeSerializer;
+import com.dosug.app.utils.LocalDateTimeDeserializer;
+import com.dosug.app.utils.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
