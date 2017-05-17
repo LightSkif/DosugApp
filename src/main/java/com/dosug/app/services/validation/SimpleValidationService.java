@@ -12,10 +12,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.hibernate.validator.internal.util.ReflectionHelper.getPropertyName;
@@ -49,7 +46,8 @@ public class SimpleValidationService implements ValidationService {
 
         List<ApiError> result = new LinkedList<>();
 
-        for (Method method : form.getClass().getDeclaredMethods()) {
+        Set<Method> methods = getAllMethods(form.getClass());
+        for (Method method : methods) {
             //получаем аннотацию с кодом ошибки
             ErrorCode errorCodeAnnotation = method.getAnnotation(ErrorCode.class);
             if (errorCodeAnnotation == null) {
@@ -76,7 +74,8 @@ public class SimpleValidationService implements ValidationService {
     private List<ApiError> getApiErrorsForFields(Object form, Validator validator) {
         List<ApiError> result = new LinkedList<>();
         try {
-            for (Field field : form.getClass().getDeclaredFields()) {
+            Set<Field> fields = getAllFields(form.getClass());
+            for (Field field : fields) {
                 field.setAccessible(true);
                 //получаем саму анотацию над полем
                 ErrorCode errorCodeAnnotation = field.getAnnotation(ErrorCode.class);
@@ -110,4 +109,38 @@ public class SimpleValidationService implements ValidationService {
                 .collect(Collectors.toList());
     }
 
+
+    private Set<Method> getAllMethods(Class formClass) {
+        Set<Method> allMethods = new HashSet<>();
+        // добавляем методы в множество
+        allMethods.addAll(Arrays.asList(formClass.getDeclaredMethods()));
+
+        if(formClass.getSuperclass() != null) {
+            Set<Method> superClassMethods = getAllMethods(formClass.getSuperclass());
+
+            superClassMethods.stream()
+                    .filter(method -> !allMethods.contains(method))
+                    .forEach(allMethods::add);
+        }
+
+
+        return allMethods;
+    }
+
+    private Set<Field> getAllFields(Class formClass) {
+        Set<Field> allFields = new HashSet<>();
+        // добавляем методы в множество
+        allFields.addAll(Arrays.asList(formClass.getDeclaredFields()));
+
+        if(formClass.getSuperclass() != null) {
+            Set<Field> superClassFields = getAllFields(formClass.getSuperclass());
+
+            superClassFields.stream()
+                    .filter(method -> !allFields.contains(method))
+                    .forEach(allFields::add);
+        }
+
+
+        return allFields;
+    }
 }
