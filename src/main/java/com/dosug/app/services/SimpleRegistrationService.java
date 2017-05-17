@@ -4,6 +4,8 @@ import com.dosug.app.domain.User;
 import com.dosug.app.repository.UserRepository;
 import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.ApiErrorCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.List;
  */
 @Service
 public class SimpleRegistrationService implements RegistrationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SimpleRegistrationService.class);
 
     private static final String USERNAME_ALREADY_USE_MESSAGE = "username already use";
 
@@ -54,6 +58,7 @@ public class SimpleRegistrationService implements RegistrationService {
                 return duplicateErrors;
             }
             //Вернем неизвестную проблему
+            logger.error(e.getMessage());
             apiErrors.add(getUnknownServiceProblem());
         }
 
