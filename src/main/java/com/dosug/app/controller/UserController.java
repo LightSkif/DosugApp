@@ -1,7 +1,6 @@
 package com.dosug.app.controller;
 
 import com.dosug.app.domain.User;
-import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.validation.ValidationService;
@@ -26,9 +25,7 @@ public class UserController {
         Response<Long> response = new Response<>();
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
+
 
         return response.success(user.getId());
     }

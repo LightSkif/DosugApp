@@ -1,8 +1,6 @@
 package com.dosug.app.controller;
 
 import com.dosug.app.domain.Tag;
-import com.dosug.app.domain.User;
-import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.exception.UnknownServerException;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.services.authentication.AuthenticationService;
@@ -28,11 +26,6 @@ public class TagController {
                             @RequestHeader(value = "authKey") String authKey) {
 
         Response<List<String>> response = new Response<>();
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         List<Tag> tags = tagService.getTagsWithPart(tagPart, count);
 

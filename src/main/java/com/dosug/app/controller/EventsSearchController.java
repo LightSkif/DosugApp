@@ -1,8 +1,6 @@
 package com.dosug.app.controller;
 
-import com.dosug.app.domain.User;
 import com.dosug.app.exception.BadRequestException;
-import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.EventPreview;
 import com.dosug.app.services.authentication.AuthenticationService;
@@ -34,11 +32,6 @@ public class EventsSearchController {
             throw new BadRequestException();
         }
 
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
-
         return response.success(
                 eventService.getEventsWithPartOfName(namePart, count).stream()
                         .map(EventPreview::new)
@@ -52,11 +45,6 @@ public class EventsSearchController {
             @RequestHeader(value = "authKey") String authKey) {
 
         Response<List<EventPreview>> response = new Response<>();
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         return response.success(
                 eventService.getEventsWithPartOfNameAfterDateTime(namePart, LocalDateTime.parse(dateTime)).stream()
@@ -75,11 +63,6 @@ public class EventsSearchController {
 
         if (count <= 0) {
             throw new BadRequestException();
-        }
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
         }
 
         return response.success(

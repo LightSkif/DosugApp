@@ -3,7 +3,6 @@ package com.dosug.app.controller;
 import com.dosug.app.domain.Event;
 import com.dosug.app.domain.Tag;
 import com.dosug.app.domain.User;
-import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.form.CreateEventForm;
 import com.dosug.app.form.UpdateEventForm;
 import com.dosug.app.respose.model.ApiError;
@@ -45,9 +44,6 @@ public class EventController {
         }
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         // Преобразуем массив строк из формы в массив тегов.
         Event event = buildEvent(form, user);
@@ -70,9 +66,6 @@ public class EventController {
         }
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         Event event = buildEvent(form, user);
         event.setId(form.getEventId());
@@ -86,10 +79,6 @@ public class EventController {
 
         Response<EventView> response = new Response<>();
 
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         EventView eventView = new EventView(eventService.getEvent(eventId));
         return response.success(eventView);
@@ -101,11 +90,6 @@ public class EventController {
 //
 //        Response<List<Event>> response = new Response<>();
 //
-//        User user = authService.authenticate(authKey);
-//        if (user == null){
-//            throw new NotAuthorizedException();
-//        }
-//
 //        return  eventService.getAllEventsByCreator();
 //    }
 
@@ -116,9 +100,6 @@ public class EventController {
         Response<Void> response = new Response<>();
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         // Передаём авторизованного пользователя для проверки достаточности прав для удаления.
         eventService.deleteEvent(eventId, user);
