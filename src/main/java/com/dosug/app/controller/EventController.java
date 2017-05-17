@@ -58,7 +58,7 @@ public class EventController {
         return response.success(eventId);
     }
 
-    @PostMapping(value = "/update")
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response update(@RequestBody UpdateEventForm form,
                            @RequestHeader(value = "authKey") String authKey) {
 
@@ -80,8 +80,8 @@ public class EventController {
         return response.success(eventService.updateEvent(event, user));
     }
 
-    @GetMapping(value = "add-participant")
-    public Response addParticipant(@RequestParam(value = "id") long eventId,
+    @PostMapping(value = "/add-participant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Response addParticipant(@RequestBody long eventId,
                                    @RequestHeader(value = "authKey") String authKey) {
         Response<Void> response = new Response<>();
 
@@ -95,8 +95,8 @@ public class EventController {
         return response.success(null);
     }
 
-    @GetMapping(value = "remove-participant")
-    public Response removeParticipant(@RequestParam(value = "id") long eventId,
+    @PostMapping(value = "/remove-participant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Response removeParticipant(@RequestBody long eventId,
                                       @RequestHeader(value = "authKey") String authKey) {
         Response<Void> response = new Response<>();
 
