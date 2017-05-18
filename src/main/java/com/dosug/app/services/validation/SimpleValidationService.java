@@ -4,6 +4,8 @@ import com.dosug.app.form.ErrorCode;
 import com.dosug.app.respose.model.ApiError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
@@ -28,8 +30,10 @@ public class SimpleValidationService implements ValidationService {
     private final ValidatorFactory validatorFactory
             = Validation.buildDefaultValidatorFactory();
 
+    private MessageSource messageSource;
+
     @Override
-    public List<ApiError> validate(Object form) {
+    public List<ApiError> validate(Object form, Locale locale) {
         Validator validator = validatorFactory.getValidator();
 
         List<ApiError> result = new LinkedList<>();
@@ -39,7 +43,16 @@ public class SimpleValidationService implements ValidationService {
         result.addAll(getApiErrorsForMethods(form, validator));
 
 
-        return result;
+        return result.stream()
+                .map(error -> localizeError(error, locale))
+                .collect(Collectors.toList());
+
+    }
+
+    private ApiError localizeError(ApiError error, Locale locale) {
+
+        return new ApiError(error.getErrorCode(),
+                    messageSource.getMessage(error.getMessage(),null, locale));
     }
 
     private List<ApiError> getApiErrorsForMethods(Object form, Validator validator) {
@@ -142,5 +155,10 @@ public class SimpleValidationService implements ValidationService {
 
 
         return allFields;
+    }
+
+    @Autowired
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 }
