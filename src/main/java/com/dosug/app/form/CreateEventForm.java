@@ -29,39 +29,39 @@ public class CreateEventForm {
     public static final int MAX_LATITUDE = 90;
 
     @ErrorCode(code = ApiErrorCode.INVALID_PLACE_NAME)
-    @Size(min = 1, max = 200, message = "name of place should be shorter than 200 characters")
+    @Size(min = 1, max = 200, message = "place_name_length_1_200")
     String placeName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_NAME)
-    @NotNull(message = "event name is required")
-    @Size(min = 1, max = EVENTNAME_MAX_SYMBOLS, message = "event name length from 1 to 256")
-    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "only character, digits, space and underscore allowed in event name")
+    @NotNull(message = "event_name_required")
+    @Size(min = 1, max = EVENTNAME_MAX_SYMBOLS, message = "event_name_length_1_256")
+    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "event_name_latin_russian_digit_space_underscore")
     private String eventName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_CONTENT)
-    @NotNull(message = "content is required")
+    @NotNull(message = "content_required")
     private String content;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_DATE)
-    @NotNull(message = "dateTime field is required")
+    @NotNull(message = "event_datetime_required")
 //    @Future
     private LocalDateTime dateTime;
 
     @ErrorCode(code = ApiErrorCode.INVALID_LONGITUDE)
-    @Min(value = MIN_LONGITUDE, message = "longitude is lower than {value}")
-    @Max(value = MAX_LONGITUDE, message = "longitude is higher than {value}")
+    @Min(value = MIN_LONGITUDE, message = "longitude_lower_180")
+    @Max(value = MAX_LONGITUDE, message = "longitude_higher_180")
     private double longitude;
 
     @ErrorCode(code = ApiErrorCode.INVALID_LATITUDE)
-    @Min(value = MIN_LATITUDE, message = "latitude is lower than {value}")
-    @Max(value = MAX_LATITUDE, message = "latitude is higher than {value}")
+    @Min(value = MIN_LATITUDE, message = "latitude_lower_-90")
+    @Max(value = MAX_LATITUDE, message = "latitude_higher_90")
     private double latitude;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAGS)
-    @NotNull(message = "tags is required")
-    @Size(min = 1, max = 10, message = "from one to ten tag is required")
+    @NotNull(message = "tags_required")
+    @Size(min = 1, max = 10, message = "tags_length_1_10")
     private ArrayList<String> tags;
 
     public CreateEventForm() {
@@ -78,7 +78,7 @@ public class CreateEventForm {
     }
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAG)
-    @AssertTrue(message = "wrong tag")
+    @AssertTrue(message = "wrong_tag")
     public boolean isRightSizeTag() {
 
         if (tags != null) {
