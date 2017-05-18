@@ -17,4 +17,12 @@ public class ApiError {
         this.errorCode = errorCode;
         this.message = message;
     }
+
+    public ApiErrorCode getErrorCode() {
+        return errorCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
