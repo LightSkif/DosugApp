@@ -3,7 +3,6 @@ package com.dosug.app.controller;
 import com.dosug.app.domain.Tag;
 import com.dosug.app.exception.UnknownServerException;
 import com.dosug.app.respose.model.Response;
-import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.tags.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,8 +17,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/tags")
 public class TagController {
-
-    private AuthenticationService authService;
 
     private TagService tagService;
 
@@ -37,11 +34,6 @@ public class TagController {
         } else {
             throw new UnknownServerException();
         }
-    }
-
-    @Autowired
-    public void setAuthService(AuthenticationService authService) {
-        this.authService = authService;
     }
 
     @Autowired

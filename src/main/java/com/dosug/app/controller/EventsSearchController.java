@@ -3,7 +3,6 @@ package com.dosug.app.controller;
 import com.dosug.app.exception.BadRequestException;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.EventPreview;
-import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.events.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +17,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/search/events")
 public class EventsSearchController {
-
-    private AuthenticationService authService;
 
     private EventService eventService;
 
@@ -70,11 +67,6 @@ public class EventsSearchController {
                         (namePart, count, LocalDateTime.parse(dateTime)).stream()
                         .map(EventPreview::new)
                         .collect(Collectors.toList()));
-    }
-
-    @Autowired
-    public void setAuthService(AuthenticationService authService) {
-        this.authService = authService;
     }
 
     @Autowired
