@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by radmir on 22.03.17.
@@ -28,11 +29,11 @@ public class LoginController {
     private ValidationService validationService;
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response login(@RequestBody AuthenticationForm form) {
+    public Response login(@RequestBody AuthenticationForm form, Locale locale) {
 
         Response<AuthReply> response = new Response<>();
 
-        List<ApiError> validateErrors = validationService.validate(form);
+        List<ApiError> validateErrors = validationService.validate(form, locale);
         if (!validateErrors.isEmpty()) {
             return response.failure(validateErrors);
         }
@@ -50,6 +51,7 @@ public class LoginController {
                 authService.authenticate(token.getToken()).getId(),
                 token.getToken()));
     }
+
 
     @Autowired
     public void setAuthService(AuthenticationService authService) {

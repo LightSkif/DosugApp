@@ -16,16 +16,16 @@ public class AuthenticationForm {
     public static final int PASSWORD_MAX_SYMBOLS = 256;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USERNAME)
-    @NotNull(message = "username field is required")
-    @Size(min = 1, max = USERNAME_MAX_SYMBOLS, message = "username length from 1 to 256")
-    @Pattern(regexp = "[a-zA-Z0-9-_]*", message = "only latin character, digits, underline and hyphen allowed in username")
+    @NotNull(message = "username_required")
+    @Size(min = 1, max = USERNAME_MAX_SYMBOLS, message = "username_length_1_256")
+    @Pattern(regexp = "[a-zA-Z0-9-_]*", message = "username_allow_latinchar_digits_hyphen_underscore")
     private String username;
 
 
     @ErrorCode(code = ApiErrorCode.INVALID_PASSWORD)
-    @NotNull(message = "password field is required")
-    @Size(min = 1, max = PASSWORD_MAX_SYMBOLS, message = "password length from 1 to 256")
-    @Pattern(regexp = "[0-9a-zA-Z_]*", message = "only latin character, digits and hyphen allowed in password")
+    @NotNull(message = "password_required")
+    @Size(min = 1, max = PASSWORD_MAX_SYMBOLS, message = "password_length_1_256")
+    @Pattern(regexp = "[0-9a-zA-Z_]*", message = "password_allow_latinchar_digits_underscore")
     private String password;
 
     public String getUsername() {

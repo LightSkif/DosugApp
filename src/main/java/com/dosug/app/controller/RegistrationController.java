@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author radmirnovii
@@ -27,10 +28,10 @@ public class RegistrationController {
     private ValidationService validationService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response register(@RequestBody RegistrationForm form) {
+    public Response register(@RequestBody RegistrationForm form, Locale locale) {
         Response<Void> response = new Response<>();
 
-        List<ApiError> validationErrors = validationService.validate(form);
+        List<ApiError> validationErrors = validationService.validate(form, locale);
         if (!validationErrors.isEmpty()) {
             return response.failure(validationErrors);
         }

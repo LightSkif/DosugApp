@@ -3,7 +3,6 @@ package com.dosug.app.controller;
 import com.dosug.app.domain.Event;
 import com.dosug.app.domain.Tag;
 import com.dosug.app.domain.User;
-import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.form.CreateEventForm;
 import com.dosug.app.form.UpdateEventForm;
 import com.dosug.app.respose.model.ApiError;
@@ -18,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,11 +35,12 @@ public class EventController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response create(@RequestBody CreateEventForm form,
-                           @RequestHeader(value = "authKey") String authKey) {
+                           @RequestHeader(value = "authKey") String authKey,
+                           Locale locale) {
 
         Response<Long> response = new Response<>();
 
-        List<ApiError> validateErrors = validationService.validate(form);
+        List<ApiError> validateErrors = validationService.validate(form, locale);
         if (!validateErrors.isEmpty()) {
             return response.failure(validateErrors);
         }
@@ -58,13 +59,14 @@ public class EventController {
         return response.success(eventId);
     }
 
-    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/update")
     public Response update(@RequestBody UpdateEventForm form,
-                           @RequestHeader(value = "authKey") String authKey) {
+                           @RequestHeader(value = "authKey") String authKey,
+                           Locale locale) {
 
         Response<Long> response = new Response<>();
 
-        List<ApiError> validateErrors = validationService.validate(form);
+        List<ApiError> validateErrors = validationService.validate(form, locale);
         if (!validateErrors.isEmpty()) {
             return response.failure(validateErrors);
         }
@@ -111,8 +113,7 @@ public class EventController {
     }
 
     @GetMapping(value = "")
-    public Response getEvent(@RequestParam(value = "id") long eventId,
-                             @RequestHeader(value = "authKey") String authKey) {
+    public Response getEvent(@RequestParam(value = "id") Long eventId) {
 
         Response<EventView> response = new Response<>();
 

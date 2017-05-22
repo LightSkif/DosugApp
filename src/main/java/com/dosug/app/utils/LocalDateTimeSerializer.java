@@ -1,4 +1,4 @@
-package com.dosug.app.form;
+package com.dosug.app.utils;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

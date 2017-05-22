@@ -44,9 +44,23 @@
         </init-param>
     </filter>
 
+    <filter>
+        <filter-name>rootAuthFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targerBeanName</param-name>
+            <param-value>rootAuthFilter</param-value>
+        </init-param>
+    </filter>
+
     <filter-mapping>
         <filter-name>adminFilter</filter-name>
         <url-pattern>/rest/admin/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>rootAuthFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
     </filter-mapping>
 
 </web-app>

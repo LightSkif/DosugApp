@@ -3,6 +3,7 @@ package com.dosug.app.services.validation;
 import com.dosug.app.respose.model.ApiError;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Сервис который занимается только валидацией
@@ -13,5 +14,5 @@ public interface ValidationService {
      * надо вернуть на клиент, если ошибок нет возвращает
      * пустой список
      */
-    List<ApiError> validate(Object form);
+    List<ApiError> validate(Object form, Locale locale);
 }

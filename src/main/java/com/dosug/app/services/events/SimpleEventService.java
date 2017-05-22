@@ -6,6 +6,8 @@ import com.dosug.app.exception.ConflictException;
 import com.dosug.app.exception.EventNotFoundException;
 import com.dosug.app.exception.InsufficientlyRightsException;
 import com.dosug.app.repository.EventRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class SimpleEventService implements EventService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SimpleEventService.class);
 
     private EventRepository eventRepository;
 
@@ -40,6 +44,8 @@ public class SimpleEventService implements EventService {
                 throw new ConflictException();
             }
             // TODO: Продумать обработку исключения лучше.
+
+            logger.error(e.getMessage());
             throw e;
         }
     }

@@ -1,7 +1,7 @@
 package com.dosug.app.domain;
 
-import com.dosug.app.form.LocalDateTimeDeserializer;
-import com.dosug.app.form.LocalDateTimeSerializer;
+import com.dosug.app.utils.LocalDateTimeDeserializer;
+import com.dosug.app.utils.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 @Table(name = "events")
 public class Event {
 
-    @Column(name = "placeName")
+    @Column(name = "place_name")
     String placeName;
 
     @Id

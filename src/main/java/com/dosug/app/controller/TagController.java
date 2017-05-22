@@ -1,15 +1,15 @@
 package com.dosug.app.controller;
 
 import com.dosug.app.domain.Tag;
-import com.dosug.app.domain.User;
-import com.dosug.app.exception.NotAuthorizedException;
 import com.dosug.app.exception.UnknownServerException;
 import com.dosug.app.respose.model.Response;
-import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.tags.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,21 +18,13 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/tags")
 public class TagController {
 
-    private AuthenticationService authService;
-
     private TagService tagService;
 
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response getTags(@RequestParam(value = "tagPart", defaultValue = "") String tagPart,
-                            @RequestParam(value = "count", defaultValue = "0") int count,
-                            @RequestHeader(value = "authKey") String authKey) {
+                            @RequestParam(value = "count", defaultValue = "0") int count) {
 
         Response<List<String>> response = new Response<>();
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         List<Tag> tags = tagService.getTagsWithPart(tagPart, count);
 
@@ -42,11 +34,6 @@ public class TagController {
         } else {
             throw new UnknownServerException();
         }
-    }
-
-    @Autowired
-    public void setAuthService(AuthenticationService authService) {
-        this.authService = authService;
     }
 
     @Autowired
