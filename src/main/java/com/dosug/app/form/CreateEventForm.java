@@ -20,6 +20,10 @@ public class CreateEventForm {
 
     public static final int TAG_MAX_SYMBOLS = 256;
 
+    public static final int TAG_MIN_AMOUNT = 1;
+
+    public static final int TAG_MAX_AMOUNT = 10;
+
     public static final int MIN_LONGITUDE = -180;
 
     public static final int MAX_LONGITUDE = 180;
@@ -61,7 +65,7 @@ public class CreateEventForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAGS)
     @NotNull(message = "tags is required")
-    @Size(min = 1, max = 10, message = "from one to ten tag is required")
+    @Size(min = TAG_MIN_AMOUNT, max = TAG_MAX_AMOUNT, message = "from one to ten tag is required")
     private ArrayList<String> tags;
 
     public CreateEventForm() {

@@ -1,6 +1,8 @@
 package com.dosug.app.repository;
 
 import com.dosug.app.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -16,6 +18,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
     User findByUsername(String username);
 
     User findByEmail(String email);
+
+    Page<User> findByUsernameContainingIgnoreCaseOrderByCreateDateDesc(String userName,
+                                                                       Pageable pageable);
 
     Iterable<User> findAll();
 }

@@ -23,7 +23,8 @@ public interface EventRepository extends CrudRepository<Event, String> {
     Page<Event> findByCreateDateLessThanOrderByCreateDateDesc(LocalDateTime dateTime,
                                                               Pageable pageable);
 
-    List<Event> findByCreateDateGreaterThanOrderByCreateDateDesc(LocalDateTime dateTime);
+    Page<Event> findByCreateDateGreaterThanOrderByCreateDateDesc(LocalDateTime dateTime,
+                                                                 Pageable pageable);
 
 
     Page<Event> findByEventNameContainingIgnoreCaseOrderByCreateDateDesc(String eventName,
@@ -32,7 +33,8 @@ public interface EventRepository extends CrudRepository<Event, String> {
     Page<Event> findByEventNameContainingIgnoreCaseAndCreateDateLessThanOrderByCreateDateDesc(String eventName, LocalDateTime dateTime,
                                                                                               Pageable pageable);
 
-    List<Event> findByEventNameContainingIgnoreCaseAndCreateDateGreaterThanOrderByCreateDateDesc(String eventName, LocalDateTime dateTime);
+    Page<Event> findByEventNameContainingIgnoreCaseAndCreateDateGreaterThanOrderByCreateDateDesc(String eventName, LocalDateTime dateTime,
+                                                                                                 Pageable pageable);
 
 
     List<Event> findAllByCreator(User creator);

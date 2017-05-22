@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/tags")
-public class TagController {
+@RequestMapping(value = "/search/tags")
+public class TagSearchController {
 
     private AuthenticationService authService;
 

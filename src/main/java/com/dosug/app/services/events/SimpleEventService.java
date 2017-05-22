@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SimpleEventService implements EventService {
@@ -101,9 +100,8 @@ public class SimpleEventService implements EventService {
     @Override
     public List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime) {
 
-        return eventRepository.findByCreateDateGreaterThanOrderByCreateDateDesc(dateTime).stream()
-                .limit(20)
-                .collect(Collectors.toList());
+        PageRequest pageable = new PageRequest(0, PAGE_SIZE);
+        return eventRepository.findByCreateDateGreaterThanOrderByCreateDateDesc(dateTime, pageable).getContent();
     }
 
     /** В случае если в базе не найдено подходящих событий возвращаем пустой список. */
@@ -126,9 +124,8 @@ public class SimpleEventService implements EventService {
     @Override
     public List<Event> getEventsWithPartOfNameAfterDateTime(String partEventName, LocalDateTime dateTime) {
 
-        return eventRepository.findByEventNameContainingIgnoreCaseAndCreateDateGreaterThanOrderByCreateDateDesc(partEventName, dateTime).stream()
-                .limit(20)
-                .collect(Collectors.toList());
+        PageRequest pageable = new PageRequest(0, PAGE_SIZE);
+        return eventRepository.findByEventNameContainingIgnoreCaseAndCreateDateGreaterThanOrderByCreateDateDesc(partEventName, dateTime, pageable).getContent();
     }
 
     /** В случае если в базе не найдено подходящих событий возвращаем пустой список. */
