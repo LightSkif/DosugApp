@@ -1,12 +1,15 @@
 package com.dosug.app.form;
 
 import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.utils.DurationDeserializer;
+import com.dosug.app.utils.DurationSerializer;
 import com.dosug.app.utils.LocalDateTimeDeserializer;
 import com.dosug.app.utils.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.validation.constraints.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -47,7 +50,13 @@ public class CreateEventForm {
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_DATE)
     @NotNull(message = "event_datetime_required")
 //    @Future
-    private LocalDateTime dateTime;
+    private LocalDateTime eventDateTime;
+
+    @JsonSerialize(using = DurationSerializer.class)
+    @JsonDeserialize(using = DurationDeserializer.class)
+    @ErrorCode(code = ApiErrorCode.INVALID_PERIOD)
+    @NotNull(message = "event_period_required")
+    private Duration period;
 
     @ErrorCode(code = ApiErrorCode.INVALID_LONGITUDE)
     @Min(value = MIN_LONGITUDE, message = "longitude_lower_180")
@@ -65,16 +74,6 @@ public class CreateEventForm {
     private ArrayList<String> tags;
 
     public CreateEventForm() {
-    }
-
-    public CreateEventForm(String eventName, String content, LocalDateTime dateTime, String placeName, double longitude, double latitude, ArrayList<String> tags) {
-        this.eventName = eventName;
-        this.content = content;
-        this.dateTime = dateTime;
-        this.placeName = placeName;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.tags = tags;
     }
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAG)
@@ -111,12 +110,12 @@ public class CreateEventForm {
         this.content = content;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getEventDateTime() {
+        return eventDateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setEventDateTime(LocalDateTime eventDateTime) {
+        this.eventDateTime = eventDateTime;
     }
 
     public ArrayList<String> getTags() {
@@ -150,5 +149,13 @@ public class CreateEventForm {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public Duration getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Duration period) {
+        this.period = period;
     }
 }

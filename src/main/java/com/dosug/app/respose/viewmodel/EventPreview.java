@@ -31,7 +31,7 @@ public class EventPreview {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime dateTime;
+    private LocalDateTime eventDateTime;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -53,7 +53,7 @@ public class EventPreview {
         eventName = event.getEventName();
         content = event.getContent();
         placeName = event.getPlaceName();
-        dateTime = event.getEventDateTime();
+        eventDateTime = event.getEventDateTime();
         avatar = event.getAvatar();
         participantsCount = event.getParticipants().size();
         createDateTime = event.getCreateDate();

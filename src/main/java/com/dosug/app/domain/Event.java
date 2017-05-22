@@ -1,10 +1,5 @@
 package com.dosug.app.domain;
 
-import com.dosug.app.utils.LocalDateTimeDeserializer;
-import com.dosug.app.utils.LocalDateTimeSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,10 +30,11 @@ public class Event {
     @Column(name = "content")
     private String content;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @Column(name = "event_date_time")
+    @Column(name = "event_start_date_time")
     private LocalDateTime eventDateTime;
+
+    @Column(name = "event_end_date_time")
+    private LocalDateTime endDateTime;
 
     @Column(name = "longitude")
     private double longitude;
@@ -201,6 +197,14 @@ public class Event {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
     }
 
     @Override

@@ -46,13 +46,9 @@ public class EventController {
         }
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         // Преобразуем массив строк из формы в массив тегов.
         Event event = buildEvent(form, user);
-
 
         Long eventId = eventService.createEvent(event);
 
@@ -72,9 +68,6 @@ public class EventController {
         }
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         Event event = buildEvent(form, user);
         event.setId(form.getEventId());
@@ -88,9 +81,6 @@ public class EventController {
         Response<Void> response = new Response<>();
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         eventService.addParticipant(eventId, user);
 
@@ -103,9 +93,6 @@ public class EventController {
         Response<Void> response = new Response<>();
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         eventService.removeParticipant(eventId, user);
 
@@ -116,11 +103,6 @@ public class EventController {
     public Response getEvent(@RequestParam(value = "id") Long eventId) {
 
         Response<EventView> response = new Response<>();
-
-        User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         EventView eventView = new EventView(eventService.getEvent(eventId));
         return response.success(eventView);
@@ -147,9 +129,6 @@ public class EventController {
         Response<Void> response = new Response<>();
 
         User user = authService.authenticate(authKey);
-        if (user == null) {
-            throw new NotAuthorizedException();
-        }
 
         // Передаём авторизованного пользователя для проверки достаточности прав для удаления.
         eventService.deleteEvent(eventId, user);
@@ -165,7 +144,9 @@ public class EventController {
         event.setCreator(user);
         event.setEventName(form.getEventName());
         event.setContent(form.getContent());
-        event.setEventDateTime(form.getDateTime());
+        event.setEventDateTime(form.getEventDateTime());
+        // Прибавляем к времени проведения события продолжительность для получения времени завершения события.
+        event.setEndDateTime(form.getEventDateTime().plus(form.getPeriod()));
         event.setEventName(form.getEventName());
         event.setPlaceName(form.getPlaceName());
         event.setLongitude(form.getLongitude());
