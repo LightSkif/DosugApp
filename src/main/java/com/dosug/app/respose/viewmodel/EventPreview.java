@@ -55,7 +55,7 @@ public class EventPreview {
         placeName = event.getPlaceName();
         eventDateTime = event.getEventDateTime();
         avatar = event.getAvatar();
-        participantsCount = event.getParticipantsLinks().size();
+        participantsCount = event.getParticipantLinks().size();
         createDateTime = event.getCreateDate();
         tags = event.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
     }

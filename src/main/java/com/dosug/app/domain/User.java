@@ -70,9 +70,9 @@ public class User {
     private List<Event> createdEvents;
 
     @OneToMany(targetEntity = EventParticipant.class,
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<EventParticipant> eventsLinks;
+    private Set<EventParticipant> eventLinks;
 
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -197,14 +197,14 @@ public class User {
         this.createdEvents = createdEvents;
     }
 
+
     public Set<EventParticipant> getEvents() {
-        return eventsLinks;
+        return eventLinks;
     }
 
     public void setEvents(Set<EventParticipant> events) {
-        this.eventsLinks = events;
+        this.eventLinks = events;
     }
-
     public Set<Tag> getTags() {
         return tags;
     }

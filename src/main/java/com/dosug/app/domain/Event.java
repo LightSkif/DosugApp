@@ -61,9 +61,9 @@ public class Event {
     private List<Image> images;
 
     @OneToMany(targetEntity = EventParticipant.class,
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             mappedBy = "event", fetch = FetchType.EAGER)
-    private Set<EventParticipant> participantsLinks;
+    private Set<EventParticipant> participantLinks;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
@@ -192,12 +192,12 @@ public class Event {
         this.images = images;
     }
 
-    public Set<EventParticipant> getParticipantsLinks() {
-        return participantsLinks;
+    public Set<EventParticipant> getParticipantLinks() {
+        return participantLinks;
     }
 
-    public void setParticipantsLinks(Set<EventParticipant> participantsLinks) {
-        this.participantsLinks = participantsLinks;
+    public void setParticipantLinks(Set<EventParticipant> participantLinks) {
+        this.participantLinks = participantLinks;
     }
 
     public Set<Tag> getTags() {

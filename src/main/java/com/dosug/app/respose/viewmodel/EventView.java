@@ -89,7 +89,7 @@ public class EventView {
                 .map(s -> s.getImage_source())
                 .collect(Collectors.toList());
 
-        participants = event.getParticipantsLinks().stream()
+        participants = event.getParticipantLinks().stream()
                 .map(s -> s.getUser().getId())
                 .collect(Collectors.toList());
 
@@ -98,6 +98,6 @@ public class EventView {
         liked = isLiked;
 
         // Проверяем завершилось ли событие и сохраняем как флаг для отправки на клиент.
-        ended = !LocalDateTime.now().isBefore(event.getEndDateTime());
+        ended = LocalDateTime.now().isAfter(event.getEndDateTime());
     }
 }

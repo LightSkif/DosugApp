@@ -73,7 +73,7 @@ public class SimpleEventService implements EventService {
 
         newEvent.setCreateDate(updatingEvent.getCreateDate());
         newEvent.setAllowed(null);
-        newEvent.setParticipantsLinks(updatingEvent.getParticipantsLinks());
+        newEvent.setParticipantLinks(updatingEvent.getParticipantLinks());
         newEvent.setImages(updatingEvent.getImages());
 
         return eventRepository.save(newEvent).getId();
@@ -92,13 +92,8 @@ public class SimpleEventService implements EventService {
         eventParticipant.setEvent(updatingEvent);
         eventParticipant.setLiked(false);
 
-        if (updatingEvent.getParticipantsLinks().add(eventParticipant)) {
-            eventRepository.save(updatingEvent);
-        }
-        // Если пользователь уже добавлен в список участников.
-        else {
-            throw new ConflictException();
-        }
+
+        eventParticipantRepository.save(eventParticipant);
     }
 
     @Override
@@ -132,6 +127,9 @@ public class SimpleEventService implements EventService {
             if (!eventParticipant.isLiked()) {
                 eventParticipant.setLiked(true);
                 eventParticipantRepository.save(eventParticipant);
+
+                event.setLikeCount(event.getLikeCount() + 1);
+                eventRepository.save(event);
             }
         }
         // Если не удалось удалить пользователя в списке участников.
@@ -149,10 +147,14 @@ public class SimpleEventService implements EventService {
 
         EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
 
+
         if (eventParticipant != null) {
             if (eventParticipant.isLiked()) {
                 eventParticipant.setLiked(false);
                 eventParticipantRepository.save(eventParticipant);
+
+                event.setLikeCount(event.getLikeCount() - 1);
+                eventRepository.save(event);
             }
         }
         // Если не удалось удалить пользователя в списке участников.
@@ -175,7 +177,7 @@ public class SimpleEventService implements EventService {
 
     public boolean isLikedByUser(long eventId, User user) {
         // Находим среди участников пользователя, соответствующего user.
-        Optional<EventParticipant> eventParticipantOptional = eventRepository.findById(eventId).getParticipantsLinks().stream()
+        Optional<EventParticipant> eventParticipantOptional = eventRepository.findById(eventId).getParticipantLinks().stream()
                 .filter(s -> s.getUser().equals(user))
                 .findFirst();
 
