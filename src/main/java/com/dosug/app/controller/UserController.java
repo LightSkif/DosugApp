@@ -2,6 +2,7 @@ package com.dosug.app.controller;
 
 import com.dosug.app.domain.User;
 import com.dosug.app.exception.InsufficientlyRightsException;
+import com.dosug.app.form.UpdateUserPasswordForm;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.UserView;
 import com.dosug.app.services.authentication.AuthenticationService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/users")
 public class UserController {
 
     private AuthenticationService authService;
@@ -22,19 +23,36 @@ public class UserController {
 
     private UserService userService;
 
-//    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public Response update(@RequestBody UpdateUserForm form,
-//                           @RequestHeader(value = "authKey") String authKey) {
-//        Response<Void> response = new Response<>();
-//
-//        User user = authService.authenticate(authKey);
-//
-//        // Проверяем совпадение запросившего и удаляемого пользователя.
-//        if (user.getId() != userId) {
-//            throw new InsufficientlyRightsException();
-//        }
-//
-//    }
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Response update(@RequestBody UpdateUserForm form,
+                           @RequestHeader(value = "authKey") String authKey) {
+
+        Response<Long> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+
+        // Проверяем совпадение запросившего и удаляемого пользователя.
+        if (user.getId() != userId) {
+            throw new InsufficientlyRightsException();
+        }
+
+    }
+
+    @PostMapping(value = "/update-password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Response updatePassword(@RequestBody UpdateUserPasswordForm form,
+                                   @RequestHeader(value = "authKey") String authKey) {
+
+        Response<Long> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+
+        // Проверяем совпадение запросившего и удаляемого пользователя.
+        if (user.getId() != userId) {
+            throw new InsufficientlyRightsException();
+        }
+
+
+    }
 
 
     @GetMapping
@@ -57,7 +75,7 @@ public class UserController {
             throw new InsufficientlyRightsException();
         }
 
-        userService.deleteUser(userId);
+        userService.deleteUser(userId, );
         return response.success(null);
     }
 

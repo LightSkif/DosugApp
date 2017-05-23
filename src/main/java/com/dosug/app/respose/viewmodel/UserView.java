@@ -22,6 +22,12 @@ public class UserView {
     private String description;
 
     @JsonProperty
+    private String firstname;
+
+    @JsonProperty
+    private String lastname;
+
+    @JsonProperty
     private List<Long> events;
 
     @JsonProperty
@@ -32,6 +38,8 @@ public class UserView {
         username = user.getUsername();
         avatar = user.getAvatar();
         description = user.getDescription();
+        firstname = user.getFirstName();
+        lastname = user.getLastName();
         events = user.getEvents().stream().map(s -> s.getId()).collect(Collectors.toList());
         tags = user.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
     }

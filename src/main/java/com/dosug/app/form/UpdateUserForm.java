@@ -15,10 +15,6 @@ public class UpdateUserForm {
 
     public static final int MIN_ID = 1;
 
-    public static final int USERNAME_MIN_SYMBOLS = 1;
-
-    public static final int USERNAME_MAX_SYMBOLS = 256;
-
     public static final int FIRSTNAME_MIN_SYMBOLS = 1;
 
     public static final int FIRSTNAME_MAX_SYMBOLS = 128;
@@ -26,6 +22,10 @@ public class UpdateUserForm {
     public static final int LASTNAME_MIN_SYMBOLS = 1;
 
     public static final int LASTNAME_MAX_SYMBOLS = 128;
+
+    public static final int DESCRIPTION_MIN_SYMBOLS = 1;
+
+    public static final int DESCRIPTION_MAX_SYMBOLS = 1024;
 
     public static final int TAG_MIN_SYMBOLS = 1;
 
@@ -36,32 +36,26 @@ public class UpdateUserForm {
     public static final int TAG_MAX_AMOUNT = 10;
 
 
-    @ErrorCode(code = ApiErrorCode.INVALID_EVENT_ID)
+    @ErrorCode(code = ApiErrorCode.INVALID_USER_ID)
     @Min(value = MIN_ID, message = "id is lower than {value}")
-    @NotNull(message = "eventId field is required")
-    private long eventId;
-
-    @ErrorCode(code = ApiErrorCode.INVALID_USERNAME)
-    @NotNull(message = "username field is required")
-    @Size(min = USERNAME_MIN_SYMBOLS, max = USERNAME_MAX_SYMBOLS, message = "username length from 1 to 256")
-    @Pattern(regexp = "[a-zA-Z0-9-_]*", message = "only latin character, digits, underline and hyphen allowed in username")
-    private String username;
+    @NotNull(message = "userId field is required")
+    private long userId;
 
     @ErrorCode(code = ApiErrorCode.INVALID_FIRSTNAME)
     @Size(min = FIRSTNAME_MIN_SYMBOLS, max = FIRSTNAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
-    @Pattern(regexp = "[a-zA-Zа-яА-Я ]*", message = "only character and space allowed in firstName")
+    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
     private String firstName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_LASTNAME)
     @Size(min = LASTNAME_MIN_SYMBOLS, max = LASTNAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
-    @Pattern(regexp = "[a-zA-Zа-яА-Я ]*", message = "only character and space allowed in firstName")
+    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
     private String lastName;
 
     private String avatar;
 
     @ErrorCode(code = ApiErrorCode.INVALID_DESCRIPTION)
     @NotNull(message = "description field is required")
-    @Size(min = FIRSTNAME_MIN_SYMBOLS, max = FIRSTNAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
+    @Size(min = DESCRIPTION_MIN_SYMBOLS, max = DESCRIPTION_MAX_SYMBOLS, message = "description should be shorter than 1000 characters")
     private String description;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -92,19 +86,11 @@ public class UpdateUserForm {
     }
 
     public long getEventId() {
-        return eventId;
+        return userId;
     }
 
     public void setEventId(long eventId) {
-        this.eventId = eventId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+        this.userId = eventId;
     }
 
     public String getFirstName() {
