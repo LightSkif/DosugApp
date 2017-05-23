@@ -19,6 +19,10 @@ public interface EventService {
 
     void removeParticipant(long eventId, User user);
 
+    void addLike(long eventId, User user);
+
+    void removeLike(long eventId, User user);
+
     Event getEvent(long Id);
 
     boolean isLikedByUser(long eventId, User user);

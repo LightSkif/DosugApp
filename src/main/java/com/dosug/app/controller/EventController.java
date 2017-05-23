@@ -75,7 +75,7 @@ public class EventController {
         return response.success(eventService.updateEvent(event, user));
     }
 
-    @PostMapping(value = "/add-participant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-participant")
     public Response addParticipant(@RequestBody long eventId,
                                    @RequestHeader(value = "authKey") String authKey) {
         Response<Void> response = new Response<>();
@@ -87,7 +87,7 @@ public class EventController {
         return response.success(null);
     }
 
-    @PostMapping(value = "/remove-participant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/remove-participant")
     public Response removeParticipant(@RequestBody long eventId,
                                       @RequestHeader(value = "authKey") String authKey) {
         Response<Void> response = new Response<>();
@@ -95,6 +95,32 @@ public class EventController {
         User user = authService.authenticate(authKey);
 
         eventService.removeParticipant(eventId, user);
+
+        return response.success(null);
+    }
+
+    @PostMapping(value = "/like")
+    public Response addLike(@RequestBody long eventId,
+                            @RequestHeader(value = "authKey") String authKey) {
+
+        Response<Void> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+
+        eventService.addLike(eventId, user);
+
+        return response.success(null);
+    }
+
+    @PostMapping(value = "/dislike")
+    public Response removeLike(@RequestBody long eventId,
+                               @RequestHeader(value = "authKey") String authKey) {
+
+        Response<Void> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+
+        eventService.removeLike(eventId, user);
 
         return response.success(null);
     }
@@ -127,7 +153,7 @@ public class EventController {
 //        return  eventService.getAllEventsByCreator();
 //    }
 
-    @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/delete")
     public Response delete(@RequestBody long eventId,
                            @RequestHeader(value = "authKey") String authKey) {
 

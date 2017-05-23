@@ -9,7 +9,7 @@ import java.util.Set;
  * A long time ago in a galaxy far, far away...
  */
 @Entity
-@Table(name = "event_participant")
+@Table(name = "events")
 public class Event {
 
     @Column(name = "place_name")

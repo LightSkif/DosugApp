@@ -40,7 +40,7 @@ CREATE TABLE  user_tag(
       REFERENCES public.tags (id) MATCH SIMPLE
       ON DELETE CASCADE,
 
-	CONSTRAINT user_tag_participant_id_fk FOREIGN KEY (user_id)
+	CONSTRAINT user_tag_user_id_fk FOREIGN KEY (user_id)
       REFERENCES public.users (id) MATCH SIMPLE
       ON DELETE CASCADE
 );

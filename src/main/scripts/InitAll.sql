@@ -105,9 +105,12 @@
 --
 -- ALTER SEQUENCE users_id_seq OWNED BY users.id;
 --
+-- ALTER TABLE ONLY users
+--     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+--
 -- CREATE TABLE bans (
 --   id bigint,
---   userId bigint,
+--   user_id bigint,
 --   duration timestamp NOT NULL,
 --
 --   CONSTRAINT bans_user_id_fk FOREIGN KEY (user_id)
@@ -149,8 +152,6 @@
 -- ALTER TABLE ONLY user_role
 --     ADD CONSTRAINT user_role_role_id_user_id_pk PRIMARY KEY (role_id, user_id);
 --
--- ALTER TABLE ONLY users
---     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 --
 --
 -- CREATE UNIQUE INDEX roles_id_uindex ON roles USING btree (id);
@@ -248,7 +249,7 @@
 -- ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 --
 -- CREATE UNIQUE INDEX event_unique_parametr
---   ON public.events (event_name, creator_id, event_date_time);
+--   ON public.events (event_name, creator_id, event_start_date_time);
 --
 -- ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 --
@@ -307,3 +308,4 @@
 -- INSERT  INTO users VALUES
 -- (1, 'user', 'pass', 'test@test.ru', 'power', 'wolf', NULL, NULL, NULL, NULL, NULL),
 -- (2, 'admin', 'admin', 'dosug@test.ru', 'sanctus', 'lupus', NULL, NULL, NULL, NULL, NULL);
+--

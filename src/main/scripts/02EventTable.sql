@@ -32,4 +32,4 @@ ALTER SEQUENCE events_id_seq OWNED BY events.id;
 
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
-CREATE UNIQUE INDEX event_unique_parametr ON public.events (event_name, creator_id, event_date_time);
+CREATE UNIQUE INDEX event_unique_parametr ON public.events (event_name, creator_id, event_start_date_time);

@@ -7,7 +7,7 @@ import javax.persistence.*;
  * A long time ago in a galaxy far, far away...
  */
 @Entity
-@Table(name = "events")
+@Table(name = "event_participant")
 public class EventParticipant {
 
     @Id
@@ -56,5 +56,23 @@ public class EventParticipant {
 
     public void setLiked(boolean liked) {
         this.liked = liked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EventParticipant that = (EventParticipant) o;
+
+        if (!getUser().equals(that.getUser())) return false;
+        return getEvent().equals(that.getEvent());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getUser() != null ? getUser().hashCode() : 0;
+        result = 31 * result + (getEvent() != null ? getEvent().hashCode() : 0);
+        return result;
     }
 }

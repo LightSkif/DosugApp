@@ -6,6 +6,8 @@ import com.dosug.app.domain.User;
 import com.dosug.app.exception.ConflictException;
 import com.dosug.app.exception.EventNotFoundException;
 import com.dosug.app.exception.InsufficientlyRightsException;
+import com.dosug.app.exception.LinkNotFoundException;
+import com.dosug.app.repository.EventParticipantRepository;
 import com.dosug.app.repository.EventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,8 @@ public class SimpleEventService implements EventService {
     private static final Logger logger = LoggerFactory.getLogger(SimpleEventService.class);
 
     private EventRepository eventRepository;
+
+    private EventParticipantRepository eventParticipantRepository;
 
     @Override
     public Long createEvent(Event event) {
@@ -99,22 +103,61 @@ public class SimpleEventService implements EventService {
 
     @Override
     public void removeParticipant(long eventId, User user) {
-        Event updatingEvent = eventRepository.findById(eventId);
-        if (updatingEvent == null) {
+        Event event = eventRepository.findById(eventId);
+        if (event == null) {
             throw new EventNotFoundException();
         }
 
-        EventParticipant eventParticipant = new EventParticipant();
-        eventParticipant.setUser(user);
-        eventParticipant.setEvent(updatingEvent);
-        eventParticipant.setLiked(false);
+        EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
 
-        if (updatingEvent.getParticipantsLinks().remove(eventParticipant)) {
-            eventRepository.save(updatingEvent);
+        if (eventParticipant != null) {
+            eventParticipantRepository.delete(eventParticipant);
         }
-        // Если не удалось удалить пользователя из списка участников.
+        // Если не удалось удалить пользователя в списке участников.
         else {
-            throw new ConflictException();
+            throw new LinkNotFoundException();
+        }
+    }
+
+    public void addLike(long eventId, User user) {
+
+        Event event = eventRepository.findById(eventId);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
+
+        if (eventParticipant != null) {
+            if (!eventParticipant.isLiked()) {
+                eventParticipant.setLiked(true);
+                eventParticipantRepository.save(eventParticipant);
+            }
+        }
+        // Если не удалось удалить пользователя в списке участников.
+        else {
+            throw new LinkNotFoundException();
+        }
+    }
+
+    public void removeLike(long eventId, User user) {
+
+        Event event = eventRepository.findById(eventId);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
+
+        if (eventParticipant != null) {
+            if (eventParticipant.isLiked()) {
+                eventParticipant.setLiked(false);
+                eventParticipantRepository.save(eventParticipant);
+            }
+        }
+        // Если не удалось удалить пользователя в списке участников.
+        else {
+            throw new LinkNotFoundException();
         }
     }
 
@@ -225,7 +268,6 @@ public class SimpleEventService implements EventService {
             throw new InsufficientlyRightsException();
         }
 
-
         eventRepository.delete(event);
     }
 
@@ -240,5 +282,10 @@ public class SimpleEventService implements EventService {
     @Autowired
     public void setEventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
+    }
+
+    @Autowired
+    public void setEventParticipantRepository(EventParticipantRepository eventParticipantRepository) {
+        this.eventParticipantRepository = eventParticipantRepository;
     }
 }

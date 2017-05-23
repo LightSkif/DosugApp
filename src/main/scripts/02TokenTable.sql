@@ -26,3 +26,5 @@ ALTER TABLE ONLY auth_tokens
 ALTER TABLE ONLY auth_tokens
     ADD CONSTRAINT fkkhs4tpy3l5krnk87ykkmafeic FOREIGN KEY (user_id) REFERENCES users(id);
 
+INSERT  INTO auth_tokens VALUES
+(1, 1, '2017-05-23 17:25:50.536', NULL);
