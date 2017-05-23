@@ -21,6 +21,8 @@ public interface EventService {
 
     Event getEvent(long Id);
 
+    boolean isLikedByUser(long eventId, User user);
+
     List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime);
 
     List<Event> getLastEventsBeforeDateTime(int count, LocalDateTime dateTime);

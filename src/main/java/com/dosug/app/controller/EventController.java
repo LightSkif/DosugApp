@@ -100,11 +100,16 @@ public class EventController {
     }
 
     @GetMapping(value = "")
-    public Response getEvent(@RequestParam(value = "id") Long eventId) {
+    public Response getEvent(@RequestParam(value = "id") Long eventId,
+                             @RequestHeader(value = "authKey") String authKey) {
 
         Response<EventView> response = new Response<>();
 
-        EventView eventView = new EventView(eventService.getEvent(eventId));
+        User user = authService.authenticate(authKey);
+
+        boolean liked = eventService.isLikedByUser(eventId, user);
+
+        EventView eventView = new EventView(eventService.getEvent(eventId), liked);
         return response.success(eventView);
     }
 

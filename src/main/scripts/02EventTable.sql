@@ -12,6 +12,7 @@ CREATE TABLE events (
 	longitude double precision,
 	latitude double precision,
 	avatar character varying(256),
+	like_count int,
 	allowed boolean,
   create_date timestamp without time zone DEFAULT now(),
 

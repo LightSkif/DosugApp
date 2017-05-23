@@ -59,13 +59,19 @@ public class EventView {
     private List<String> tags;
 
     @JsonProperty
-    private boolean isEnded;
+    private boolean ended;
+
+    @JsonProperty
+    private boolean liked;
+
+    @JsonProperty
+    private int likeCount;
 
     public EventView() {
 
     }
 
-    public EventView(Event event) {
+    public EventView(Event event, boolean isLiked) {
 
         eventId = event.getId();
         creatorId = event.getCreator().getId();
@@ -77,13 +83,21 @@ public class EventView {
         longitude = event.getLongitude();
         latitude = event.getLatitude();
         avatar = event.getAvatar();
+        likeCount = event.getLikeCount();
 
-        images = event.getImages().stream().map(s -> s.getImage_source()).collect(Collectors.toList());
-        participants = event.getParticipants().stream().map(s -> s.getId()).collect(Collectors.toList());
+        images = event.getImages().stream()
+                .map(s -> s.getImage_source())
+                .collect(Collectors.toList());
 
-        // Если событие не завершилось отправляем список тегов с нулевыми оценками.
-        isEnded = !LocalDateTime.now().isBefore(event.getEndDateTime());
+        participants = event.getParticipantsLinks().stream()
+                .map(s -> s.getUser().getId())
+                .collect(Collectors.toList());
 
         tags = event.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
+
+        liked = isLiked;
+
+        // Проверяем завершилось ли событие и сохраняем как флаг для отправки на клиент.
+        ended = !LocalDateTime.now().isBefore(event.getEndDateTime());
     }
 }

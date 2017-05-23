@@ -1,6 +1,7 @@
 package com.dosug.app.services.events;
 
 import com.dosug.app.domain.Event;
+import com.dosug.app.domain.EventParticipant;
 import com.dosug.app.domain.User;
 import com.dosug.app.exception.ConflictException;
 import com.dosug.app.exception.EventNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,7 +69,7 @@ public class SimpleEventService implements EventService {
 
         newEvent.setCreateDate(updatingEvent.getCreateDate());
         newEvent.setAllowed(null);
-        newEvent.setParticipants(updatingEvent.getParticipants());
+        newEvent.setParticipantsLinks(updatingEvent.getParticipantsLinks());
         newEvent.setImages(updatingEvent.getImages());
 
         return eventRepository.save(newEvent).getId();
@@ -80,7 +82,13 @@ public class SimpleEventService implements EventService {
             throw new EventNotFoundException();
         }
 
-        if (updatingEvent.getParticipants().add(user)) {
+        // Создаём сущность для таблицы связки событий и пользователей.
+        EventParticipant eventParticipant = new EventParticipant();
+        eventParticipant.setUser(user);
+        eventParticipant.setEvent(updatingEvent);
+        eventParticipant.setLiked(false);
+
+        if (updatingEvent.getParticipantsLinks().add(eventParticipant)) {
             eventRepository.save(updatingEvent);
         }
         // Если пользователь уже добавлен в список участников.
@@ -96,8 +104,12 @@ public class SimpleEventService implements EventService {
             throw new EventNotFoundException();
         }
 
+        EventParticipant eventParticipant = new EventParticipant();
+        eventParticipant.setUser(user);
+        eventParticipant.setEvent(updatingEvent);
+        eventParticipant.setLiked(false);
 
-        if (updatingEvent.getParticipants().remove(user)) {
+        if (updatingEvent.getParticipantsLinks().remove(eventParticipant)) {
             eventRepository.save(updatingEvent);
         }
         // Если не удалось удалить пользователя из списка участников.
@@ -115,6 +127,20 @@ public class SimpleEventService implements EventService {
             return event;
         } else {
             throw new EventNotFoundException();
+        }
+    }
+
+    public boolean isLikedByUser(long eventId, User user) {
+        // Находим среди участников пользователя, соответствующего user.
+        Optional<EventParticipant> eventParticipantOptional = eventRepository.findById(eventId).getParticipantsLinks().stream()
+                .filter(s -> s.getUser().equals(user))
+                .findFirst();
+
+        // Если участник был найден возвращаем его лайк
+        if (eventParticipantOptional.isPresent()) {
+            return eventParticipantOptional.get().isLiked();
+        } else {
+            return false;
         }
     }
 

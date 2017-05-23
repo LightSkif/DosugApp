@@ -69,13 +69,11 @@ public class User {
             mappedBy = "creator")
     private List<Event> createdEvents;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "event_participant",
-            joinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk"))
-    )
-    private Set<Event> events;
+    @OneToMany(targetEntity = EventParticipant.class,
+            cascade = CascadeType.ALL,
+            mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<EventParticipant> eventsLinks;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -199,12 +197,12 @@ public class User {
         this.createdEvents = createdEvents;
     }
 
-    public Set<Event> getEvents() {
-        return events;
+    public Set<EventParticipant> getEvents() {
+        return eventsLinks;
     }
 
-    public void setEvents(Set<Event> events) {
-        this.events = events;
+    public void setEvents(Set<EventParticipant> events) {
+        this.eventsLinks = events;
     }
 
     public Set<Tag> getTags() {

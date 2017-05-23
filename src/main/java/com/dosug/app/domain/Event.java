@@ -9,7 +9,7 @@ import java.util.Set;
  * A long time ago in a galaxy far, far away...
  */
 @Entity
-@Table(name = "events")
+@Table(name = "event_participant")
 public class Event {
 
     @Column(name = "place_name")
@@ -45,6 +45,9 @@ public class Event {
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "like_count")
+    private int likeCount;
+
     @Column(name = "allowed")
     private Boolean allowed;
 
@@ -57,13 +60,10 @@ public class Event {
             fetch = FetchType.EAGER)
     private List<Image> images;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "event_participant",
-            joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk"))
-    )
-    private Set<User> participants;
+    @OneToMany(targetEntity = EventParticipant.class,
+            cascade = CascadeType.ALL,
+            mappedBy = "event", fetch = FetchType.EAGER)
+    private Set<EventParticipant> participantsLinks;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
@@ -72,6 +72,7 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "event_tag_tag_id_fk"))
     )
     private Set<Tag> tags;
+
 
     public Event() {
     }
@@ -175,6 +176,14 @@ public class Event {
         this.avatar = avatar;
     }
 
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
     public List<Image> getImages() {
         return images;
     }
@@ -183,12 +192,12 @@ public class Event {
         this.images = images;
     }
 
-    public Set<User> getParticipants() {
-        return participants;
+    public Set<EventParticipant> getParticipantsLinks() {
+        return participantsLinks;
     }
 
-    public void setParticipants(Set<User> participants) {
-        this.participants = participants;
+    public void setParticipantsLinks(Set<EventParticipant> participantsLinks) {
+        this.participantsLinks = participantsLinks;
     }
 
     public Set<Tag> getTags() {
