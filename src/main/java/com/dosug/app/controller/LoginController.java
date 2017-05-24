@@ -4,17 +4,18 @@ import com.dosug.app.domain.AuthToken;
 import com.dosug.app.form.AuthenticationForm;
 import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.respose.model.AuthReply;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by radmir on 22.03.17.
@@ -28,11 +29,11 @@ public class LoginController {
     private ValidationService validationService;
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response login(@RequestBody AuthenticationForm form) {
+    public Response login(@RequestBody AuthenticationForm form, Locale locale) {
 
-        Response<String> response = new Response<>();
+        Response<AuthReply> response = new Response<>();
 
-        List<ApiError> validateErrors = validationService.validate(form);
+        List<ApiError> validateErrors = validationService.validate(form, locale);
         if (!validateErrors.isEmpty()) {
             return response.failure(validateErrors);
         }
@@ -46,13 +47,11 @@ public class LoginController {
                             "Login or/and password not found"));
         }
 
-        return response.success(token.getToken());
+        return response.success(new AuthReply(
+                authService.authenticate(token.getToken()).getId(),
+                token.getToken()));
     }
 
-    @GetMapping(value = "/test")
-    public String test() {
-        return "Hello";
-    }
 
     @Autowired
     public void setAuthService(AuthenticationService authService) {

@@ -21,28 +21,28 @@ public class RegistrationForm {
     private static final int USERNAME_MAX_LENGTH = 256;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USERNAME)
-    @Length(min = 1, max = USERNAME_MAX_LENGTH, message = "username length from 1 to 256")
-    @NotNull(message = "username field is required")
-    @Pattern(regexp = "[a-zA-Z0-9-_]*", message = "only latin character, digits, underline and hyphen allowed in username")
+    @Length(min = 1, max = USERNAME_MAX_LENGTH, message = "username_length_1_256")
+    @NotNull(message = "username_required")
+    @Pattern(regexp = "[a-zA-Z0-9-_]*", message = "username_allow_latinchar_digits_hyphen_underscore")
     private String username;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EMAIL)
-    @NotNull(message = "email field is required")
-    @Size(min = 1, max = EMAIL_MAX_LENGTH, message = "email length from 1 to 256")
-    @Email(message = "not correct email")
+    @NotNull(message = "email_required")
+    @Size(min = 1, max = EMAIL_MAX_LENGTH, message = "email_length_1_256")
+    @Email(message = "email_not_correct")
     private String email;
 
     @ErrorCode(code = ApiErrorCode.INVALID_PASSWORD)
-    @NotNull(message = "password field is required")
-    @Size(min = 1, max = MAX_PASSWORD_LENGTH, message = "password length from 1 to 256")
-    @Pattern(regexp = "[a-zA-Z0-9_]*", message = "only latin character, digits and underscore allowed in password")
+    @NotNull(message = "password_required")
+    @Size(min = 1, max = MAX_PASSWORD_LENGTH, message = "password_length_1_256")
+    @Pattern(regexp = "[0-9a-zA-Z_]*", message = "password_allow_latinchar_digits_underscore")
     private String password;
 
     @JsonProperty("passwordConfirmation")
     private String passwordRetry;
 
     @ErrorCode(code = ApiErrorCode.INVALID_PASSWORD_RETRY)
-    @AssertTrue(message = "password and password retry not equals")
+    @AssertTrue(message = "password_retry_not_equals")
     public boolean isRetryEqualsPassword() {
         // NPE check
         if (password != null) {

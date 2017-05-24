@@ -1,10 +1,5 @@
 package com.dosug.app.domain;
 
-import com.dosug.app.utils.LocalDateTimeDeserializer;
-import com.dosug.app.utils.LocalDateTimeSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,10 +30,11 @@ public class Event {
     @Column(name = "content")
     private String content;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @Column(name = "event_date_time")
+    @Column(name = "event_start_date_time")
     private LocalDateTime eventDateTime;
+
+    @Column(name = "event_end_date_time")
+    private LocalDateTime endDateTime;
 
     @Column(name = "longitude")
     private double longitude;
@@ -48,6 +44,9 @@ public class Event {
 
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "like_count")
+    private int likeCount;
 
     @Column(name = "allowed")
     private Boolean allowed;
@@ -61,13 +60,10 @@ public class Event {
             fetch = FetchType.EAGER)
     private List<Image> images;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "event_participant",
-            joinColumns = @JoinColumn(name = "event_id", foreignKey = @ForeignKey(name = "event_participant_event_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "participant_id", foreignKey = @ForeignKey(name = "event_participant_participant_id_fk"))
-    )
-    private Set<User> participants;
+    @OneToMany(targetEntity = EventParticipant.class,
+            cascade = CascadeType.REMOVE,
+            mappedBy = "event", fetch = FetchType.EAGER)
+    private Set<EventParticipant> participantLinks;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
@@ -76,6 +72,7 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "event_tag_tag_id_fk"))
     )
     private Set<Tag> tags;
+
 
     public Event() {
     }
@@ -179,6 +176,14 @@ public class Event {
         this.avatar = avatar;
     }
 
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
     public List<Image> getImages() {
         return images;
     }
@@ -187,12 +192,12 @@ public class Event {
         this.images = images;
     }
 
-    public Set<User> getParticipants() {
-        return participants;
+    public Set<EventParticipant> getParticipantLinks() {
+        return participantLinks;
     }
 
-    public void setParticipants(Set<User> participants) {
-        this.participants = participants;
+    public void setParticipantLinks(Set<EventParticipant> participantLinks) {
+        this.participantLinks = participantLinks;
     }
 
     public Set<Tag> getTags() {
@@ -201,6 +206,14 @@ public class Event {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
     }
 
     @Override

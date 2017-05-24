@@ -1,10 +1,13 @@
 package com.dosug.app.services.events;
 
 import com.dosug.app.domain.Event;
+import com.dosug.app.domain.EventParticipant;
 import com.dosug.app.domain.User;
 import com.dosug.app.exception.ConflictException;
 import com.dosug.app.exception.EventNotFoundException;
 import com.dosug.app.exception.InsufficientlyRightsException;
+import com.dosug.app.exception.LinkNotFoundException;
+import com.dosug.app.repository.EventParticipantRepository;
 import com.dosug.app.repository.EventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleEventService implements EventService {
@@ -22,6 +27,8 @@ public class SimpleEventService implements EventService {
     private static final Logger logger = LoggerFactory.getLogger(SimpleEventService.class);
 
     private EventRepository eventRepository;
+
+    private EventParticipantRepository eventParticipantRepository;
 
     @Override
     public Long createEvent(Event event) {
@@ -66,7 +73,7 @@ public class SimpleEventService implements EventService {
 
         newEvent.setCreateDate(updatingEvent.getCreateDate());
         newEvent.setAllowed(null);
-        newEvent.setParticipants(updatingEvent.getParticipants());
+        newEvent.setParticipantLinks(updatingEvent.getParticipantLinks());
         newEvent.setImages(updatingEvent.getImages());
 
         return eventRepository.save(newEvent).getId();
@@ -81,6 +88,20 @@ public class SimpleEventService implements EventService {
             return event;
         } else {
             throw new EventNotFoundException();
+        }
+    }
+
+    public boolean isLikedByUser(long eventId, User user) {
+        // Находим среди участников пользователя, соответствующего user.
+        Optional<EventParticipant> eventParticipantOptional = eventRepository.findById(eventId).getParticipantLinks().stream()
+                .filter(s -> s.getUser().equals(user))
+                .findFirst();
+
+        // Если участник был найден возвращаем его лайк
+        if (eventParticipantOptional.isPresent()) {
+            return eventParticipantOptional.get().isLiked();
+        } else {
+            return false;
         }
     }
 
@@ -178,5 +199,10 @@ public class SimpleEventService implements EventService {
     @Autowired
     public void setEventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
+    }
+
+    @Autowired
+    public void setEventParticipantRepository(EventParticipantRepository eventParticipantRepository) {
+        this.eventParticipantRepository = eventParticipantRepository;
     }
 }

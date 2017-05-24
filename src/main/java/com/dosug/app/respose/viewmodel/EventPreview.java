@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // Объект для возвращения полного события на клиент.
-
 public class EventPreview {
 
     @JsonProperty
@@ -32,7 +31,7 @@ public class EventPreview {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime dateTime;
+    private LocalDateTime eventDateTime;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -54,9 +53,9 @@ public class EventPreview {
         eventName = event.getEventName();
         content = event.getContent();
         placeName = event.getPlaceName();
-        dateTime = event.getEventDateTime();
+        eventDateTime = event.getEventDateTime();
         avatar = event.getAvatar();
-        participantsCount = event.getParticipants().size();
+        participantsCount = event.getParticipantLinks().size();
         createDateTime = event.getCreateDate();
         tags = event.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
     }

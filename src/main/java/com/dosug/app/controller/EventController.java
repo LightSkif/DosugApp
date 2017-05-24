@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,11 +35,12 @@ public class EventController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response create(@RequestBody CreateEventForm form,
-                           @RequestHeader(value = "authKey") String authKey) {
+                           @RequestHeader(value = "authKey") String authKey,
+                           Locale locale) {
 
         Response<Long> response = new Response<>();
 
-        List<ApiError> validateErrors = validationService.validate(form);
+        List<ApiError> validateErrors = validationService.validate(form, locale);
         if (!validateErrors.isEmpty()) {
             return response.failure(validateErrors);
         }
@@ -48,7 +50,6 @@ public class EventController {
         // Преобразуем массив строк из формы в массив тегов.
         Event event = buildEvent(form, user);
 
-
         Long eventId = eventService.createEvent(event);
 
         return response.success(eventId);
@@ -56,11 +57,12 @@ public class EventController {
 
     @PostMapping(value = "/update")
     public Response update(@RequestBody UpdateEventForm form,
-                           @RequestHeader(value = "authKey") String authKey) {
+                           @RequestHeader(value = "authKey") String authKey,
+                           Locale locale) {
 
         Response<Long> response = new Response<>();
 
-        List<ApiError> validateErrors = validationService.validate(form);
+        List<ApiError> validateErrors = validationService.validate(form, locale);
         if (!validateErrors.isEmpty()) {
             return response.failure(validateErrors);
         }
@@ -73,14 +75,67 @@ public class EventController {
         return response.success(eventService.updateEvent(event, user));
     }
 
+    @PostMapping(value = "/add-participant")
+    public Response addParticipant(@RequestBody long eventId,
+                                   @RequestHeader(value = "authKey") String authKey) {
+        Response<Void> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+
+        eventService.addParticipant(eventId, user);
+
+        return response.success(null);
+    }
+
+    @PostMapping(value = "/remove-participant")
+    public Response removeParticipant(@RequestBody long eventId,
+                                      @RequestHeader(value = "authKey") String authKey) {
+        Response<Void> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+
+        eventService.removeParticipant(eventId, user);
+
+        return response.success(null);
+    }
+
+    @PostMapping(value = "/like")
+    public Response addLike(@RequestBody long eventId,
+                            @RequestHeader(value = "authKey") String authKey) {
+
+        Response<Void> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+
+        eventService.addLike(eventId, user);
+
+        return response.success(null);
+    }
+
+    @PostMapping(value = "/dislike")
+    public Response removeLike(@RequestBody long eventId,
+                               @RequestHeader(value = "authKey") String authKey) {
+
+        Response<Void> response = new Response<>();
+
+        User user = authService.authenticate(authKey);
+
+        eventService.removeLike(eventId, user);
+
+        return response.success(null);
+    }
+
     @GetMapping(value = "")
     public Response getEvent(@RequestParam(value = "id") Long eventId,
                              @RequestHeader(value = "authKey") String authKey) {
 
         Response<EventView> response = new Response<>();
 
+        User user = authService.authenticate(authKey);
 
-        EventView eventView = new EventView(eventService.getEvent(eventId));
+        boolean liked = eventService.isLikedByUser(eventId, user);
+
+        EventView eventView = new EventView(eventService.getEvent(eventId), liked);
         return response.success(eventView);
     }
 
@@ -90,10 +145,15 @@ public class EventController {
 //
 //        Response<List<Event>> response = new Response<>();
 //
+//        User user = authService.authenticate(authKey);
+//        if (user == null){
+//            throw new NotAuthorizedException();
+//        }
+//
 //        return  eventService.getAllEventsByCreator();
 //    }
 
-    @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/delete")
     public Response delete(@RequestBody long eventId,
                            @RequestHeader(value = "authKey") String authKey) {
 
@@ -115,7 +175,9 @@ public class EventController {
         event.setCreator(user);
         event.setEventName(form.getEventName());
         event.setContent(form.getContent());
-        event.setEventDateTime(form.getDateTime());
+        event.setEventDateTime(form.getEventDateTime());
+        // Прибавляем к времени проведения события продолжительность для получения времени завершения события.
+        event.setEndDateTime(form.getEventDateTime().plus(form.getPeriod()));
         event.setEventName(form.getEventName());
         event.setPlaceName(form.getPlaceName());
         event.setLongitude(form.getLongitude());
