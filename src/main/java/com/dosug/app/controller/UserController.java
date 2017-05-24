@@ -1,7 +1,7 @@
 package com.dosug.app.controller;
 
 import com.dosug.app.domain.User;
-import com.dosug.app.exception.InsufficientlyRightsException;
+import com.dosug.app.form.UpdateUserForm;
 import com.dosug.app.form.UpdateUserPasswordForm;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.UserView;
@@ -29,13 +29,10 @@ public class UserController {
 
         Response<Long> response = new Response<>();
 
-        User user = authService.authenticate(authKey);
+        User requestedUser = authService.authenticate(authKey);
 
-        // Проверяем совпадение запросившего и удаляемого пользователя.
-        if (user.getId() != userId) {
-            throw new InsufficientlyRightsException();
-        }
-
+        //return response.success(userService.updateUser(, requestedUser));
+        return null;
     }
 
     @PostMapping(value = "/update-password", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -44,16 +41,11 @@ public class UserController {
 
         Response<Long> response = new Response<>();
 
-        User user = authService.authenticate(authKey);
+        User requestedUser = authService.authenticate(authKey);
 
-        // Проверяем совпадение запросившего и удаляемого пользователя.
-        if (user.getId() != userId) {
-            throw new InsufficientlyRightsException();
-        }
-
-
+        //return response.success(userService.updateUserPassword(, requestedUser));
+        return null;
     }
-
 
     @GetMapping
     public Response getUserId(@RequestParam(value = "id") Long userId) {
@@ -62,20 +54,15 @@ public class UserController {
         return response.success(new UserView(userService.getUser(userId)));
     }
 
-    @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/delete")
     public Response delete(@RequestBody long userId,
                            @RequestHeader(value = "authKey") String authKey) {
 
         Response<Void> response = new Response<>();
 
-        User user = authService.authenticate(authKey);
+        User requestedUser = authService.authenticate(authKey);
 
-        // Проверяем совпадение запросившего и удаляемого пользователя.
-        if (user.getId() != userId) {
-            throw new InsufficientlyRightsException();
-        }
-
-        userService.deleteUser(userId, );
+        userService.deleteUser(userId, requestedUser);
         return response.success(null);
     }
 

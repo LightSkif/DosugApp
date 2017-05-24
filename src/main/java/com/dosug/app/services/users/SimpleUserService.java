@@ -1,6 +1,7 @@
 package com.dosug.app.services.users;
 
 import com.dosug.app.domain.User;
+import com.dosug.app.exception.InsufficientlyRightsException;
 import com.dosug.app.exception.UserNotFoundException;
 import com.dosug.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,11 @@ public class SimpleUserService implements UserService {
 
     private UserRepository userRepository;
 
-    public Long updateUser(User user) {
+    public Long updateUser(User user, User requestedUser) {
+        return null;
+    }
+
+    public Long updateUserPassword(User user, User requestedUser) {
         return null;
     }
 
@@ -36,8 +41,20 @@ public class SimpleUserService implements UserService {
         return userRepository.findByUsernameContainingIgnoreCaseOrderByCreateDateDesc(partUserName, pageable).getContent();
     }
 
-    public void deleteUser(long userId) {
+    public void deleteUser(long userId, User requestedUser) {
 
+        // Проверяем совпадение запросившего и удаляемого пользователя.
+        if (requestedUser.getId() != userId) {
+            throw new InsufficientlyRightsException();
+        }
+
+        User user = userRepository.findById(userId);
+
+        if (user != null) {
+            userRepository.delete(user);
+        } else {
+            throw new UserNotFoundException();
+        }
 
     }
 

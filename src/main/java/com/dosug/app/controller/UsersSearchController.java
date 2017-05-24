@@ -22,7 +22,7 @@ public class UsersSearchController {
 
     private UserService userService;
 
-    @GetMapping(value = "/")
+    @GetMapping
     public Response searchEvent(
             @RequestParam(value = "namePart", defaultValue = "") String namePart,
             @RequestParam(value = "count") int count) {

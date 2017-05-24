@@ -77,7 +77,7 @@ public class User {
     )
     private Set<Event> events;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_tag",
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_tag_user_id_fk")),
