@@ -27,7 +27,7 @@ public interface EventService {
 
     Event getEvent(long Id);
 
-    List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart);
+    List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart, User requestedUser);
 
     List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime);
 

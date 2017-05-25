@@ -151,7 +151,7 @@ public class EventController {
         User requestedUser = authService.authenticate(authKey);
         Event event = eventService.getEvent(eventId);
 
-        List<UserWithLikePreview> userWithLikePreviews = eventService.getParticpantsWithPartName(eventId, count, namePart).stream()
+        List<UserWithLikePreview> userWithLikePreviews = eventService.getParticpantsWithPartName(eventId, count, namePart, requestedUser).stream()
                 .map(s -> new UserWithLikePreview(s, event, requestedUser))
                 .collect(Collectors.toList());
 

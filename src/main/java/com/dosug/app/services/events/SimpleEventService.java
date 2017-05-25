@@ -227,7 +227,7 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart) {
+    public List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart, User requestedUser) {
 
         Event event = eventRepository.findById(eventId);
 
@@ -240,6 +240,7 @@ public class SimpleEventService implements EventService {
         Stream<User> streamUsers = eventParticipantRepository.findByEvent(event, pageable)
                 .getContent().stream()
                 .map(s -> s.getUser())
+                .filter(u -> !u.equals(requestedUser))
                 .sorted((u1, u2) -> u1.getUsername().compareTo(u2.getUsername()));
 
         if (usernamePart != null) {

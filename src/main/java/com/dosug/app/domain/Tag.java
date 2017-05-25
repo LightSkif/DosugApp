@@ -24,7 +24,7 @@ public class Tag {
     private Set<Event> events;
 
     @OneToMany(targetEntity = UserLike.class,
-            mappedBy = "evaluateUser",
+            mappedBy = "tag",
             cascade = CascadeType.REMOVE,
             fetch = FetchType.EAGER)
     private Set<UserLike> likes;
