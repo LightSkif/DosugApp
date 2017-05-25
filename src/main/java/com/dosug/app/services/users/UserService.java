@@ -18,7 +18,7 @@ public interface UserService {
 
     void addLike(long ratedUserId, long eventId, long tagId, User evaluateUser);
 
-    void removeLike(long ratedUserId, long eventId, long tagId, User requestedUser);
+//    void removeLike(long ratedUserId, long eventId, long tagId, User requestedUser);
 
     void deleteUser(long userId, User requestedUser);
 

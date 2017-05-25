@@ -140,8 +140,8 @@ public class EventController {
         return response.success(eventView);
     }
 
-    @GetMapping(value = "/get-particpants-likes")
-    public Response getParticpantsWithLikes(@RequestParam(value = "eventId") long eventId,
+    @GetMapping(value = "/get-participants-likes-by-name")
+    public Response getParticipantsWithLikes(@RequestParam(value = "eventId") long eventId,
                                             @RequestParam(value = "count") int count,
                                             @RequestParam(value = "namePart") String namePart,
                                             @RequestHeader(value = "authKey") String authKey) {
@@ -158,6 +158,15 @@ public class EventController {
         return response.success(userWithLikePreviews);
     }
 
+    @GetMapping(value = "/get-participants-likes")
+    public Response getParticipantsWithLikes(@RequestParam(value = "eventId") long eventId,
+                                             @RequestParam(value = "count") int count,
+                                             @RequestHeader(value = "authKey") String authKey) {
+
+        Response<List<UserWithLikePreview>> response = new Response<>();
+
+        return getParticipantsWithLikes(eventId, count, null, authKey);
+    }
 
 //    @GetMapping(value = "/byCreator", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    public Response getEventsByCreator(, @RequestHeader(value = "authKey") String authKey) {

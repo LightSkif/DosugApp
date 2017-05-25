@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,12 @@ public class SimpleUserService implements UserService {
 
         UserLike newUserLike = userLikeBuilder(ratedUserId, eventId, tagId, evaluateUser);
 
+        // Проверяем закончилось ли событие.
+        if (LocalDateTime.now().isBefore(newUserLike.getEvent().getEndDateTime())) {
+
+            throw new InsufficientlyRightsException();
+        }
+
         // Пытаемся найти идентичный лайк в бд.
         UserLike updatedUserLike = userLikeRepository.findByEventAndEvaluateUserAndRatedUserAndTag(
                 newUserLike.getEvent(), evaluateUser, newUserLike.getRatedUser(), newUserLike.getTag());
@@ -75,26 +82,26 @@ public class SimpleUserService implements UserService {
         }
     }
 
-    @Override
-    public void removeLike(long ratedUserId, long eventId, long tagId, User evaluateUser) {
-
-
-        // Пытаемся найти идентичный лайк в бд.
-        UserLike removeUserLike = userLikeRepository.findByEventAndEvaluateUserAndRatedUserAndTag(
-                eventRepository.findById(eventId), evaluateUser, userRepository.findById(ratedUserId), tagRepository.findById(tagId));
-
-        if (removeUserLike != null) {
-            // Находим связку оценённого пользователя и тега, по которому производится добавление лайка.
-            UserTag userTagLink = removeUserLike.getRatedUser().getTagLinks().stream().filter(s -> s.getTag().getId() == tagId).findFirst().get();
-
-            // Увеличиваем счётчик лайков в связке.
-            userTagLink.setLikeCount(userTagLink.getLikeCount() - 1);
-
-            userTagRepository.save(userTagLink);
-
-            userLikeRepository.delete(removeUserLike);
-        }
-    }
+//    @Override
+//    public void removeLike(long ratedUserId, long eventId, long tagId, User evaluateUser) {
+//
+//
+//        // Пытаемся найти идентичный лайк в бд.
+//        UserLike removeUserLike = userLikeRepository.findByEventAndEvaluateUserAndRatedUserAndTag(
+//                eventRepository.findById(eventId), evaluateUser, userRepository.findById(ratedUserId), tagRepository.findById(tagId));
+//
+//        if (removeUserLike != null) {
+//            // Находим связку оценённого пользователя и тега, по которому производится добавление лайка.
+//            UserTag userTagLink = removeUserLike.getRatedUser().getTagLinks().stream().filter(s -> s.getTag().getId() == tagId).findFirst().get();
+//
+//            // Увеличиваем счётчик лайков в связке.
+//            userTagLink.setLikeCount(userTagLink.getLikeCount() - 1);
+//
+//            userTagRepository.save(userTagLink);
+//
+//            userLikeRepository.delete(removeUserLike);
+//        }
+//    }
 
     @Override
     public void deleteUser(long userId, User requestedUser) {

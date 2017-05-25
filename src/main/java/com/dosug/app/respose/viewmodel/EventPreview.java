@@ -45,6 +45,9 @@ public class EventPreview {
     @JsonProperty
     private List<String> tags;
 
+    @JsonProperty
+    private boolean isEnded;
+
     public EventPreview() {
 
     }
@@ -60,5 +63,8 @@ public class EventPreview {
         participantsCount = event.getParticipantLinks().size();
         createDateTime = event.getCreateDate();
         tags = event.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
+
+        // Проверяем завершилось ли событие и сохраняем как флаг для отправки на клиент.
+        isEnded = LocalDateTime.now().isAfter(event.getEndDateTime());
     }
 }

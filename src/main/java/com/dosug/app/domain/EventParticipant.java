@@ -65,8 +65,8 @@ public class EventParticipant {
 
         EventParticipant that = (EventParticipant) o;
 
-        if (!getUser().equals(that.getUser())) return false;
-        return getEvent().equals(that.getEvent());
+        if (getUser() != null ? !getUser().equals(that.getUser()) : that.getUser() != null) return false;
+        return getEvent() != null ? getEvent().equals(that.getEvent()) : that.getEvent() == null;
     }
 
     @Override

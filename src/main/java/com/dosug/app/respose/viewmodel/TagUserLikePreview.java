@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TagUserLikePreview {
 
     @JsonProperty
-    private Long userId;
+    private Long tagId;
 
     @JsonProperty
     private String tagName;
@@ -17,8 +17,8 @@ public class TagUserLikePreview {
     @JsonProperty
     private Boolean isLiked;
 
-    public TagUserLikePreview(Long userId, String tagName, Boolean isLiked) {
-        this.userId = userId;
+    public TagUserLikePreview(Long tagId, String tagName, Boolean isLiked) {
+        this.tagId = tagId;
         this.tagName = tagName;
         this.isLiked = isLiked;
     }

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class SimpleEventService implements EventService {
@@ -82,14 +83,23 @@ public class SimpleEventService implements EventService {
             throw new EventNotFoundException();
         }
 
+        // Проверяем не закончилось ли событие.
+        if (LocalDateTime.now().isAfter(updatingEvent.getEndDateTime())) {
+
+            throw new InsufficientlyRightsException();
+        }
+
         // Создаём сущность для таблицы связки событий и пользователей.
         EventParticipant eventParticipant = new EventParticipant();
         eventParticipant.setUser(user);
         eventParticipant.setEvent(updatingEvent);
         eventParticipant.setLiked(false);
 
+        EventParticipant existingEventParticipant = eventParticipantRepository.findByEventAndUser(updatingEvent, user);
 
-        eventParticipantRepository.save(eventParticipant);
+        if (existingEventParticipant == null) {
+            eventParticipantRepository.save(eventParticipant);
+        }
     }
 
     @Override
@@ -97,6 +107,12 @@ public class SimpleEventService implements EventService {
         Event event = eventRepository.findById(eventId);
         if (event == null) {
             throw new EventNotFoundException();
+        }
+
+        // Проверяем закончилось ли событие.
+        if (LocalDateTime.now().isAfter(event.getEndDateTime())) {
+
+            throw new InsufficientlyRightsException();
         }
 
         EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
@@ -118,9 +134,15 @@ public class SimpleEventService implements EventService {
             throw new EventNotFoundException();
         }
 
+        // Проверяем закончилось ли событие.
+        if (LocalDateTime.now().isBefore(event.getEndDateTime())) {
+
+            throw new InsufficientlyRightsException();
+        }
+
         EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
 
-        if (eventParticipant == null) {
+        if (eventParticipant != null) {
             if (!eventParticipant.isLiked()) {
                 eventParticipant.setLiked(true);
                 eventParticipantRepository.save(eventParticipant);
@@ -143,8 +165,13 @@ public class SimpleEventService implements EventService {
             throw new EventNotFoundException();
         }
 
-        EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
+        // Проверяем закончилось ли событие.
+        if (LocalDateTime.now().isBefore(event.getEndDateTime())) {
 
+            throw new InsufficientlyRightsException();
+        }
+
+        EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
 
         if (eventParticipant != null) {
             if (eventParticipant.isLiked()) {
@@ -209,12 +236,19 @@ public class SimpleEventService implements EventService {
         }
 
         PageRequest pageable = new PageRequest(0, count);
-        return eventParticipantRepository.findByEvent(event, pageable)
+
+        Stream<User> streamUsers = eventParticipantRepository.findByEvent(event, pageable)
                 .getContent().stream()
                 .map(s -> s.getUser())
-                .filter(u -> u.getUsername().compareTo(usernamePart) == 1)
-                .sorted((u1, u2) -> u1.getUsername().compareTo(u2.getUsername()))
-                .collect(Collectors.toList());
+                .sorted((u1, u2) -> u1.getUsername().compareTo(u2.getUsername()));
+
+        if (usernamePart != null) {
+            return streamUsers.filter(u -> u.getUsername()
+                    .compareTo(usernamePart) == 1)
+                    .collect(Collectors.toList());
+        } else {
+            return streamUsers.collect(Collectors.toList());
+        }
     }
 
     /**

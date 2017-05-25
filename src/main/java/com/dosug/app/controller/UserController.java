@@ -77,24 +77,6 @@ public class UserController {
         return response.success(null);
     }
 
-    @PostMapping(value = "/dislike")
-    public Response removeLike(@RequestBody UserLikeForm form,
-                               @RequestHeader(value = "authKey") String authKey,
-                               Locale locale) {
-
-        Response<Void> response = new Response<>();
-
-        List<ApiError> validateErrors = validationService.validate(form, locale);
-        if (!validateErrors.isEmpty()) {
-            return response.failure(validateErrors);
-        }
-
-        User requestedUser = authService.authenticate(authKey);
-
-        userService.removeLike(form.getRatedUserId(), form.getEventId(), form.getTagId(), requestedUser);
-        return response.success(null);
-    }
-
     @PostMapping(value = "/delete")
     public Response delete(@RequestBody long userId,
                            @RequestHeader(value = "authKey") String authKey) {
