@@ -3,6 +3,8 @@ package com.dosug.app.controller;
 import com.dosug.app.domain.User;
 import com.dosug.app.form.UpdateUserForm;
 import com.dosug.app.form.UpdateUserPasswordForm;
+import com.dosug.app.form.UserLikeForm;
+import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.UserView;
 import com.dosug.app.services.authentication.AuthenticationService;
@@ -11,6 +13,9 @@ import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Locale;
 
 
 @RestController
@@ -52,6 +57,42 @@ public class UserController {
 
         Response<UserView> response = new Response<>();
         return response.success(new UserView(userService.getUser(userId)));
+    }
+
+    @PostMapping(value = "/like")
+    public Response addLike(@RequestBody UserLikeForm form,
+                            @RequestHeader(value = "authKey") String authKey,
+                            Locale locale) {
+
+        Response<Void> response = new Response<>();
+
+        List<ApiError> validateErrors = validationService.validate(form, locale);
+        if (!validateErrors.isEmpty()) {
+            return response.failure(validateErrors);
+        }
+
+        User requestedUser = authService.authenticate(authKey);
+
+        userService.addLike(form.getRatedUserId(), form.getEventId(), form.getTagId(), requestedUser);
+        return response.success(null);
+    }
+
+    @PostMapping(value = "/dislike")
+    public Response removeLike(@RequestBody UserLikeForm form,
+                               @RequestHeader(value = "authKey") String authKey,
+                               Locale locale) {
+
+        Response<Void> response = new Response<>();
+
+        List<ApiError> validateErrors = validationService.validate(form, locale);
+        if (!validateErrors.isEmpty()) {
+            return response.failure(validateErrors);
+        }
+
+        User requestedUser = authService.authenticate(authKey);
+
+        userService.removeLike(form.getRatedUserId(), form.getEventId(), form.getTagId(), requestedUser);
+        return response.success(null);
     }
 
     @PostMapping(value = "/delete")

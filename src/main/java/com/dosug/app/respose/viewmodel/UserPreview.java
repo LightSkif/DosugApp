@@ -3,7 +3,9 @@ package com.dosug.app.respose.viewmodel;
 import com.dosug.app.domain.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-// Объект для возвращения основной информации о пользователе на клиент.
+/**
+ * Объект для возвращения основной информации о пользователе на клиент.
+ */
 public class UserPreview {
 
     @JsonProperty

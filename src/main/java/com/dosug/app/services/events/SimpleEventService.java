@@ -3,10 +3,7 @@ package com.dosug.app.services.events;
 import com.dosug.app.domain.Event;
 import com.dosug.app.domain.EventParticipant;
 import com.dosug.app.domain.User;
-import com.dosug.app.exception.ConflictException;
-import com.dosug.app.exception.EventNotFoundException;
-import com.dosug.app.exception.InsufficientlyRightsException;
-import com.dosug.app.exception.LinkNotFoundException;
+import com.dosug.app.exception.*;
 import com.dosug.app.repository.EventParticipantRepository;
 import com.dosug.app.repository.EventRepository;
 import org.slf4j.Logger;
@@ -49,7 +46,6 @@ public class SimpleEventService implements EventService {
             if (checkEventDuplicate(event)) {
                 throw new ConflictException();
             }
-            // TODO: Продумать обработку исключения лучше.
 
             logger.error(e.getMessage());
             throw e;
@@ -80,7 +76,119 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public Event getEvent(Long Id) {
+    public void addParticipant(long eventId, User user) {
+        Event updatingEvent = eventRepository.findById(eventId);
+        if (updatingEvent == null) {
+            throw new EventNotFoundException();
+        }
+
+        // Создаём сущность для таблицы связки событий и пользователей.
+        EventParticipant eventParticipant = new EventParticipant();
+        eventParticipant.setUser(user);
+        eventParticipant.setEvent(updatingEvent);
+        eventParticipant.setLiked(false);
+
+
+        eventParticipantRepository.save(eventParticipant);
+    }
+
+    @Override
+    public void removeParticipant(long eventId, User user) {
+        Event event = eventRepository.findById(eventId);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
+
+        if (eventParticipant != null) {
+            eventParticipantRepository.delete(eventParticipant);
+        }
+        // Если не удалось удалить пользователя в списке участников.
+        else {
+            throw new LinkNotFoundException();
+        }
+    }
+
+    @Override
+    public void addLike(long eventId, User user) {
+
+        Event event = eventRepository.findById(eventId);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
+
+        if (eventParticipant == null) {
+            if (!eventParticipant.isLiked()) {
+                eventParticipant.setLiked(true);
+                eventParticipantRepository.save(eventParticipant);
+
+                event.setLikeCount(event.getLikeCount() + 1);
+                eventRepository.save(event);
+            }
+        }
+        // Если не удалось удалить пользователя в списке участников.
+        else {
+            throw new LinkNotFoundException();
+        }
+    }
+
+    @Override
+    public void removeLike(long eventId, User user) {
+
+        Event event = eventRepository.findById(eventId);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        EventParticipant eventParticipant = eventParticipantRepository.findByEventAndUser(event, user);
+
+
+        if (eventParticipant != null) {
+            if (eventParticipant.isLiked()) {
+                eventParticipant.setLiked(false);
+                eventParticipantRepository.save(eventParticipant);
+
+                event.setLikeCount(event.getLikeCount() - 1);
+                eventRepository.save(event);
+            }
+        }
+        // Если не удалось удалить пользователя в списке участников.
+        else {
+            throw new LinkNotFoundException();
+        }
+    }
+
+    @Override
+    public boolean isLikedByUser(long eventId, User user) {
+
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+
+        Event event = eventRepository.findById(eventId);
+
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        // Находим среди участников пользователя, соответствующего user.
+        Optional<EventParticipant> eventParticipantOptional = event.getParticipantLinks().stream()
+                .filter(s -> s.getUser().equals(user))
+                .findFirst();
+
+        // Если участник был найден возвращаем его лайк
+        if (eventParticipantOptional.isPresent()) {
+            return eventParticipantOptional.get().isLiked();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Event getEvent(long Id) {
 
         Event event = eventRepository.findById(Id);
 
@@ -91,18 +199,22 @@ public class SimpleEventService implements EventService {
         }
     }
 
-    public boolean isLikedByUser(long eventId, User user) {
-        // Находим среди участников пользователя, соответствующего user.
-        Optional<EventParticipant> eventParticipantOptional = eventRepository.findById(eventId).getParticipantLinks().stream()
-                .filter(s -> s.getUser().equals(user))
-                .findFirst();
+    @Override
+    public List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart) {
 
-        // Если участник был найден возвращаем его лайк
-        if (eventParticipantOptional.isPresent()) {
-            return eventParticipantOptional.get().isLiked();
-        } else {
-            return false;
+        Event event = eventRepository.findById(eventId);
+
+        if (event == null) {
+            throw new EventNotFoundException();
         }
+
+        PageRequest pageable = new PageRequest(0, count);
+        return eventParticipantRepository.findByEvent(event, pageable)
+                .getContent().stream()
+                .map(s -> s.getUser())
+                .filter(u -> u.getUsername().compareTo(usernamePart) == 1)
+                .sorted((u1, u2) -> u1.getUsername().compareTo(u2.getUsername()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -121,7 +233,7 @@ public class SimpleEventService implements EventService {
     @Override
     public List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime) {
 
-        PageRequest pageable = new PageRequest(0, PAGE_SIZE);
+        PageRequest pageable = new PageRequest(0, DEFAULT_EVENT_PAGE_SIZE);
         return eventRepository.findByCreateDateGreaterThanOrderByCreateDateDesc(dateTime, pageable).getContent();
     }
 
@@ -145,7 +257,7 @@ public class SimpleEventService implements EventService {
     @Override
     public List<Event> getEventsWithPartOfNameAfterDateTime(String partEventName, LocalDateTime dateTime) {
 
-        PageRequest pageable = new PageRequest(0, PAGE_SIZE);
+        PageRequest pageable = new PageRequest(0, DEFAULT_EVENT_PAGE_SIZE);
         return eventRepository.findByEventNameContainingIgnoreCaseAndCreateDateGreaterThanOrderByCreateDateDesc(partEventName, dateTime, pageable).getContent();
     }
 
@@ -193,7 +305,8 @@ public class SimpleEventService implements EventService {
     }
 
     private boolean checkEventDuplicate(Event event) {
-        return eventRepository.findByEventNameIgnoreCaseAndCreatorAndEventDateTime(event.getEventName(), event.getCreator(), event.getEventDateTime()) != null;
+        return eventRepository.findByEventNameIgnoreCaseAndCreatorAndEventDateTime(
+                event.getEventName(), event.getCreator(), event.getEventDateTime()) != null;
     }
 
     @Autowired

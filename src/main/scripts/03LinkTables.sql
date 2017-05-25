@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS public.user_tag CASCADE;
 DROP TABLE IF EXISTS public.user_role CASCADE;
 DROP TABLE IF EXISTS public.event_tag CASCADE;
 
@@ -24,23 +23,10 @@ CREATE TABLE  event_tag(
 	tag_id bigint,
 
 	CONSTRAINT event_tag_event_id_fk FOREIGN KEY (event_id)
-      REFERENCES public.events (id) MATCH SIMPLE
+      REFERENCES public.events (id)
       ON DELETE CASCADE,
 
 	CONSTRAINT event_tag_tag_id_fk FOREIGN KEY (tag_id)
-      REFERENCES public.tags (id) MATCH SIMPLE
-      ON DELETE CASCADE
-);
-
-CREATE TABLE  user_tag(
-    user_id bigint,
-	tag_id bigint,
-
-	CONSTRAINT user_tag_tag_id_fk FOREIGN KEY (tag_id)
-      REFERENCES public.tags (id) MATCH SIMPLE
-      ON DELETE CASCADE,
-
-	CONSTRAINT user_tag_user_id_fk FOREIGN KEY (user_id)
-      REFERENCES public.users (id) MATCH SIMPLE
+      REFERENCES public.tags (id)
       ON DELETE CASCADE
 );

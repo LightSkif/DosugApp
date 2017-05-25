@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Объект для возвращения полной информации о пользователе на клиент.
+/**
+ * Объект для возвращения полной информации о пользователе на клиент.
+ */
 public class UserView {
 
     @JsonProperty
@@ -40,7 +42,7 @@ public class UserView {
         description = user.getDescription();
         firstname = user.getFirstName();
         lastname = user.getLastName();
-        events = user.getEvents().stream().map(s -> s.getId()).collect(Collectors.toList());
-        tags = user.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
+        events = user.getEventLinks().stream().map(s -> s.getEvent().getId()).collect(Collectors.toList());
+        tags = user.getTagLinks().stream().map(s -> s.getTag().getTagName()).collect(Collectors.toList());
     }
 }

@@ -75,13 +75,17 @@ public class User {
     private Set<EventParticipant> eventLinks;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_tag",
-            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_tag_user_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "user_tag_tag_id_fk"))
-    )
-    private Set<Tag> tags;
+    @OneToMany(targetEntity = UserLike.class,
+            mappedBy = "evaluateUser",
+            cascade = CascadeType.REMOVE,
+            fetch = FetchType.EAGER)
+    private Set<UserLike> likes;
+
+    @OneToMany(targetEntity = UserTag.class,
+            mappedBy = "user",
+            cascade = CascadeType.REMOVE,
+            fetch = FetchType.EAGER)
+    private Set<UserTag> tagLinks;
 
     public User() {
     }
@@ -197,20 +201,28 @@ public class User {
         this.createdEvents = createdEvents;
     }
 
-
-    public Set<EventParticipant> getEvents() {
+    public Set<EventParticipant> getEventLinks() {
         return eventLinks;
     }
 
-    public void setEvents(Set<EventParticipant> events) {
-        this.eventLinks = events;
-    }
-    public Set<Tag> getTags() {
-        return tags;
+    public void setEventLinks(Set<EventParticipant> eventLinks) {
+        this.eventLinks = eventLinks;
     }
 
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
+    public Set<UserLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<UserLike> likes) {
+        this.likes = likes;
+    }
+
+    public Set<UserTag> getTagLinks() {
+        return tagLinks;
+    }
+
+    public void setTagLinks(Set<UserTag> tagLinks) {
+        this.tagLinks = tagLinks;
     }
 
     public Collection<Role> getRoles() {
@@ -238,21 +250,5 @@ public class User {
         int result = getUsername() != null ? getUsername().hashCode() : 0;
         result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", description='" + description + '\'' +
-                ", birthDate=" + birthDate +
-                ", phone='" + phone + '\'' +
-                ", createDate='" + createDate + '\'' +
-                '}';
     }
 }

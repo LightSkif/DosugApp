@@ -23,13 +23,17 @@ public class Tag {
     )
     private Set<Event> events;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_tag",
-            joinColumns = @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "user_tag_tag_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_tag_user_id_fk"))
-    )
-    private Set<User> users;
+    @OneToMany(targetEntity = UserLike.class,
+            mappedBy = "evaluateUser",
+            cascade = CascadeType.REMOVE,
+            fetch = FetchType.EAGER)
+    private Set<UserLike> likes;
+
+    @OneToMany(targetEntity = UserTag.class,
+            mappedBy = "tag",
+            cascade = CascadeType.REMOVE,
+            fetch = FetchType.EAGER)
+    private Set<UserTag> userLinks;
 
     public Tag() {
     }
@@ -62,19 +66,42 @@ public class Tag {
         this.events = events;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Set<UserLike> getLikes() {
+        return likes;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setLikes(Set<UserLike> likes) {
+        this.likes = likes;
+    }
+
+    public Set<UserTag> getUserLinks() {
+        return userLinks;
+    }
+
+    public void setUserLinks(Set<UserTag> userLinks) {
+        this.userLinks = userLinks;
+    }
+
+    public Set<UserTag> getUsers() {
+        return userLinks;
+    }
+
+    public void setUsers(Set<UserTag> userLinks) {
+        this.userLinks = userLinks;
     }
 
     @Override
-    public String toString() {
-        return "Tag{" +
-                "id=" + id +
-                ", tagName='" + tagName + '\'' +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tag tag = (Tag) o;
+
+        return getTagName() != null ? getTagName().equals(tag.getTagName()) : tag.getTagName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getTagName() != null ? getTagName().hashCode() : 0;
     }
 }

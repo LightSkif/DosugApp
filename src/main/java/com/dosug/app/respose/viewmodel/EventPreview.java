@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Объект для возвращения полного события на клиент.
+/**
+ * Объект для возвращения полного события на клиент.
+ */
 public class EventPreview {
 
     @JsonProperty

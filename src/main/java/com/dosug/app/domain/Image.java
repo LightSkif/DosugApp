@@ -41,12 +41,4 @@ public class Image {
     public void setEvent(Event event) {
         this.event = event;
     }
-
-    @Override
-    public String toString() {
-        return "Image{" +
-                "id=" + id +
-                ", image_source='" + image_source + '\'' +
-                '}';
-    }
 }

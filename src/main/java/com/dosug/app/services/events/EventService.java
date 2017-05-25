@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface EventService {
 
-    int PAGE_SIZE = 20;
+    int DEFAULT_EVENT_PAGE_SIZE = 20;
 
     Long createEvent(Event event);
 
@@ -23,9 +23,11 @@ public interface EventService {
 
     void removeLike(long eventId, User user);
 
+    boolean isLikedByUser(long eventId, User user);
+
     Event getEvent(long Id);
 
-    boolean isLikedByUser(long eventId, User user);
+    List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart);
 
     List<Event> getLastEventsAfterDateTime(LocalDateTime dateTime);
 

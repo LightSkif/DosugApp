@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-public interface EventRepository extends CrudRepository<Event, String> {
+public interface EventRepository extends CrudRepository<Event, Long> {
 
     Event findById(long eventId);
 

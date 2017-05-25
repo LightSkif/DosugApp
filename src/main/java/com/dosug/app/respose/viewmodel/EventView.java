@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Объект для возвращения частичного события на клиент.
+/**
+ * Объект для возвращения частичного события на клиент.
+ */
 public class EventView {
 
     @JsonProperty
@@ -59,10 +61,10 @@ public class EventView {
     private List<String> tags;
 
     @JsonProperty
-    private boolean ended;
+    private boolean isEnded;
 
     @JsonProperty
-    private boolean liked;
+    private boolean isLiked;
 
     @JsonProperty
     private int likeCount;
@@ -95,9 +97,9 @@ public class EventView {
 
         tags = event.getTags().stream().map(s -> s.getTagName()).collect(Collectors.toList());
 
-        liked = isLiked;
+        this.isLiked = isLiked;
 
         // Проверяем завершилось ли событие и сохраняем как флаг для отправки на клиент.
-        ended = LocalDateTime.now().isAfter(event.getEndDateTime());
+        isEnded = LocalDateTime.now().isAfter(event.getEndDateTime());
     }
 }
