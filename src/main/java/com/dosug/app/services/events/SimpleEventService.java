@@ -244,8 +244,9 @@ public class SimpleEventService implements EventService {
                 .sorted((u1, u2) -> u1.getUsername().compareTo(u2.getUsername()));
 
         if (usernamePart != null) {
-            return streamUsers.filter(u -> u.getUsername()
-                    .compareTo(usernamePart) == 1)
+
+            return streamUsers.filter(t -> t.getUsername()
+                    .compareTo(usernamePart) > 0)
                     .collect(Collectors.toList());
         } else {
             return streamUsers.collect(Collectors.toList());
