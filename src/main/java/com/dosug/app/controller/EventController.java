@@ -8,7 +8,6 @@ import com.dosug.app.form.UpdateEventForm;
 import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.EventView;
-import com.dosug.app.respose.viewmodel.UserWithLikePreview;
 import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.events.EventService;
 import com.dosug.app.services.tags.TagService;
@@ -138,34 +137,6 @@ public class EventController {
 
         EventView eventView = new EventView(eventService.getEvent(eventId), liked);
         return response.success(eventView);
-    }
-
-    @GetMapping(value = "/get-participants-likes-by-name")
-    public Response getParticipantsWithLikes(@RequestParam(value = "eventId") long eventId,
-                                            @RequestParam(value = "count") int count,
-                                            @RequestParam(value = "namePart") String namePart,
-                                            @RequestHeader(value = "authKey") String authKey) {
-
-        Response<List<UserWithLikePreview>> response = new Response<>();
-
-        User requestedUser = authService.authenticate(authKey);
-        Event event = eventService.getEvent(eventId);
-
-        List<UserWithLikePreview> userWithLikePreviews = eventService.getParticpantsWithPartName(eventId, count, namePart, requestedUser).stream()
-                .map(s -> new UserWithLikePreview(s, event, requestedUser))
-                .collect(Collectors.toList());
-
-        return response.success(userWithLikePreviews);
-    }
-
-    @GetMapping(value = "/get-participants-likes")
-    public Response getParticipantsWithLikes(@RequestParam(value = "eventId") long eventId,
-                                             @RequestParam(value = "count") int count,
-                                             @RequestHeader(value = "authKey") String authKey) {
-
-        Response<List<UserWithLikePreview>> response = new Response<>();
-
-        return getParticipantsWithLikes(eventId, count, null, authKey);
     }
 
 //    @GetMapping(value = "/byCreator", consumes = MediaType.APPLICATION_JSON_VALUE)

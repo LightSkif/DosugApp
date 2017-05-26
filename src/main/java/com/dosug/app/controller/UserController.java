@@ -1,5 +1,6 @@
 package com.dosug.app.controller;
 
+import com.dosug.app.domain.Event;
 import com.dosug.app.domain.User;
 import com.dosug.app.form.UpdateUserForm;
 import com.dosug.app.form.UpdateUserPasswordForm;
@@ -7,7 +8,9 @@ import com.dosug.app.form.UserLikeForm;
 import com.dosug.app.respose.model.ApiError;
 import com.dosug.app.respose.model.Response;
 import com.dosug.app.respose.viewmodel.UserView;
+import com.dosug.app.respose.viewmodel.UserWithLikePreview;
 import com.dosug.app.services.authentication.AuthenticationService;
+import com.dosug.app.services.events.EventService;
 import com.dosug.app.services.users.UserService;
 import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -27,6 +31,8 @@ public class UserController {
     private ValidationService validationService;
 
     private UserService userService;
+
+    private EventService eventService;
 
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response update(@RequestBody UpdateUserForm form,
@@ -52,13 +58,6 @@ public class UserController {
         return null;
     }
 
-    @GetMapping
-    public Response getUserId(@RequestParam(value = "id") Long userId) {
-
-        Response<UserView> response = new Response<>();
-        return response.success(new UserView(userService.getUser(userId)));
-    }
-
     @PostMapping(value = "/like")
     public Response addLike(@RequestBody UserLikeForm form,
                             @RequestHeader(value = "authKey") String authKey,
@@ -75,6 +74,41 @@ public class UserController {
 
         userService.addLike(form.getRatedUserId(), form.getEventId(), form.getTagId(), requestedUser);
         return response.success(null);
+    }
+
+    @GetMapping
+    public Response getUserId(@RequestParam(value = "id") Long userId) {
+
+        Response<UserView> response = new Response<>();
+        return response.success(new UserView(userService.getUser(userId)));
+    }
+
+    @GetMapping(value = "/get-participants-likes-by-name")
+    public Response getParticipantsWithLikes(@RequestParam(value = "eventId") long eventId,
+                                             @RequestParam(value = "count") int count,
+                                             @RequestParam(value = "namePart") String namePart,
+                                             @RequestHeader(value = "authKey") String authKey) {
+
+        Response<List<UserWithLikePreview>> response = new Response<>();
+
+        User requestedUser = authService.authenticate(authKey);
+        Event event = eventService.getEvent(eventId);
+
+        List<UserWithLikePreview> userWithLikePreviews = userService.getParticpantsWithPartName(eventId, count, namePart, requestedUser).stream()
+                .map(s -> new UserWithLikePreview(s, event, requestedUser))
+                .collect(Collectors.toList());
+
+        return response.success(userWithLikePreviews);
+    }
+
+    @GetMapping(value = "/get-participants-likes")
+    public Response getParticipantsWithLikes(@RequestParam(value = "eventId") long eventId,
+                                             @RequestParam(value = "count") int count,
+                                             @RequestHeader(value = "authKey") String authKey) {
+
+        Response<List<UserWithLikePreview>> response = new Response<>();
+
+        return getParticipantsWithLikes(eventId, count, null, authKey);
     }
 
     @PostMapping(value = "/delete")
@@ -105,5 +139,11 @@ public class UserController {
     public void setUserService(UserService userService) {
 
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setEventService(EventService eventService) {
+
+        this.eventService = eventService;
     }
 }

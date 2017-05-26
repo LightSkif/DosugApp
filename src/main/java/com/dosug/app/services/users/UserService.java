@@ -12,13 +12,15 @@ public interface UserService {
 
     Long updateUserPassword(User user, User requestedUser);
 
+    void addLike(long ratedUserId, long eventId, long tagId, User evaluateUser);
+
+//    void removeLike(long ratedUserId, long eventId, long tagId, User requestedUser);
+
     User getUser(long Id);
 
     List<User> getUsersWithPartOfName(String partUserName, int count);
 
-    void addLike(long ratedUserId, long eventId, long tagId, User evaluateUser);
-
-//    void removeLike(long ratedUserId, long eventId, long tagId, User requestedUser);
+    List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart, User requestedUser);
 
     void deleteUser(long userId, User requestedUser);
 

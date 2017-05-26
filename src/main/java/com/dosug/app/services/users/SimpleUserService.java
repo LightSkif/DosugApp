@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -21,9 +23,9 @@ public class SimpleUserService implements UserService {
 
     private UserTagRepository userTagRepository;
 
-    private TagRepository tagRepository;
-
     private EventRepository eventRepository;
+
+    private EventParticipantRepository eventParticipantRepository;
 
     @Override
     public Long updateUser(User user, User requestedUser) {
@@ -33,25 +35,6 @@ public class SimpleUserService implements UserService {
     @Override
     public Long updateUserPassword(User user, User requestedUser) {
         return null;
-    }
-
-    @Override
-    public User getUser(long Id) {
-
-        User user = userRepository.findById(Id);
-
-        if (user != null) {
-            return user;
-        } else {
-            throw new UserNotFoundException();
-        }
-    }
-
-    @Override
-    public List<User> getUsersWithPartOfName(String partUserName, int count) {
-
-        PageRequest pageable = new PageRequest(0, count);
-        return userRepository.findByUsernameContainingIgnoreCaseOrderByCreateDateDesc(partUserName, pageable).getContent();
     }
 
     @Override
@@ -85,7 +68,6 @@ public class SimpleUserService implements UserService {
 //    @Override
 //    public void removeLike(long ratedUserId, long eventId, long tagId, User evaluateUser) {
 //
-//
 //        // Пытаемся найти идентичный лайк в бд.
 //        UserLike removeUserLike = userLikeRepository.findByEventAndEvaluateUserAndRatedUserAndTag(
 //                eventRepository.findById(eventId), evaluateUser, userRepository.findById(ratedUserId), tagRepository.findById(tagId));
@@ -102,6 +84,62 @@ public class SimpleUserService implements UserService {
 //            userLikeRepository.delete(removeUserLike);
 //        }
 //    }
+
+    @Override
+    public User getUser(long Id) {
+
+        User user = userRepository.findById(Id);
+
+        if (user != null) {
+            return user;
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
+
+    @Override
+    public List<User> getUsersWithPartOfName(String partUserName, int count) {
+
+        PageRequest pageable = new PageRequest(0, count);
+        return userRepository.findByUsernameContainingIgnoreCaseOrderByCreateDateDesc(partUserName, pageable).getContent();
+    }
+
+    @Override
+    public List<User> getParticpantsWithPartName(long eventId, int count, String username, User requestedUser) {
+
+        Event event = eventRepository.findById(eventId);
+
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        PageRequest pageable = new PageRequest(0, count);
+
+//        if (username != null) {
+//
+//            return userRepository.findParticipantsUsernameContaining(event.getId(), username, pageable).getContent();
+//        }
+//        else {
+//            return userRepository.findParticipants(event.getId(), pageable).getContent();
+//        }
+
+        Stream<User> streamUsers = eventParticipantRepository.findByEvent(event)
+                .stream()
+                .map(s -> s.getUser())
+                .filter(u -> !u.equals(requestedUser))
+                .sorted((u1, u2) -> u1.getUsername().compareTo(u2.getUsername()));
+
+        if (username != null) {
+
+            return streamUsers.filter(t -> t.getUsername()
+                    .compareTo(username) > 0)
+                    .limit(count)
+                    .collect(Collectors.toList());
+        } else {
+
+            return streamUsers.limit(count).collect(Collectors.toList());
+        }
+    }
 
     @Override
     public void deleteUser(long userId, User requestedUser) {
@@ -197,12 +235,12 @@ public class SimpleUserService implements UserService {
     }
 
     @Autowired
-    public void setTagRepository(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
+    public void setEventRepository(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
     }
 
     @Autowired
-    public void setEventRepository(EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
+    public void setEventParticipantRepository(EventParticipantRepository eventParticipantRepository) {
+        this.eventParticipantRepository = eventParticipantRepository;
     }
 }

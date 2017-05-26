@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class SimpleEventService implements EventService {
@@ -223,33 +221,6 @@ public class SimpleEventService implements EventService {
             return event;
         } else {
             throw new EventNotFoundException();
-        }
-    }
-
-    @Override
-    public List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart, User requestedUser) {
-
-        Event event = eventRepository.findById(eventId);
-
-        if (event == null) {
-            throw new EventNotFoundException();
-        }
-
-        PageRequest pageable = new PageRequest(0, count);
-
-        Stream<User> streamUsers = eventParticipantRepository.findByEvent(event, pageable)
-                .getContent().stream()
-                .map(s -> s.getUser())
-                .filter(u -> !u.equals(requestedUser))
-                .sorted((u1, u2) -> u1.getUsername().compareTo(u2.getUsername()));
-
-        if (usernamePart != null) {
-
-            return streamUsers.filter(t -> t.getUsername()
-                    .compareTo(usernamePart) > 0)
-                    .collect(Collectors.toList());
-        } else {
-            return streamUsers.collect(Collectors.toList());
         }
     }
 
