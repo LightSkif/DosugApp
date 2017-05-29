@@ -1,7 +1,7 @@
 package com.dosug.app.services.validation;
 
 import com.dosug.app.form.ErrorCode;
-import com.dosug.app.respose.model.ApiError;
+import com.dosug.app.response.model.ApiError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

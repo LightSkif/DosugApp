@@ -2,10 +2,10 @@ package com.dosug.app.controller;
 
 import com.dosug.app.domain.AuthToken;
 import com.dosug.app.form.AuthenticationForm;
-import com.dosug.app.respose.model.ApiError;
-import com.dosug.app.respose.model.ApiErrorCode;
-import com.dosug.app.respose.model.AuthReply;
-import com.dosug.app.respose.model.Response;
+import com.dosug.app.response.model.ApiError;
+import com.dosug.app.response.model.ApiErrorCode;
+import com.dosug.app.response.model.AuthReply;
+import com.dosug.app.response.model.Response;
 import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.dosug.app.form.admin;
 
 import com.dosug.app.form.ErrorCode;
-import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.LocalDateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.validator.constraints.Email;

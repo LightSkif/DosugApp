@@ -2,10 +2,10 @@ package com.dosug.app.controller.admin;
 
 import com.dosug.app.form.admin.AdminUpdateEventForm;
 import com.dosug.app.repository.EventRepository;
-import com.dosug.app.respose.model.ApiError;
-import com.dosug.app.respose.model.Response;
-import com.dosug.app.respose.viewmodel.admin.EventPreview;
-import com.dosug.app.respose.viewmodel.admin.EventView;
+import com.dosug.app.response.model.ApiError;
+import com.dosug.app.response.model.Response;
+import com.dosug.app.response.viewmodel.admin.EventPreview;
+import com.dosug.app.response.viewmodel.admin.EventView;
 import com.dosug.app.services.admin.EventAdminService;
 import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;

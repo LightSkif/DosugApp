@@ -2,8 +2,8 @@ package com.dosug.app.services;
 
 import com.dosug.app.domain.User;
 import com.dosug.app.repository.UserRepository;
-import com.dosug.app.respose.model.ApiError;
-import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.response.model.ApiError;
+import com.dosug.app.response.model.ApiErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

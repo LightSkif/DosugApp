@@ -1,6 +1,6 @@
 package com.dosug.app.form;
 
-import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.response.model.ApiErrorCode;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

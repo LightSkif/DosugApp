@@ -1,4 +1,4 @@
-package com.dosug.app.respose.viewmodel.admin;
+package com.dosug.app.response.viewmodel.admin;
 
 import com.dosug.app.domain.Tag;
 import com.dosug.app.domain.User;

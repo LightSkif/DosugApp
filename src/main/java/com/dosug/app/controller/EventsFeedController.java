@@ -1,8 +1,8 @@
 package com.dosug.app.controller;
 
 import com.dosug.app.exception.BadRequestException;
-import com.dosug.app.respose.model.Response;
-import com.dosug.app.respose.viewmodel.EventPreview;
+import com.dosug.app.response.model.Response;
+import com.dosug.app.response.viewmodel.EventPreview;
 import com.dosug.app.services.events.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

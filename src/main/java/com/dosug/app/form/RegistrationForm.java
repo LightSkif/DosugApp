@@ -1,6 +1,6 @@
 package com.dosug.app.form;
 
-import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.response.model.ApiErrorCode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;

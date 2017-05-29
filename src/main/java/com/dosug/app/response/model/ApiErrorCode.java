@@ -1,4 +1,4 @@
-package com.dosug.app.respose.model;
+package com.dosug.app.response.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

@@ -1,6 +1,6 @@
 package com.dosug.app.form;
 
-import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.DurationDeserializer;
 import com.dosug.app.utils.DurationSerializer;
 import com.dosug.app.utils.LocalDateTimeDeserializer;

@@ -1,6 +1,6 @@
 package com.dosug.app.form;
 
-import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.ISOLocalDateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 

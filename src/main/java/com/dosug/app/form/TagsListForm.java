@@ -1,6 +1,6 @@
 package com.dosug.app.form;
 
-import com.dosug.app.respose.model.ApiErrorCode;
+import com.dosug.app.response.model.ApiErrorCode;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
@@ -44,11 +44,11 @@ public class TagsListForm {
         return true;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
     public List<String> getTags() {
         return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }

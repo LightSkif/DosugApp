@@ -1,4 +1,4 @@
-package com.dosug.app.respose.viewmodel;
+package com.dosug.app.response.viewmodel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

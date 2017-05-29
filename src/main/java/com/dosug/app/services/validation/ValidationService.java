@@ -1,6 +1,6 @@
 package com.dosug.app.services.validation;
 
-import com.dosug.app.respose.model.ApiError;
+import com.dosug.app.response.model.ApiError;
 
 import java.util.List;
 import java.util.Locale;

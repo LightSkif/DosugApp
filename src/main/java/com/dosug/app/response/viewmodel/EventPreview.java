@@ -1,4 +1,4 @@
-package com.dosug.app.respose.viewmodel;
+package com.dosug.app.response.viewmodel;
 
 import com.dosug.app.domain.Event;
 import com.dosug.app.utils.LocalDateTimeDeserializer;

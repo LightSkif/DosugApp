@@ -2,8 +2,8 @@ package com.dosug.app.controller;
 
 import com.dosug.app.domain.User;
 import com.dosug.app.form.RegistrationForm;
-import com.dosug.app.respose.model.ApiError;
-import com.dosug.app.respose.model.Response;
+import com.dosug.app.response.model.ApiError;
+import com.dosug.app.response.model.Response;
 import com.dosug.app.services.RegistrationService;
 import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;

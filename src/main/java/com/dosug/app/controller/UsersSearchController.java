@@ -1,8 +1,8 @@
 package com.dosug.app.controller;
 
 import com.dosug.app.exception.BadRequestException;
-import com.dosug.app.respose.model.Response;
-import com.dosug.app.respose.viewmodel.UserPreview;
+import com.dosug.app.response.model.Response;
+import com.dosug.app.response.viewmodel.UserPreview;
 import com.dosug.app.services.authentication.AuthenticationService;
 import com.dosug.app.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

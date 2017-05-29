@@ -2,11 +2,11 @@ package com.dosug.app.controller.admin;
 
 import com.dosug.app.form.admin.AdminUpdateUserForm;
 import com.dosug.app.repository.UserRepository;
-import com.dosug.app.respose.model.ApiError;
-import com.dosug.app.respose.model.Response;
-import com.dosug.app.respose.viewmodel.EventPreview;
-import com.dosug.app.respose.viewmodel.admin.UserPreview;
-import com.dosug.app.respose.viewmodel.admin.UserView;
+import com.dosug.app.response.model.ApiError;
+import com.dosug.app.response.model.Response;
+import com.dosug.app.response.viewmodel.EventPreview;
+import com.dosug.app.response.viewmodel.admin.UserPreview;
+import com.dosug.app.response.viewmodel.admin.UserView;
 import com.dosug.app.services.admin.UserAdminService;
 import com.dosug.app.services.validation.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;

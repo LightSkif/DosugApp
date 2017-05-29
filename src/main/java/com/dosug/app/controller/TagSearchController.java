@@ -2,7 +2,7 @@ package com.dosug.app.controller;
 
 import com.dosug.app.domain.Tag;
 import com.dosug.app.exception.UnknownServerException;
-import com.dosug.app.respose.model.Response;
+import com.dosug.app.response.model.Response;
 import com.dosug.app.services.tags.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
