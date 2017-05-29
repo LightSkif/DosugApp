@@ -2,6 +2,7 @@ package com.dosug.app.controller;
 
 import com.dosug.app.domain.Event;
 import com.dosug.app.domain.User;
+import com.dosug.app.form.TagsListForm;
 import com.dosug.app.form.UpdateUserForm;
 import com.dosug.app.form.UpdateUserPasswordForm;
 import com.dosug.app.form.UserLikeForm;
@@ -36,26 +37,46 @@ public class UserController {
 
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response update(@RequestBody UpdateUserForm form,
-                           @RequestHeader(value = "authKey") String authKey) {
+                           @RequestHeader(value = "authKey") String authKey,
+                           Locale locale) {
 
         Response<Long> response = new Response<>();
 
-        User requestedUser = authService.authenticate(authKey);
+        List<ApiError> errors = validationService.validate(form, locale);
+        if(!errors.isEmpty()) {
+            return response.failure(errors);
+        }
 
-        //return response.success(userService.updateUser(, requestedUser));
-        return null;
+        User requestedUser = authService.authenticate(authKey);
+        User updateUser = userService.getUser(form.getUserId());
+
+        updateUser.setBirthDate(form.getBirthDate());
+        updateUser.setDescription(form.getDescription());
+        updateUser.setFirstName(form.getFirstName());
+        updateUser.setLastName(form.getLastName());
+
+        return response.success(userService.updateUser(updateUser, requestedUser));
     }
 
     @PostMapping(value = "/update-password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Response updatePassword(@RequestBody UpdateUserPasswordForm form,
-                                   @RequestHeader(value = "authKey") String authKey) {
+                                   @RequestHeader(value = "authKey") String authKey,
+                                   Locale locale) {
 
         Response<Long> response = new Response<>();
 
+        List<ApiError> errors = validationService.validate(form, locale);
+        if(!errors.isEmpty()) {
+            return response.failure(errors);
+        }
+
         User requestedUser = authService.authenticate(authKey);
 
-        //return response.success(userService.updateUserPassword(, requestedUser));
-        return null;
+        long userId = userService.updateUserPassword(form.getOldPassword(),
+                                       form.getNewPassword(),
+                                       requestedUser);
+
+        return response.success(userId);
     }
 
     @PostMapping(value = "/like")
@@ -121,6 +142,45 @@ public class UserController {
 
         userService.deleteUser(userId, requestedUser);
         return response.success(null);
+    }
+
+    @PostMapping(value = "/tags/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Response<Void> deleteTags(@RequestBody TagsListForm tagsForm,
+                                     @RequestHeader("authKey") String authKey,
+                                     Locale locale) {
+
+        Response<Void> res = new Response<>();
+
+        List<ApiError> errors = validationService.validate(tagsForm, locale);
+        if(!errors.isEmpty()) {
+            return res.failure(errors);
+        }
+
+        User requestedUser = authService.authenticate(authKey);
+
+        userService.deleteTags(tagsForm.getTags(), requestedUser);
+
+        return res.success(null);
+    }
+
+
+    @PostMapping(value = "/tags/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Response<Void> addTags(@RequestBody TagsListForm tagsForm,
+                                  @RequestHeader("authKey") String authKey,
+                                  Locale locale) {
+
+        Response<Void> res = new Response<>();
+
+        List<ApiError> errors = validationService.validate(tagsForm, locale);
+        if(!errors.isEmpty()) {
+            return res.failure(errors);
+        }
+
+        User requestedUser = authService.authenticate(authKey);
+
+        userService.addTags(tagsForm.getTags(), requestedUser);
+
+        return res.success(null);
     }
 
     @Autowired

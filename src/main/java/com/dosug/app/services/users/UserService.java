@@ -22,4 +22,8 @@ public interface UserService {
     List<User> getParticpantsWithPartName(long eventId, int count, String usernamePart, User requestedUser);
 
     void deleteUser(long userId, User requestedUser);
+
+    void deleteTags(List<String> tags, User requestedUser);
+
+    void addTags(List<String> tags, User requestedUser);
 }

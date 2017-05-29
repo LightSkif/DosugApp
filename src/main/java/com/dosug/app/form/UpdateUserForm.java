@@ -1,15 +1,14 @@
 package com.dosug.app.form;
 
 import com.dosug.app.respose.model.ApiErrorCode;
-import com.dosug.app.utils.LocalDateTimeDeserializer;
-import com.dosug.app.utils.LocalDateTimeSerializer;
+import com.dosug.app.utils.ISOLocalDateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class UpdateUserForm {
 
@@ -27,15 +26,6 @@ public class UpdateUserForm {
 
     public static final int DESCRIPTION_MAX_SYMBOLS = 1024;
 
-    public static final int TAG_MIN_SYMBOLS = 1;
-
-    public static final int TAG_MAX_SYMBOLS = 256;
-
-    public static final int TAG_MIN_AMOUNT = 1;
-
-    public static final int TAG_MAX_AMOUNT = 10;
-
-
     @ErrorCode(code = ApiErrorCode.INVALID_USER_ID)
     @Min(value = MIN_ID, message = "id is lower than {value}")
     @NotNull(message = "userId field is required")
@@ -51,46 +41,20 @@ public class UpdateUserForm {
     @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
     private String lastName;
 
-    private String avatar;
-
     @ErrorCode(code = ApiErrorCode.INVALID_DESCRIPTION)
     @NotNull(message = "description field is required")
     @Size(min = DESCRIPTION_MIN_SYMBOLS, max = DESCRIPTION_MAX_SYMBOLS, message = "description should be shorter than 1000 characters")
     private String description;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonDeserialize(using = ISOLocalDateDeserializer.class)
     private LocalDate birthDate;
 
-    @ErrorCode(code = ApiErrorCode.INVALID_USER_TAGS)
-    @NotNull(message = "tags is required")
-    @Size(min = TAG_MIN_AMOUNT, max = TAG_MAX_AMOUNT, message = "from one to ten tag is required")
-    private ArrayList<String> tags;
-
-    @ErrorCode(code = ApiErrorCode.INVALID_USER_TAG)
-    @AssertTrue(message = "wrong tag")
-    public boolean isRightSizeTag() {
-
-        if (tags != null) {
-            java.util.regex.Pattern regexPattern = java.util.regex.Pattern.compile("[a-zA-Zа-яА-Я0-9-_]*");
-            Optional<String> tagMistake = tags.stream()
-                    .filter(s -> ((s.length() > TAG_MAX_SYMBOLS) ||
-                            (s.length() < TAG_MIN_SYMBOLS) || !regexPattern.matcher(s).matches()))
-                    .findFirst();
-
-            // В случае если ни одной ошибки не найдено, проверка завершена успешно.
-            return tagMistake.equals(Optional.empty());
-        }
-
-        return true;
-    }
-
-    public long getEventId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setEventId(long eventId) {
-        this.userId = eventId;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {
@@ -109,14 +73,6 @@ public class UpdateUserForm {
         this.lastName = lastName;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -133,11 +89,4 @@ public class UpdateUserForm {
         this.birthDate = birthDate;
     }
 
-    public ArrayList<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
-    }
 }

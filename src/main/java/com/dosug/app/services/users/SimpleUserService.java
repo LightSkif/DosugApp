@@ -3,6 +3,7 @@ package com.dosug.app.services.users;
 import com.dosug.app.domain.*;
 import com.dosug.app.exception.*;
 import com.dosug.app.repository.*;
+import com.dosug.app.services.tags.TagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +34,8 @@ public class SimpleUserService implements UserService {
     private EventParticipantRepository eventParticipantRepository;
 
     private TagRepository tagRepository;
+
+    private TagService tagService;
 
     @Override
     public Long updateUser(User user, User requestedUser) {
@@ -234,6 +238,43 @@ public class SimpleUserService implements UserService {
 
     }
 
+
+    @Override
+    public void addTags(List<String> tagNames, User requestedUser) {
+
+
+        Set<Tag> userTags = requestedUser.getTagLinks().stream()
+                .map(UserTag::getTag)
+                .collect(Collectors.toSet());
+
+        tagNames.stream()
+                .map(tagService::getTag)
+                .filter(tag -> !userTags.contains(tag))
+                // создаем UserTag из тега и пользователя
+                .map(tag -> {
+                    UserTag userTag = new UserTag();
+                    userTag.setTag(tag);
+                    userTag.setUser(requestedUser);
+
+                    return userTag;
+                })
+                .forEach(userTagRepository::save);
+
+    }
+
+
+    @Override
+    public void deleteTags(List<String> tagNames, User requestedUser) {
+
+        Set<Tag> tagOnDeletion = tagNames.stream()
+                    .map(tagRepository::findByTagName)
+                    .collect(Collectors.toSet());
+
+        requestedUser.getTagLinks().stream()
+                        .filter(userTag -> tagOnDeletion.contains(userTag.getTag()))
+                        .forEach(userTagRepository::delete);
+    }
+
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -262,5 +303,10 @@ public class SimpleUserService implements UserService {
     @Autowired
     public void setTagRepository(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
+    }
+
+    @Autowired
+    public void setTagService(TagService tagService) {
+        this.tagService = tagService;
     }
 }

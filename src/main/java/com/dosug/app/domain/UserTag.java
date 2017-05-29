@@ -21,7 +21,7 @@ public class UserTag {
     private Tag tag;
 
     @OneToMany(targetEntity = UserLike.class,
-               cascade = CascadeType.ALL,
+               cascade = CascadeType.REMOVE,
                mappedBy = "ratedUserTag", fetch = FetchType.EAGER)
     private Set<UserLike> likes;
 

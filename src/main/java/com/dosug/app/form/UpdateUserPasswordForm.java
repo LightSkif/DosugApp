@@ -8,7 +8,18 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UpdateUserPasswordForm extends CheckedUpdateUserForm {
+public class UpdateUserPasswordForm {
+
+    private static final int PASSWORD_MIN_SYMBOLS = 1;
+    private static final int PASSWORD_MAX_SYMBOLS = 255;
+
+
+    @ErrorCode(code = ApiErrorCode.INVALID_PASSWORD)
+    @NotNull(message = "password field is required")
+    @Size(min = PASSWORD_MIN_SYMBOLS, max = PASSWORD_MAX_SYMBOLS, message = "password length from 1 to 256")
+    @Pattern(regexp = "[a-zA-Z0-9_]*", message = "only latin character, digits and underscore allowed in password")
+    private String oldPassword;
+
 
     @ErrorCode(code = ApiErrorCode.INVALID_NEW_PASSWORD)
     @NotNull(message = "password field is required")
@@ -27,5 +38,13 @@ public class UpdateUserPasswordForm extends CheckedUpdateUserForm {
             return newPassword.equals(newPasswordRetry);
         }
         return false;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
     }
 }
