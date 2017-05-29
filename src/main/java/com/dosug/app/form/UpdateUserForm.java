@@ -14,23 +14,23 @@ import java.time.LocalDate;
 public class UpdateUserForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_ID)
-    @Min(value = Consts.MIN_ID, message = "id is lower than {value}")
-    @NotNull(message = "userId field is required")
+    @Min(value = Consts.MIN_ID, message = "id_lower_1")
+    @NotNull(message = "user_id_required")
     private long userId;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_FIRST_NAME)
-    @Size(min = Consts.FIRST_NAME_MIN_SYMBOLS, max = Consts.FIRST_NAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
-    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
+    @Size(min = Consts.FIRST_NAME_MIN_SYMBOLS, max = Consts.FIRST_NAME_MAX_SYMBOLS, message = "first_name_length_0_100")
+    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "first_name_only_latin_cyrillic_character_digits_underscore_hyphen _allowed")
     private String firstName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_LAST_NAME)
-    @Size(min = Consts.LAST_NAME_MIN_SYMBOLS, max = Consts.LAST_NAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
-    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
+    @Size(min = Consts.LAST_NAME_MIN_SYMBOLS, max = Consts.LAST_NAME_MAX_SYMBOLS, message = "last_name_length_0_100")
+    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "last_name_only_latin_cyrillic_character_digits_underscore_hyphen _allowed")
     private String lastName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_DESCIPTION)
-    @NotNull(message = "description field is required")
-    @Size(min = Consts.DESCRIPTION_MIN_SYMBOLS, max = Consts.DESCRIPTION_MAX_SYMBOLS, message = "description should be shorter than 1000 characters")
+    @NotNull(message = "description_field_required")
+    @Size(min = Consts.DESCRIPTION_MIN_SYMBOLS, max = Consts.DESCRIPTION_MAX_SYMBOLS, message = "description_lower_1000")
     private String description;
 
     @JsonDeserialize(using = ISOLocalDateDeserializer.class)

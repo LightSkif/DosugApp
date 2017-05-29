@@ -13,23 +13,23 @@ public class UpdateUserPasswordForm {
 
 
     @ErrorCode(code = ApiErrorCode.INVALID_PASSWORD)
-    @NotNull(message = "password field is required")
-    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "password length from 1 to 256")
-    @Pattern(regexp = "[a-zA-Z0-9_]*", message = "only latin character, digits and underscore allowed in password")
+    @NotNull(message = "password_required")
+    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "password_length_1_256")
+    @Pattern(regexp = "[a-zA-Z0-9_]*", message = "password_allow_latinchar_digits_underscore")
     private String oldPassword;
 
 
     @ErrorCode(code = ApiErrorCode.INVALID_NEW_PASSWORD)
-    @NotNull(message = "password field is required")
-    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "password length from 1 to 256")
-    @Pattern(regexp = "[a-zA-Z0-9_]*", message = "only latin character, digits and underscore allowed in password")
+    @NotNull(message = "new_password_required")
+    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "new_password_length_1_256")
+    @Pattern(regexp = "[a-zA-Z0-9_]*", message = "new_password_allow_latinchar_digits_underscore")
     private String newPassword;
 
     @JsonProperty("passwordConfirmation")
     private String newPasswordRetry;
 
     @ErrorCode(code = ApiErrorCode.INVALID_NEW_PASSWORD_RETRY)
-    @AssertTrue(message = "new password and new password retry not equals")
+    @AssertTrue(message = "new_password_retry_not_equals")
     public boolean isRetryEqualsPassword() {
         // NPE check
         if (newPassword != null) {

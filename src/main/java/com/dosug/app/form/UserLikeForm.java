@@ -11,7 +11,7 @@ public class UserLikeForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_ID)
     @Min(value = Consts.MIN_ID, message = "id_lower_1")
-    @NotNull(message = "rated user id required")
+    @NotNull(message = "rated_user_id_required")
     private long ratedUserId;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_ID)
@@ -21,7 +21,7 @@ public class UserLikeForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_TAG_ID)
     @Min(value = Consts.MIN_ID, message = "id_lower_1")
-    @NotNull(message = "tag id required")
+    @NotNull(message = "tag_id_required")
     private long tagId;
 
     public long getRatedUserId() {

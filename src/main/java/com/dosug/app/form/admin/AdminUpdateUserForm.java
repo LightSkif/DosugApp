@@ -37,17 +37,17 @@ public class AdminUpdateUserForm {
 
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_FIRST_NAME)
-    @Size(min = Consts.FIRST_NAME_MIN_SYMBOLS, max = Consts.FIRST_NAME_MAX_SYMBOLS, message = "first_name_length_0_60")
-    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "first_name_not_allowed_symbols")
+    @Size(min = Consts.FIRST_NAME_MIN_SYMBOLS, max = Consts.FIRST_NAME_MAX_SYMBOLS, message = "first_name_length_0_100")
+    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "first_name_only_latin_cyrillic_character_digits_underscore_hyphen _allowed")
     private String firstName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_LAST_NAME)
-    @Size(min = Consts.LAST_NAME_MIN_SYMBOLS, max = Consts.LAST_NAME_MAX_SYMBOLS, message = "last_name_length_0_60")
-    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "last_name_not_allowed_symbols")
+    @Size(min = Consts.LAST_NAME_MIN_SYMBOLS, max = Consts.LAST_NAME_MAX_SYMBOLS, message = "last_name_length_0_100")
+    @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "last_name_only_latin_cyrillic_character_digits_underscore_hyphen _allowed")
     private String lastName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_DESCIPTION)
-    @Size(min = Consts.DESCRIPTION_MIN_SYMBOLS, max = Consts.DESCRIPTION_MAX_SYMBOLS)
+    @Size(min = Consts.DESCRIPTION_MIN_SYMBOLS, max = Consts.DESCRIPTION_MAX_SYMBOLS, message = "description_lower_1000")
     private String description;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_BIRTH_DATE)
@@ -56,7 +56,7 @@ public class AdminUpdateUserForm {
     private LocalDate birthDate;
 
     @ErrorCode(code = ApiErrorCode.INVALID_PHONE)
-    @Size(min = Consts.PHONE_MIN_LENGTH, max = Consts.PHONE_MAX_LENGTH)
+    @Size(min = Consts.PHONE_MIN_LENGTH, max = Consts.PHONE_MAX_LENGTH, message = "phone_length_1_15")
     @Pattern(regexp = "[0-9]*", message = "phone_allow_digits")
     private String phone;
 

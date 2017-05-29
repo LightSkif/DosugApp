@@ -23,7 +23,7 @@ public class CreateEventForm {
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_NAME)
     @NotNull(message = "event_name_required")
     @Size(min = Consts.EVENT_NAME_MIN_SYMBOLS, max = Consts.EVENT_NAME_MAX_SYMBOLS, message = "event_name_length_1_256")
-    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "event_name_latin_russian_digit_space_underscore")
+    @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "event_name_latin_cyrillic_digit_space_underscore")
     private String eventName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_CONTENT)
