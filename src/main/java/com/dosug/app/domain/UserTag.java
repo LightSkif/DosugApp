@@ -1,6 +1,7 @@
 package com.dosug.app.domain;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_tag")
@@ -19,8 +20,10 @@ public class UserTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
-    @Column(name = "like_count")
-    private int likeCount;
+    @OneToMany(targetEntity = UserLike.class,
+               cascade = CascadeType.ALL,
+               mappedBy = "ratedUserTag", fetch = FetchType.EAGER)
+    private Set<UserLike> likes;
 
     public long getId() {
         return id;
@@ -46,11 +49,19 @@ public class UserTag {
         this.tag = tag;
     }
 
-    public int getLikeCount() {
-        return likeCount;
+    public Set<UserLike> getLikes() {
+        return likes;
     }
 
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
+    public void setLikes(Set<UserLike> likes) {
+        this.likes = likes;
     }
+
+    //    public int getLikeCount() {
+//        return likeCount;
+//    }
+//
+//    public void setLikeCount(int likeCount) {
+//        this.likeCount = likeCount;
+//    }
 }

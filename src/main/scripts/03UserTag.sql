@@ -5,7 +5,7 @@ CREATE TABLE  user_tag(
   id bigint PRIMARY KEY,
   user_id bigint,
 	tag_id bigint,
-	like_count int,
+--	like_count int,
 
 	CONSTRAINT user_tag_tag_id_fk FOREIGN KEY (tag_id)
       REFERENCES public.tags (id)

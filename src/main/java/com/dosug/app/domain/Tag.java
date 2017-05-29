@@ -23,12 +23,6 @@ public class Tag {
     )
     private Set<Event> events;
 
-    @OneToMany(targetEntity = UserLike.class,
-            mappedBy = "tag",
-            cascade = CascadeType.REMOVE,
-            fetch = FetchType.EAGER)
-    private Set<UserLike> likes;
-
     @OneToMany(targetEntity = UserTag.class,
             mappedBy = "tag",
             cascade = CascadeType.REMOVE,
@@ -64,14 +58,6 @@ public class Tag {
 
     public void setEvents(Set<Event> events) {
         this.events = events;
-    }
-
-    public Set<UserLike> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Set<UserLike> likes) {
-        this.likes = likes;
     }
 
     public Set<UserTag> getUserLinks() {

@@ -16,12 +16,8 @@ public class UserLike {
     private User evaluateUser;
 
     @ManyToOne
-    @JoinColumn(name = "rated_user_id")
-    private User ratedUser;
-
-    @ManyToOne
-    @JoinColumn(name = "tag_id")
-    private Tag tag;
+    @JoinColumn(name = "rated_user_tag_id")
+    private UserTag ratedUserTag;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
@@ -43,20 +39,12 @@ public class UserLike {
         this.evaluateUser = evaluateUser;
     }
 
-    public User getRatedUser() {
-        return ratedUser;
+    public UserTag getRatedUserTag() {
+        return ratedUserTag;
     }
 
-    public void setRatedUser(User ratedUser) {
-        this.ratedUser = ratedUser;
-    }
-
-    public Tag getTag() {
-        return tag;
-    }
-
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public void setRatedUserTag(UserTag ratedUserTag) {
+        this.ratedUserTag = ratedUserTag;
     }
 
     public Event getEvent() {

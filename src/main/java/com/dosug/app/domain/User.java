@@ -74,13 +74,6 @@ public class User {
             mappedBy = "user", fetch = FetchType.EAGER)
     private Set<EventParticipant> eventLinks;
 
-
-    @OneToMany(targetEntity = UserLike.class,
-            mappedBy = "evaluateUser",
-            cascade = CascadeType.REMOVE,
-            fetch = FetchType.EAGER)
-    private Set<UserLike> likes;
-
     @OneToMany(targetEntity = UserTag.class,
             mappedBy = "user",
             cascade = CascadeType.REMOVE,
@@ -207,14 +200,6 @@ public class User {
 
     public void setEventLinks(Set<EventParticipant> eventLinks) {
         this.eventLinks = eventLinks;
-    }
-
-    public Set<UserLike> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Set<UserLike> likes) {
-        this.likes = likes;
     }
 
     public Set<UserTag> getTagLinks() {

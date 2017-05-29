@@ -230,4 +230,24 @@ public class Event {
                 ", allowed=" + allowed +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        if (creator != null ? !creator.equals(event.creator) : event.creator != null) return false;
+        if (eventName != null ? !eventName.equals(event.eventName) : event.eventName != null) return false;
+        return eventDateTime != null ? eventDateTime.equals(event.eventDateTime) : event.eventDateTime == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = creator != null ? creator.hashCode() : 0;
+        result = 31 * result + (eventName != null ? eventName.hashCode() : 0);
+        result = 31 * result + (eventDateTime != null ? eventDateTime.hashCode() : 0);
+        return result;
+    }
 }
