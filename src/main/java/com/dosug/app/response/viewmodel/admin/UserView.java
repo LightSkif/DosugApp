@@ -1,7 +1,9 @@
 package com.dosug.app.response.viewmodel.admin;
 
+import com.dosug.app.domain.EventParticipant;
 import com.dosug.app.domain.Tag;
 import com.dosug.app.domain.User;
+import com.dosug.app.domain.UserTag;
 import com.dosug.app.utils.LocalDateSerializer;
 import com.dosug.app.utils.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -68,11 +70,13 @@ public class UserView {
         phone = user.getPhone();
         createDate = user.getCreateDate();
 
-        tags = user.getTags().stream()
+        tags = user.getTagLinks().stream()
+                .map(UserTag::getTag)
                 .map(Tag::getTagName)
                 .collect(Collectors.toList());
 
-        events = user.getEvents().stream()
+        events = user.getEventLinks().stream()
+                .map(EventParticipant::getEvent)
                     .map(EventPreview::new)
                     .collect(Collectors.toList());
 

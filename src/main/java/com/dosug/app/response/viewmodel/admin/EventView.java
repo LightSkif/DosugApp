@@ -2,6 +2,7 @@ package com.dosug.app.response.viewmodel.admin;
 
 
 import com.dosug.app.domain.Event;
+import com.dosug.app.domain.EventParticipant;
 import com.dosug.app.domain.User;
 import com.dosug.app.utils.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -60,7 +61,8 @@ public class EventView {
         allowed = event.isAllowed();
         createDate = event.getCreateDate();
 
-        participants = event.getParticipants().stream()
+        participants = event.getParticipantLinks().stream()
+                .map(EventParticipant::getUser)
                         .map(EventUserPreview::new)
                         .collect(Collectors.toList());
 
