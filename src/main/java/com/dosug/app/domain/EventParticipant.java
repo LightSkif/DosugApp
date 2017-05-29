@@ -16,11 +16,13 @@ public class EventParticipant {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "participant_id")
+    @JoinColumn(name = "participant_id",
+            foreignKey = @ForeignKey(name = "event_participant_participant_id_fk"))
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id",
+            foreignKey = @ForeignKey(name = "event_participant_event_id_fk"))
     private Event event;
 
     @Column(name = "liked")

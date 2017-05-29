@@ -19,7 +19,8 @@ public class Event {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "creator_id")
+    @JoinColumn(name = "creator_id",
+            foreignKey = @ForeignKey(name = "events_creator_id_fk"))
     private User creator;
 
     @Column(name = "event_name")

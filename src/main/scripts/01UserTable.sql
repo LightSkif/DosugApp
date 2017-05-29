@@ -2,17 +2,18 @@ DROP SEQUENCE IF EXISTS public.users_id_seq CASCADE;
 DROP TABLE IF EXISTS public.users CASCADE;
 
 CREATE TABLE users (
-    id bigint NOT NULL,
-    username character varying(256) NOT NULL,
-    password character varying(256) NOT NULL,
-    email character varying(256) NOT NULL,
-    first_name character varying(60),
-    last_name character varying(60),
-    create_date timestamp without time zone DEFAULT now(),
-	  avatar character varying(256),
-    description character varying(1000),
-    birthdate date,
-    phone character varying(15)
+  id          BIGINT                 NOT NULL,
+  username    CHARACTER VARYING(256) NOT NULL,
+  password    CHARACTER VARYING(256) NOT NULL,
+  email       CHARACTER VARYING(256) NOT NULL,
+  first_name  CHARACTER VARYING(60),
+  last_name   CHARACTER VARYING(60),
+  create_date TIMESTAMP WITHOUT TIME ZONE DEFAULT now(),
+  avatar      CHARACTER VARYING(256),
+  description CHARACTER VARYING(1000),
+  birthdate   DATE,
+  phone       CHARACTER VARYING(15),
+  is_banned   BOOLEAN
 );
 
 

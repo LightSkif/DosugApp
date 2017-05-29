@@ -76,7 +76,6 @@ public class User {
 
     @OneToMany(targetEntity = Event.class,
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
             mappedBy = "creator")
     private List<Event> createdEvents;
 

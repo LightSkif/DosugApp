@@ -15,7 +15,8 @@ public class Image {
     private String image_source;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id",
+            foreignKey = @ForeignKey(name = "images_event_id_fk"))
     private Event event;
 
     public long getId() {

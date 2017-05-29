@@ -13,11 +13,13 @@ public class UserTag {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",
+            foreignKey = @ForeignKey(name = "user_tag_user_id_fk"))
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tag_id")
+    @JoinColumn(name = "tag_id",
+            foreignKey = @ForeignKey(name = "user_tag_tag_id_fk"))
     private Tag tag;
 
     @OneToMany(targetEntity = UserLike.class,
