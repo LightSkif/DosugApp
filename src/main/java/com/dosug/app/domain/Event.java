@@ -185,12 +185,20 @@ public class Event {
         this.images = images;
     }
 
-    public Set<User> getParticipants() {
-        return participants;
+    public int getLikeCount() {
+        return likeCount;
     }
 
-    public void setParticipants(Set<User> participants) {
-        this.participants = participants;
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Set<EventParticipant> getParticipantLinks() {
+        return participantLinks;
+    }
+
+    public void setParticipantLinks(Set<EventParticipant> participantLinks) {
+        this.participantLinks = participantLinks;
     }
 
     public Set<Tag> getTags() {
@@ -207,21 +215,6 @@ public class Event {
 
     public void setEndDateTime(LocalDateTime endDateTime) {
         this.endDateTime = endDateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", creator=" + creator +
-                ", eventName='" + eventName + '\'' +
-                ", content='" + content + '\'' +
-                ", eventDateTime=" + eventDateTime +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", createDate=" + createDate +
-                ", allowed=" + allowed +
-                '}';
     }
 
     @Override
