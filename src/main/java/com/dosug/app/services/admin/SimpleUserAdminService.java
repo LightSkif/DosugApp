@@ -1,6 +1,7 @@
 package com.dosug.app.services.admin;
 
 import com.dosug.app.domain.Event;
+import com.dosug.app.domain.EventParticipant;
 import com.dosug.app.domain.User;
 import com.dosug.app.exception.UnknownServerException;
 import com.dosug.app.form.admin.AdminUpdateUserForm;
@@ -71,7 +72,6 @@ public class SimpleUserAdminService implements UserAdminService{
     public User getUser(long userId) {
         User user = userRepository.findOne(userId);
         if(user != null) {
-            Object object = user.getTags().size();
             return user;
         }
         return null;
@@ -82,8 +82,8 @@ public class SimpleUserAdminService implements UserAdminService{
         User user = userRepository.findOne(userId);
 
         if(user != null) {
-            return user.getEvents()
-                        .parallelStream()
+            return user.getEventLinks().parallelStream()
+                    .map(EventParticipant::getEvent)
                         .collect(Collectors.toList());
         }
 
