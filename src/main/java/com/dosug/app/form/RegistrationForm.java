@@ -1,6 +1,7 @@
 package com.dosug.app.form;
 
 import com.dosug.app.response.model.ApiErrorCode;
+import com.dosug.app.utils.Consts;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -14,27 +15,22 @@ import javax.validation.constraints.Size;
  * Форма для регистрации
  */
 public class RegistrationForm {
-    private static final int EMAIL_MAX_LENGTH = 256;
-
-    private static final int MAX_PASSWORD_LENGTH = 256;
-
-    private static final int USERNAME_MAX_LENGTH = 256;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USERNAME)
-    @Length(min = 1, max = USERNAME_MAX_LENGTH, message = "username_length_1_256")
+    @Length(min = Consts.USERNAME_MIN_LENGTH, max = Consts.USERNAME_MAX_LENGTH, message = "username_length_1_256")
     @NotNull(message = "username_required")
     @Pattern(regexp = "[a-zA-Z0-9-_]*", message = "username_allow_latinchar_digits_hyphen_underscore")
     private String username;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EMAIL)
     @NotNull(message = "email_required")
-    @Size(min = 1, max = EMAIL_MAX_LENGTH, message = "email_length_1_256")
+    @Size(min = Consts.EMAIL_MIN_LENGTH, max = Consts.EMAIL_MAX_LENGTH, message = "email_length_1_256")
     @Email(message = "email_not_correct")
     private String email;
 
     @ErrorCode(code = ApiErrorCode.INVALID_PASSWORD)
     @NotNull(message = "password_required")
-    @Size(min = 1, max = MAX_PASSWORD_LENGTH, message = "password_length_1_256")
+    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "password_length_1_256")
     @Pattern(regexp = "[0-9a-zA-Z_]*", message = "password_allow_latinchar_digits_underscore")
     private String password;
 

@@ -1,6 +1,7 @@
 package com.dosug.app.form;
 
 import com.dosug.app.response.model.ApiErrorCode;
+import com.dosug.app.utils.Consts;
 import com.dosug.app.utils.ISOLocalDateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -12,38 +13,24 @@ import java.time.LocalDate;
 
 public class UpdateUserForm {
 
-    public static final int MIN_ID = 1;
-
-    public static final int FIRSTNAME_MIN_SYMBOLS = 1;
-
-    public static final int FIRSTNAME_MAX_SYMBOLS = 128;
-
-    public static final int LASTNAME_MIN_SYMBOLS = 1;
-
-    public static final int LASTNAME_MAX_SYMBOLS = 128;
-
-    public static final int DESCRIPTION_MIN_SYMBOLS = 1;
-
-    public static final int DESCRIPTION_MAX_SYMBOLS = 1024;
-
     @ErrorCode(code = ApiErrorCode.INVALID_USER_ID)
-    @Min(value = MIN_ID, message = "id is lower than {value}")
+    @Min(value = Consts.MIN_ID, message = "id is lower than {value}")
     @NotNull(message = "userId field is required")
     private long userId;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_FIRST_NAME)
-    @Size(min = FIRSTNAME_MIN_SYMBOLS, max = FIRSTNAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
+    @Size(min = Consts.FIRST_NAME_MIN_SYMBOLS, max = Consts.FIRST_NAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
     @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
     private String firstName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_LAST_NAME)
-    @Size(min = LASTNAME_MIN_SYMBOLS, max = LASTNAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
+    @Size(min = Consts.LAST_NAME_MIN_SYMBOLS, max = Consts.LAST_NAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
     @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
     private String lastName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_DESCIPTION)
     @NotNull(message = "description field is required")
-    @Size(min = DESCRIPTION_MIN_SYMBOLS, max = DESCRIPTION_MAX_SYMBOLS, message = "description should be shorter than 1000 characters")
+    @Size(min = Consts.DESCRIPTION_MIN_SYMBOLS, max = Consts.DESCRIPTION_MAX_SYMBOLS, message = "description should be shorter than 1000 characters")
     private String description;
 
     @JsonDeserialize(using = ISOLocalDateDeserializer.class)

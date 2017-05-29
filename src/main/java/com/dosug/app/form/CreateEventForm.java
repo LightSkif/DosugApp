@@ -1,10 +1,7 @@
 package com.dosug.app.form;
 
 import com.dosug.app.response.model.ApiErrorCode;
-import com.dosug.app.utils.DurationDeserializer;
-import com.dosug.app.utils.DurationSerializer;
-import com.dosug.app.utils.LocalDateTimeDeserializer;
-import com.dosug.app.utils.LocalDateTimeSerializer;
+import com.dosug.app.utils.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -15,38 +12,23 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static com.dosug.app.utils.Consts.MIN_LONGITUDE;
+
 public class CreateEventForm {
 
-    public static final int EVENTNAME_MAX_SYMBOLS = 256;
-
-    public static final int TAG_MIN_SYMBOLS = 1;
-
-    public static final int TAG_MAX_SYMBOLS = 256;
-
-    public static final int TAG_MIN_AMOUNT = 1;
-
-    public static final int TAG_MAX_AMOUNT = 10;
-
-    public static final int MIN_LONGITUDE = -180;
-
-    public static final int MAX_LONGITUDE = 180;
-
-    public static final int MIN_LATITUDE = -90;
-
-    public static final int MAX_LATITUDE = 90;
-
     @ErrorCode(code = ApiErrorCode.INVALID_PLACE_NAME)
-    @Size(min = 1, max = 200, message = "place_name_length_1_200")
-    String placeName;
+    @Size(min = Consts.PLACE_NAME_MIN_SYMBOLS, max = Consts.PLACE_NAME_MAX_SYMBOLS, message = "place_name_length_1_200")
+    private String placeName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_NAME)
     @NotNull(message = "event_name_required")
-    @Size(min = 1, max = EVENTNAME_MAX_SYMBOLS, message = "event_name_length_1_256")
+    @Size(min = Consts.EVENT_NAME_MIN_SYMBOLS, max = Consts.EVENT_NAME_MAX_SYMBOLS, message = "event_name_length_1_256")
     @javax.validation.constraints.Pattern(regexp = "[a-zA-Zа-яА-Я0-9 _]*", message = "event_name_latin_russian_digit_space_underscore")
     private String eventName;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_CONTENT)
     @NotNull(message = "content_required")
+    @Size(min = Consts.CONTENT_MIN_SYMBOLS, max = Consts.CONTENT_MAX_SYMBOLS)
     private String content;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -64,17 +46,17 @@ public class CreateEventForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_LONGITUDE)
     @Min(value = MIN_LONGITUDE, message = "longitude_lower_180")
-    @Max(value = MAX_LONGITUDE, message = "longitude_higher_180")
+    @Max(value = Consts.MAX_LONGITUDE, message = "longitude_higher_180")
     private double longitude;
 
     @ErrorCode(code = ApiErrorCode.INVALID_LATITUDE)
-    @Min(value = MIN_LATITUDE, message = "latitude_lower_-90")
-    @Max(value = MAX_LATITUDE, message = "latitude_higher_90")
+    @Min(value = Consts.MIN_LATITUDE, message = "latitude_lower_-90")
+    @Max(value = Consts.MAX_LATITUDE, message = "latitude_higher_90")
     private double latitude;
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAGS)
     @NotNull(message = "tags_required")
-    @Size(min = TAG_MIN_AMOUNT, max = TAG_MAX_AMOUNT, message = "tags_length_1_10")
+    @Size(min = Consts.TAG_MIN_AMOUNT, max = Consts.TAG_MAX_AMOUNT, message = "tags_length_1_10")
     private ArrayList<String> tags;
 
     public CreateEventForm() {
@@ -87,8 +69,8 @@ public class CreateEventForm {
         if (tags != null) {
             Pattern regexPattern = Pattern.compile("[a-zA-Zа-яА-Я0-9-_]*");
             Optional<String> tagMistake = tags.stream()
-                    .filter(s -> ((s.length() > TAG_MAX_SYMBOLS) ||
-                            (s.length() < TAG_MIN_SYMBOLS) || !regexPattern.matcher(s).matches()))
+                    .filter(s -> ((s.length() > Consts.TAG_MAX_SYMBOLS) ||
+                            (s.length() < Consts.TAG_MIN_SYMBOLS) || !regexPattern.matcher(s).matches()))
                     .findFirst();
 
             // В случае если ни одной ошибки не найдено, проверка завершена успешно.
