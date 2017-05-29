@@ -3,6 +3,8 @@ package com.dosug.app.services.users;
 import com.dosug.app.domain.*;
 import com.dosug.app.exception.*;
 import com.dosug.app.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import java.util.stream.Stream;
 @Service
 public class SimpleUserService implements UserService {
 
+    private final static Logger logger = LoggerFactory.getLogger(SimpleUserService.class);
+
     private UserRepository userRepository;
 
     private UserLikeRepository userLikeRepository;
@@ -27,63 +31,134 @@ public class SimpleUserService implements UserService {
 
     private EventParticipantRepository eventParticipantRepository;
 
+    private TagRepository tagRepository;
+
     @Override
     public Long updateUser(User user, User requestedUser) {
-        return null;
+
+        if(user.getId() != requestedUser.getId()) {
+            throw new InsufficientlyRightsException();
+        }
+
+        try {
+            userRepository.save(user);
+        } catch (Exception e ){
+            logger.error(e.getMessage());
+            throw new UnknownServerException();
+        }
+
+        return user.getId();
     }
 
     @Override
-    public Long updateUserPassword(User user, User requestedUser) {
-        return null;
+    public Long updateUserPassword(String oldPassword, String newPassword, User requestedUser) {
+        if(!requestedUser.getPassword().equals(oldPassword)) {
+            throw new InsufficientlyRightsException();
+        }
+
+        try {
+
+            requestedUser.setPassword(newPassword);
+            userRepository.save(requestedUser);
+
+        }  catch (Exception e ){
+            logger.error(e.getMessage());
+            throw new UnknownServerException();
+        }
+        return requestedUser.getId();
     }
 
     @Override
     public void addLike(long ratedUserId, long eventId, long tagId, User evaluateUser) {
 
-        UserLike newUserLike = userLikeBuilder(ratedUserId, eventId, tagId, evaluateUser);
+//        UserLike newUserLike = userLikeBuilder(ratedUserId, eventId, tagId, evaluateUser);
+
+        if(ratedUserId == evaluateUser.getId()) {
+            throw new ConflictException();
+        }
+
+        Event event = Optional.ofNullable(eventRepository.findOne(eventId))
+                                .orElseThrow(EventNotFoundException::new);
 
         // Проверяем закончилось ли событие.
-        if (LocalDateTime.now().isBefore(newUserLike.getEvent().getEndDateTime())) {
-
+        if (LocalDateTime.now().isBefore(event.getEndDateTime())) {
             throw new InsufficientlyRightsException();
         }
 
-        // Пытаемся найти идентичный лайк в бд.
-        UserLike updatedUserLike = userLikeRepository.findByEventAndEvaluateUserAndRatedUserAndTag(
-                newUserLike.getEvent(), evaluateUser, newUserLike.getRatedUser(), newUserLike.getTag());
+        User ratedUser = Optional.ofNullable(userRepository.findOne(ratedUserId))
+                                .orElseThrow(UserNotFoundException::new);
 
-        // Проверяем существование идентичного лайка.
-        if (updatedUserLike == null) {
-            // Находим связку оценённого пользователя и тега, по которому производится добавление лайка.
-            UserTag userTagLink = newUserLike.getRatedUser().getTagLinks().stream().filter(s -> s.getTag().getId() == tagId).findFirst().get();
+        Tag tag = Optional.ofNullable(tagRepository.findOne(tagId))
+                                .orElseThrow(TagNotFoundException::new);
 
-            // Увеличиваем счётчик лайков в связке.
-            userTagLink.setLikeCount(userTagLink.getLikeCount() + 1);
-            userTagRepository.save(userTagLink);
+        UserTag ratedUserTag = Optional.ofNullable(userTagRepository.findByUserAndTag(ratedUser, tag))
+                                            .orElseThrow(UserTagNotFoundException::new);
 
-            userLikeRepository.save(newUserLike);
+        checkUserInEvent(ratedUser, event);
+        checkUserInEvent(evaluateUser, event);
+
+        checkTagInEvent(tag, event);
+
+        checkTagInUser(tag, ratedUser);
+
+
+        UserLike userLike = new UserLike();
+        userLike.setEvaluateUser(evaluateUser);
+        userLike.setEvent(event);
+        userLike.setRatedUserTag(ratedUserTag);
+
+        try {
+            userLikeRepository.save(userLike);
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            if(userLikeRepository.findByEventAndEvaluateUserAndRatedUserTag(event, evaluateUser, ratedUserTag) == null) {
+                throw new UnknownServerException();
+            }
+        }
+
+    }
+
+
+
+
+    /**
+     * @param searchedTag тег который ищем у пользователя
+     * @param user сбсн пользователь
+     */
+    private void checkTagInUser(Tag searchedTag, User user) {
+
+        if(user.getTagLinks().stream()
+                .noneMatch(tagLink -> tagLink.getTag().equals(searchedTag))) {
+
+            throw new LinkNotFoundException();
         }
     }
 
-//    @Override
-//    public void removeLike(long ratedUserId, long eventId, long tagId, User evaluateUser) {
-//
-//        // Пытаемся найти идентичный лайк в бд.
-//        UserLike removeUserLike = userLikeRepository.findByEventAndEvaluateUserAndRatedUserAndTag(
-//                eventRepository.findById(eventId), evaluateUser, userRepository.findById(ratedUserId), tagRepository.findById(tagId));
-//
-//        if (removeUserLike != null) {
-//            // Находим связку оценённого пользователя и тега, по которому производится добавление лайка.
-//            UserTag userTagLink = removeUserLike.getRatedUser().getTagLinks().stream().filter(s -> s.getTag().getId() == tagId).findFirst().get();
-//
-//            // Увеличиваем счётчик лайков в связке.
-//            userTagLink.setLikeCount(userTagLink.getLikeCount() - 1);
-//
-//            userTagRepository.save(userTagLink);
-//
-//            userLikeRepository.delete(removeUserLike);
-//        }
-//    }
+    /**
+     * @param searchedTag тег который ищем в событии
+     * @param event сбсн Событие
+     */
+    private void checkTagInEvent(Tag searchedTag, Event event) {
+
+        if(event.getTags().stream()
+                .noneMatch(tag -> tag.equals(searchedTag))) {
+
+            throw new LinkNotFoundException();
+        }
+    }
+
+
+    private void checkUserInEvent(User user, Event event) {
+
+        if(event.getParticipantLinks().stream()
+                .noneMatch(eventParticipant -> eventParticipant.getUser().equals(user))) {
+
+            throw new LinkNotFoundException();
+        }
+    }
+
 
     @Override
     public User getUser(long Id) {
@@ -159,66 +234,6 @@ public class SimpleUserService implements UserService {
 
     }
 
-    @Override
-    public UserLike userLikeBuilder(long ratedUserId, long eventId, long tagId, User evaluateUser) {
-        Event event = eventRepository.findById(eventId);
-
-        if (event == null) {
-            throw new EventNotFoundException();
-        }
-
-        // Проверяем наличее пользователя, поставившего лайк в списке участников.
-        if (event.getParticipantLinks().stream()
-                .noneMatch(s -> s.getUser().equals(evaluateUser))) {
-
-            throw new LinkNotFoundException();
-        }
-
-        // Проверяем наличее пользователя, получившего лайк в списке участников.
-        Optional<User> optionalRatedUser = event.getParticipantLinks().stream()
-                .filter(s -> s.getUser().getId() == ratedUserId)
-                .findFirst()
-                .map(s -> s.getUser());
-        User ratedUser;
-
-        if (optionalRatedUser.isPresent()) {
-
-            ratedUser = optionalRatedUser.get();
-        } else {
-
-            throw new LinkNotFoundException();
-        }
-
-        // Проверяем наличее тега, по которому проходит лайк, в списке тегов события.
-        Optional<Tag> optionalTag = event.getTags().stream()
-                .filter(s -> s.getId() == tagId)
-                .findFirst();
-        Tag tag;
-
-        if (optionalTag.isPresent()) {
-
-            tag = optionalTag.get();
-        } else {
-
-            throw new TagNotFoundException();
-        }
-
-        // Проверяем наличие тега, по которому проходит лайк, у оцениваемого пользователя.
-        if (ratedUser.getTagLinks().stream()
-                .noneMatch(s -> s.getTag().equals(tag))) {
-
-            throw new TagNotFoundException();
-        }
-
-        UserLike userLike = new UserLike();
-        userLike.setEvent(event);
-        userLike.setEvaluateUser(evaluateUser);
-        userLike.setRatedUser(ratedUser);
-        userLike.setTag(tag);
-
-        return userLike;
-    }
-
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -242,5 +257,10 @@ public class SimpleUserService implements UserService {
     @Autowired
     public void setEventParticipantRepository(EventParticipantRepository eventParticipantRepository) {
         this.eventParticipantRepository = eventParticipantRepository;
+    }
+
+    @Autowired
+    public void setTagRepository(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
     }
 }
