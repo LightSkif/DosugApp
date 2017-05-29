@@ -14,6 +14,16 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")
+@NamedQueries({
+    @NamedQuery(name = "User.simpleSearch",
+                query = "FROM User as u " +
+                        "WHERE u.username LIKE CONCAT('%', :part, '%') " +
+                        "or u.email LIKE CONCAT('%', :part, '%')"),
+    @NamedQuery(name = "User.simpleSearchCount",
+                query = "SELECT COUNT(*) FROM User as u " +
+                        "WHERE u.username LIKE CONCAT('%', :part, '%') " +
+                        "or u.email LIKE CONCAT('%', :part, '%')")
+})
 public class User {
 
     @Id
@@ -66,6 +76,7 @@ public class User {
 
     @OneToMany(targetEntity = Event.class,
             cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
             mappedBy = "creator")
     private List<Event> createdEvents;
 
@@ -79,6 +90,9 @@ public class User {
             cascade = CascadeType.REMOVE,
             fetch = FetchType.EAGER)
     private Set<UserTag> tagLinks;
+
+    @Column(name = "is_banned")
+    private boolean isBanned;
 
     public User() {
     }
@@ -216,6 +230,14 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean isBanned() {
+        return isBanned;
+    }
+
+    public void setBanned(boolean banned) {
+        isBanned = banned;
     }
 
     @Override

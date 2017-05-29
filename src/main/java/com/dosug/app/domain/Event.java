@@ -1,5 +1,6 @@
 package com.dosug.app.domain;
 
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,9 +12,6 @@ import java.util.Set;
 @Entity
 @Table(name = "events")
 public class Event {
-
-    @Column(name = "place_name")
-    String placeName;
 
     @Id
     @GeneratedValue
@@ -41,6 +39,9 @@ public class Event {
 
     @Column(name = "latitude")
     private double latitude;
+
+    @Column(name = "place_name")
+    private String placeName;
 
     @Column(name = "avatar")
     private String avatar;
@@ -176,14 +177,6 @@ public class Event {
         this.avatar = avatar;
     }
 
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
-
     public List<Image> getImages() {
         return images;
     }
@@ -192,12 +185,12 @@ public class Event {
         this.images = images;
     }
 
-    public Set<EventParticipant> getParticipantLinks() {
-        return participantLinks;
+    public Set<User> getParticipants() {
+        return participants;
     }
 
-    public void setParticipantLinks(Set<EventParticipant> participantLinks) {
-        this.participantLinks = participantLinks;
+    public void setParticipants(Set<User> participants) {
+        this.participants = participants;
     }
 
     public Set<Tag> getTags() {
