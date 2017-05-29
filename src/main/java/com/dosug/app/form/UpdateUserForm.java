@@ -31,17 +31,17 @@ public class UpdateUserForm {
     @NotNull(message = "userId field is required")
     private long userId;
 
-    @ErrorCode(code = ApiErrorCode.INVALID_FIRSTNAME)
+    @ErrorCode(code = ApiErrorCode.INVALID_USER_FIRST_NAME)
     @Size(min = FIRSTNAME_MIN_SYMBOLS, max = FIRSTNAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
     @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
     private String firstName;
 
-    @ErrorCode(code = ApiErrorCode.INVALID_LASTNAME)
+    @ErrorCode(code = ApiErrorCode.INVALID_USER_LAST_NAME)
     @Size(min = LASTNAME_MIN_SYMBOLS, max = LASTNAME_MAX_SYMBOLS, message = "firstName should be shorter than 100 characters")
     @Pattern(regexp = "[a-zA-Zа-яА-Я- ]*", message = "only character, hypen and space allowed in firstName")
     private String lastName;
 
-    @ErrorCode(code = ApiErrorCode.INVALID_DESCRIPTION)
+    @ErrorCode(code = ApiErrorCode.INVALID_USER_DESCIPTION)
     @NotNull(message = "description field is required")
     @Size(min = DESCRIPTION_MIN_SYMBOLS, max = DESCRIPTION_MAX_SYMBOLS, message = "description should be shorter than 1000 characters")
     private String description;
