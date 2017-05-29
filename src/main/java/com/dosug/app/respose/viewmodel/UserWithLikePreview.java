@@ -34,7 +34,7 @@ public class UserWithLikePreview {
         // Находим все общие для события и оцениваемого пользователя теги.
         List<Tag> overlappingTags = event.getTags().stream()
                 .filter(s -> ratedUser.getTagLinks().stream()
-                        .anyMatch(t -> t.getTag().equals(s)))
+                            .anyMatch(t -> t.getTag().equals(s)))
                 .collect(Collectors.toList());
 
         tags = TagUserLikePreviewsBuilder(overlappingTags, event, evaluateUser, ratedUser);
@@ -44,12 +44,19 @@ public class UserWithLikePreview {
 
         // Переводим все теги в объект с id, названием тега и лайком.
         return overlappingTags.stream()
-                .map(s -> new TagUserLikePreview(s.getId(), s.getTagName(), s
-                        .getLikes().stream()
-                        .anyMatch(l -> (l.getRatedUser().equals(ratedUser)) &&
-                                (l.getEvaluateUser().equals(evaluateUser)) &&
-                                (l.getEvent().equals(event)))))
-                .collect(Collectors.toList());
+            .map(tag -> new TagUserLikePreview(tag.getId(),
+                    tag.getTagName(),
+                    tag.getUserLinks().stream()
+                        //выбираем только тот userTag, который связан с ratedUser
+                        .filter(userTag -> userTag.getUser().equals(ratedUser))
+                        //получаем все лайки по этому тегу для нужного  юзера
+                        .flatMap(userTag -> userTag.getLikes().stream())
+                        //проверяем был ли такой пользователь который лайкал
+                        //этого пользователя по этому тегу в этом событии
+                        .anyMatch(userLike -> userLike.getEvaluateUser().equals(evaluateUser)
+                                        && userLike.getEvent().equals(event))))
+
+            .collect(Collectors.toList());
     }
 
 }
