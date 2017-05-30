@@ -21,7 +21,7 @@ public class AuthenticationForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_PASSWORD)
     @NotNull(message = "password_required")
-    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "password_length_1_256")
+    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "password_length_8_256")
     @Pattern(regexp = "[0-9a-zA-Z_]*", message = "password_allow_latinchar_digits_underscore")
     private String password;
 
