@@ -13,7 +13,7 @@ CREATE TABLE users (
   description CHARACTER VARYING(1000),
   birthdate   DATE,
   phone       CHARACTER VARYING(15),
-  is_banned   BOOLEAN
+  is_banned   BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 
