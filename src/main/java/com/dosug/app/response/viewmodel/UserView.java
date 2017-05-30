@@ -41,6 +41,7 @@ public class UserView {
     public UserView(User user) {
         userId = user.getId();
         username = user.getUsername();
+        email = user.getEmail();
         avatar = user.getAvatar();
         description = user.getDescription();
         firstName = user.getFirstName();
