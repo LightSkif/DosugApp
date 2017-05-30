@@ -15,7 +15,7 @@ if($pgService.Status -eq $stoppedState) {
 if($pgService.Status -eq $runningState) {
     Write-Host "Deploy is started..." -ForegroundColor Green
 
-    mvn clean install tomcat7:run-war
+    mvn tomcat7:run-war `-Dmaven.test.skip=true -T 2C
 }
 else {
     Write-Host "Couldn't start DB service." -ForegroundColor Red
