@@ -59,4 +59,26 @@ public class UserWithLikePreview {
             .collect(Collectors.toList());
     }
 
+    /*
+     *  Объект для возвращения тега пользователя
+     *  с отсутствующей или присутствующей меткой лайка.
+     */
+    private class TagUserLikePreview {
+
+        @JsonProperty
+        private Long tagId;
+
+        @JsonProperty
+        private String tagName;
+
+        @JsonProperty
+        private Boolean isLiked;
+
+        public TagUserLikePreview(Long tagId, String tagName, Boolean isLiked) {
+            this.tagId = tagId;
+            this.tagName = tagName;
+            this.isLiked = isLiked;
+        }
+    }
+
 }
