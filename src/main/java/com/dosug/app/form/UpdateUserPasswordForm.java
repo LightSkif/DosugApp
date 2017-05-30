@@ -21,7 +21,7 @@ public class UpdateUserPasswordForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_NEW_PASSWORD)
     @NotNull(message = "new_password_required")
-    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "new_password_length_1_256")
+    @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "new_password_length_8_256")
     @Pattern(regexp = "[a-zA-Z0-9_]*", message = "new_password_allow_latinchar_digits_underscore")
     private String newPassword;
 
