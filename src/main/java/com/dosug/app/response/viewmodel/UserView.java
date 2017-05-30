@@ -24,10 +24,10 @@ public class UserView {
     private String description;
 
     @JsonProperty
-    private String firstname;
+    private String firstName;
 
     @JsonProperty
-    private String lastname;
+    private String lastName;
 
     @JsonProperty
     private List<Long> events;
@@ -40,8 +40,8 @@ public class UserView {
         username = user.getUsername();
         avatar = user.getAvatar();
         description = user.getDescription();
-        firstname = user.getFirstName();
-        lastname = user.getLastName();
+        firstName = user.getFirstName();
+        lastName = user.getLastName();
         events = user.getEventLinks().stream().map(s -> s.getEvent().getId()).collect(Collectors.toList());
         tags = user.getTagLinks().stream().map(s -> s.getTag().getTagName()).collect(Collectors.toList());
     }
