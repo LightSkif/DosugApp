@@ -49,8 +49,8 @@
         <bean id="dataSource"
               class="org.springframework.jdbc.datasource.DriverManagerDataSource"
               p:driverClassName="org.postgresql.Driver"
-              p:url="jdbc:postgresql://dosugdb.cg2qkip4p4ll.eu-central-1.rds.amazonaws.com:5432/dosug"
-              p:username="dosuguser"
+              p:url="jdbc:postgresql://dosugdd.cg2qkip4p4ll.eu-central-1.rds.amazonaws.com:5432/dosug"
+              p:username="adminUser"
               p:password="123qwe123qwet"/>
 
         <util:properties id="hibernateProperties">
