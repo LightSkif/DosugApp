@@ -9,8 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -37,6 +40,8 @@ public class SimpleUserService implements UserService {
 
     private TagService tagService;
 
+    private AuthTokenRepository authTokenRepository;
+
     @Override
     public Long updateUser(User user, User requestedUser) {
 
@@ -55,6 +60,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Long updateUserPassword(String oldPassword, String newPassword, User requestedUser) {
         if(!requestedUser.getPassword().equals(oldPassword)) {
             throw new InsufficientlyRightsException();
@@ -63,8 +69,10 @@ public class SimpleUserService implements UserService {
         try {
 
             requestedUser.setPassword(newPassword);
+            requestedUser.setAuthToken(new HashSet<>());
             userRepository.save(requestedUser);
 
+            authTokenRepository.deleteAllByUser(requestedUser);
         }  catch (Exception e ){
             logger.error(e.getMessage());
             throw new UnknownServerException();
@@ -308,5 +316,10 @@ public class SimpleUserService implements UserService {
     @Autowired
     public void setTagService(TagService tagService) {
         this.tagService = tagService;
+    }
+
+    @Autowired
+    public void setAuthTokenRepository(AuthTokenRepository authTokenRepository) {
+        this.authTokenRepository = authTokenRepository;
     }
 }

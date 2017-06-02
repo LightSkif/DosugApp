@@ -3,7 +3,6 @@ package com.dosug.app.repository;
 import com.dosug.app.domain.AuthToken;
 import com.dosug.app.domain.User;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.Repository;
 
 import java.util.List;
 
@@ -13,4 +12,6 @@ import java.util.List;
 public interface AuthTokenRepository extends CrudRepository<AuthToken, String> {
 
     List<AuthToken> findAllByUser(User user);
+
+    void deleteAllByUser(User user);
 }
