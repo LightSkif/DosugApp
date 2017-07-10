@@ -6,8 +6,7 @@ import com.dosug.app.domain.User;
 import com.dosug.app.exception.UnknownServerException;
 import com.dosug.app.form.admin.AdminUpdateUserForm;
 import com.dosug.app.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class SimpleUserAdminService implements UserAdminService{
-
-    private Logger logger = LoggerFactory.getLogger(SimpleUserAdminService.class);
 
     private UserRepository userRepository;
 
@@ -46,7 +44,7 @@ public class SimpleUserAdminService implements UserAdminService{
             userRepository.save(user);
         } catch (Exception e) {
             //TODO: имплементирую позже
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             throw new UnknownServerException();
         }
     }

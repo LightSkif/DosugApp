@@ -4,16 +4,15 @@ import com.dosug.app.domain.Event;
 import com.dosug.app.form.admin.AdminUpdateEventForm;
 import com.dosug.app.repository.EventRepository;
 import com.dosug.app.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class SimpleEventAdminService implements EventAdminService{
-    private final static Logger logger = LoggerFactory.getLogger(SimpleUserAdminService.class);
 
 
     private EventRepository eventRepository;
@@ -52,7 +51,7 @@ public class SimpleEventAdminService implements EventAdminService{
            try {
                eventRepository.save(event);
            } catch (Exception e) {
-               logger.error("Cannot save form");
+               log.error("Cannot save form");
                throw e;
            }
        }

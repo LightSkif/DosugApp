@@ -2,8 +2,7 @@ package com.dosug.app.services.validation;
 
 import com.dosug.app.form.ErrorCode;
 import com.dosug.app.response.model.ApiError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,8 @@ import static org.hibernate.validator.internal.util.ReflectionHelper.getProperty
  * Простая имплементация
  */
 @Service
+@Slf4j
 public class SimpleValidationService implements ValidationService {
-
-    private final static Logger logger = LoggerFactory.getLogger(SimpleValidationService.class);
 
     private final ValidatorFactory validatorFactory
             = Validation.buildDefaultValidatorFactory();
@@ -110,7 +108,7 @@ public class SimpleValidationService implements ValidationService {
             }
         } catch (IllegalAccessException e) {
             // я уже поставил ассеss true в начале цикла так что здесь не падает
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
 
         return result;

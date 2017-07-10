@@ -4,8 +4,7 @@ import com.dosug.app.domain.*;
 import com.dosug.app.exception.*;
 import com.dosug.app.repository.*;
 import com.dosug.app.services.tags.TagService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,8 @@ import java.util.stream.Stream;
 
 
 @Service
+@Slf4j
 public class SimpleUserService implements UserService {
-
-    private final static Logger logger = LoggerFactory.getLogger(SimpleUserService.class);
 
     private UserRepository userRepository;
 
@@ -52,7 +50,7 @@ public class SimpleUserService implements UserService {
         try {
             userRepository.save(user);
         } catch (Exception e ){
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             throw new UnknownServerException();
         }
 
@@ -74,7 +72,7 @@ public class SimpleUserService implements UserService {
 
             authTokenRepository.deleteAllByUser(requestedUser);
         }  catch (Exception e ){
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             throw new UnknownServerException();
         }
         return requestedUser.getId();
@@ -123,7 +121,7 @@ public class SimpleUserService implements UserService {
             userLikeRepository.save(userLike);
         } catch (Exception e) {
 
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
 
             if(userLikeRepository.findByEventAndEvaluateUserAndRatedUserTag(event, evaluateUser, ratedUserTag) == null) {
                 throw new UnknownServerException();

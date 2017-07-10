@@ -6,8 +6,7 @@ import com.dosug.app.domain.User;
 import com.dosug.app.exception.*;
 import com.dosug.app.repository.EventParticipantRepository;
 import com.dosug.app.repository.EventRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class SimpleEventService implements EventService {
-
-    private static final Logger logger = LoggerFactory.getLogger(SimpleEventService.class);
 
     private EventRepository eventRepository;
 
@@ -46,7 +44,7 @@ public class SimpleEventService implements EventService {
                 throw new ConflictException();
             }
 
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             throw e;
         }
     }
