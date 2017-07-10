@@ -1,6 +1,8 @@
 package com.dosug.app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,6 +14,7 @@ import java.util.Set;
 /**
  * Created by radmir on 23.03.17.
  */
+@Data
 @Entity
 @Table(name = "users")
 @NamedQueries({
@@ -91,7 +94,8 @@ public class User {
     private Set<UserTag> tagLinks;
 
     @Column(name = "is_banned")
-    private boolean isBanned;
+    @Getter
+    private boolean banned;
 
     public User() {
     }
@@ -100,143 +104,6 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @JsonIgnore
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public Set<AuthToken> getAuthToken() {
-        return authToken;
-    }
-
-    public void setAuthToken(Set<AuthToken> authToken) {
-        this.authToken = authToken;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public List<Event> getCreatedEvents() {
-        return createdEvents;
-    }
-
-    public void setCreatedEvents(List<Event> createdEvents) {
-        this.createdEvents = createdEvents;
-    }
-
-    public Set<EventParticipant> getEventLinks() {
-        return eventLinks;
-    }
-
-    public void setEventLinks(Set<EventParticipant> eventLinks) {
-        this.eventLinks = eventLinks;
-    }
-
-    public Set<UserTag> getTagLinks() {
-        return tagLinks;
-    }
-
-    public void setTagLinks(Set<UserTag> tagLinks) {
-        this.tagLinks = tagLinks;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public boolean isBanned() {
-        return isBanned;
-    }
-
-    public void setBanned(boolean banned) {
-        isBanned = banned;
     }
 
     @Override

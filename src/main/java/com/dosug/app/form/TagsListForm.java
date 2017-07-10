@@ -2,6 +2,7 @@ package com.dosug.app.form;
 
 import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.Consts;
+import lombok.Data;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 /**
  * Created by radmir on 29.05.17.
  */
+@Data
 public class TagsListForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_EVENT_TAGS)
@@ -35,13 +37,5 @@ public class TagsListForm {
             return tagMistake.equals(Optional.empty());
         }
         return true;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
     }
 }

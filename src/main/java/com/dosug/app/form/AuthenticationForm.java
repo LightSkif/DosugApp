@@ -2,6 +2,7 @@ package com.dosug.app.form;
 
 import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.Consts;
+import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Size;
 /**
  * Created by radmir on 24.03.17.
  */
+@Data
 public class AuthenticationForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_USERNAME)
@@ -24,20 +26,4 @@ public class AuthenticationForm {
     @Size(min = Consts.PASSWORD_MIN_SYMBOLS, max = Consts.PASSWORD_MAX_SYMBOLS, message = "password_length_8_256")
     @Pattern(regexp = "[0-9a-zA-Z_]*", message = "password_allow_latinchar_digits_underscore")
     private String password;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

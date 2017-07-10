@@ -1,6 +1,9 @@
 package com.dosug.app.domain;
 
 
+import lombok.Data;
+import lombok.Getter;
+
 import javax.persistence.*;
 
 /**
@@ -8,6 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "event_participant")
+@Data
 public class EventParticipant {
 
     @Id
@@ -26,39 +30,8 @@ public class EventParticipant {
     private Event event;
 
     @Column(name = "liked")
+    @Getter
     private boolean liked;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    public boolean isLiked() {
-        return liked;
-    }
-
-    public void setLiked(boolean liked) {
-        this.liked = liked;
-    }
 
     @Override
     public boolean equals(Object o) {

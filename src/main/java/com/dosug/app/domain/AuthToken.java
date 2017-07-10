@@ -1,5 +1,7 @@
 package com.dosug.app.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -8,6 +10,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "auth_tokens")
+@Data
 public class AuthToken {
 
     @Id
@@ -34,38 +37,6 @@ public class AuthToken {
         this.token = token;
         this.user = user;
         this.createTime = createTime;
-        this.expiringTime = expiringTime;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getExpiringTime() {
-        return expiringTime;
-    }
-
-    public void setExpiringTime(LocalDateTime expiringTime) {
         this.expiringTime = expiringTime;
     }
 

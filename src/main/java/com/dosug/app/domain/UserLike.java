@@ -1,9 +1,12 @@
 package com.dosug.app.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "user_like")
+@Data
 public class UserLike {
 
     @Id
@@ -25,36 +28,4 @@ public class UserLike {
     @JoinColumn(name = "event_id",
             foreignKey = @ForeignKey(name = "user_like_event_id_fk"))
     private Event event;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getEvaluateUser() {
-        return evaluateUser;
-    }
-
-    public void setEvaluateUser(User evaluateUser) {
-        this.evaluateUser = evaluateUser;
-    }
-
-    public UserTag getRatedUserTag() {
-        return ratedUserTag;
-    }
-
-    public void setRatedUserTag(UserTag ratedUserTag) {
-        this.ratedUserTag = ratedUserTag;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
 }

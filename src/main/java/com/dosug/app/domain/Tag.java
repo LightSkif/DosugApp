@@ -1,10 +1,13 @@
 package com.dosug.app.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "tags")
+@Data
 public class Tag {
 
     @Id
@@ -34,46 +37,6 @@ public class Tag {
 
     public Tag(String tagName) {
         this.tagName = tagName;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
-
-    public Set<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(Set<Event> events) {
-        this.events = events;
-    }
-
-    public Set<UserTag> getUserLinks() {
-        return userLinks;
-    }
-
-    public void setUserLinks(Set<UserTag> userLinks) {
-        this.userLinks = userLinks;
-    }
-
-    public Set<UserTag> getUsers() {
-        return userLinks;
-    }
-
-    public void setUsers(Set<UserTag> userLinks) {
-        this.userLinks = userLinks;
     }
 
     @Override

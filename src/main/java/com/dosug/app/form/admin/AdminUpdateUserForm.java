@@ -5,6 +5,7 @@ import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.Consts;
 import com.dosug.app.utils.LocalDateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Data;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 /**
  * Created by radmir on 23.05.17.
  */
+@Data
 public class AdminUpdateUserForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_USERNAME)
@@ -59,68 +61,4 @@ public class AdminUpdateUserForm {
     @Size(min = Consts.PHONE_MIN_LENGTH, max = Consts.PHONE_MAX_LENGTH, message = "phone_length_1_15")
     @Pattern(regexp = "[0-9]*", message = "phone_allow_digits")
     private String phone;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 }

@@ -1,9 +1,12 @@
 package com.dosug.app.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "images")
+@Data
 public class Image {
 
     @Id
@@ -18,28 +21,4 @@ public class Image {
     @JoinColumn(name = "event_id",
             foreignKey = @ForeignKey(name = "images_event_id_fk"))
     private Event event;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getImage_source() {
-        return image_source;
-    }
-
-    public void setImage_source(String image_source) {
-        this.image_source = image_source;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
 }

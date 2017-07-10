@@ -34,6 +34,6 @@ public class EventPreview {
         name = event.getEventName();
         placeName = event.getPlaceName();
         dateTime = event.getEventDateTime();
-        allowed = event.isAllowed();
+        allowed = event.getAllowed();
     }
 }

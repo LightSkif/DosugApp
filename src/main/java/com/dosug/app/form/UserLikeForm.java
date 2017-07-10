@@ -2,11 +2,12 @@ package com.dosug.app.form;
 
 import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.Consts;
+import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-
+@Data
 public class UserLikeForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_ID)
@@ -23,28 +24,4 @@ public class UserLikeForm {
     @Min(value = Consts.MIN_ID, message = "id_lower_1")
     @NotNull(message = "tag_id_required")
     private long tagId;
-
-    public long getRatedUserId() {
-        return ratedUserId;
-    }
-
-    public void setRatedUserId(long ratedUserId) {
-        this.ratedUserId = ratedUserId;
-    }
-
-    public long getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(long eventId) {
-        this.eventId = eventId;
-    }
-
-    public long getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(long tagId) {
-        this.tagId = tagId;
-    }
 }

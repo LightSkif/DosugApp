@@ -58,7 +58,7 @@ public class EventView {
         longitude = event.getLongitude();
         latitude = event.getLatitude();
         placeName = event.getPlaceName();
-        allowed = event.isAllowed();
+        allowed = event.getAllowed();
         createDate = event.getCreateDate();
 
         participants = event.getParticipantLinks().stream()

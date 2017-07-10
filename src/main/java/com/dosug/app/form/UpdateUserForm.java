@@ -4,6 +4,7 @@ import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.Consts;
 import com.dosug.app.utils.ISOLocalDateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+@Data
 public class UpdateUserForm {
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_ID)
@@ -35,45 +37,4 @@ public class UpdateUserForm {
 
     @JsonDeserialize(using = ISOLocalDateDeserializer.class)
     private LocalDate birthDate;
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
 }

@@ -3,12 +3,14 @@ package com.dosug.app.form;
 import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.Consts;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@Data
 public class UpdateUserPasswordForm {
 
 
@@ -36,13 +38,5 @@ public class UpdateUserPasswordForm {
             return newPassword.equals(newPasswordRetry);
         }
         return false;
-    }
-
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
     }
 }

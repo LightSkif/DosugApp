@@ -1,5 +1,7 @@
 package com.dosug.app.domain;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,6 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "roles")
+@Data
 public class Role {
 
     private static final String ADMIN_ROLE_NAME = "ADMIN";
@@ -33,22 +36,6 @@ public class Role {
         // то id проставлять смысла нет
         role.setRoleName(ADMIN_ROLE_NAME);
         return role;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
     }
 
     @Override
