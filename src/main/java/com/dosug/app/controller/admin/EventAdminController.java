@@ -8,6 +8,7 @@ import com.dosug.app.response.viewmodel.admin.EventPreview;
 import com.dosug.app.response.viewmodel.admin.EventView;
 import com.dosug.app.services.admin.EventAdminService;
 import com.dosug.app.services.validation.ValidationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping("/admin/events")
+@Slf4j
 public class EventAdminController {
 
     @Autowired
@@ -51,7 +53,7 @@ public class EventAdminController {
 
         PageRequest pageable = new PageRequest(pageNumber - 1, eventPerPage);
 
-        System.out.println("search Query: " + part);
+        log.info("search Query: " + part);
 
         return eventRepository.simpleSearch(part, pageable)
                 .map(EventPreview::new)
