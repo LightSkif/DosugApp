@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean   id="messageSource"
             class="org.springframework.context.support.ResourceBundleMessageSource"
@@ -14,4 +15,22 @@
 
     <import resource="data-context.xml"/>
     <import resource="dispatcher-servlet.xml"/>
+
+    <beans profile="dev">
+        <bean id="localImageUploadService"
+              class="com.dosug.app.services.images.UploadProvider.LocalImageUploadProvider"/>
+    </beans>
+
+    <beans profile="prod">
+        <bean id="S3ImageUploadService"
+              class="com.dosug.app.services.images.UploadProvider.AmazonS3ImageUploadProvider"/>
+    </beans>
+
+    <util:map id="ImageTypes">
+        <entry key="x-ms-bmp" value="bmp"/>
+        <entry key="png" value="png"/>
+        <entry key="jpeg" value="jpg"/>
+        <entry key="gif" value="gif"/>
+    </util:map>
+    >
 </beans>

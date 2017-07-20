@@ -34,8 +34,8 @@ CREATE TABLE users (
   username    CHARACTER VARYING(256) NOT NULL,
   password    CHARACTER VARYING(256) NOT NULL,
   email       CHARACTER VARYING(256) NOT NULL,
-  first_name  CHARACTER VARYING(60),
-  last_name   CHARACTER VARYING(60),
+  first_name  CHARACTER VARYING(128),
+  last_name   CHARACTER VARYING(128),
   create_date TIMESTAMP WITHOUT TIME ZONE DEFAULT now(),
   avatar      CHARACTER VARYING(256),
   description CHARACTER VARYING(1000),
@@ -78,13 +78,13 @@ CREATE TABLE events (
   id                    BIGINT PRIMARY KEY,
   creator_id            BIGINT                 NOT NULL,
   event_name            CHARACTER VARYING(256) NOT NULL,
-  content               TEXT,
+  content               CHARACTER VARYING(1024),
   event_start_date_time TIMESTAMP              NOT NULL,
   event_end_date_time   TIMESTAMP              NOT NULL,
   place_name            CHARACTER VARYING(256),
   longitude             DOUBLE PRECISION,
   latitude              DOUBLE PRECISION,
-  avatar                CHARACTER VARYING(256),
+  avatar                CHARACTER VARYING(1024),
   like_count            INT,
   allowed               BOOLEAN,
   create_date           TIMESTAMP WITHOUT TIME ZONE DEFAULT now(),
@@ -192,33 +192,6 @@ ALTER TABLE ONLY event_participant
 
 CREATE UNIQUE INDEX event_participant_unique_parametr
   ON public.event_participant (event_id, participant_id);
-DROP SEQUENCE IF EXISTS public.images_id_seq CASCADE;
-DROP TABLE IF EXISTS public.images CASCADE;
-
-CREATE TABLE images (
-  id           BIGINT PRIMARY KEY,
-  image_source CHARACTER VARYING(256),
-  event_id     BIGINT,
-
-  CONSTRAINT images_event_id_fk FOREIGN KEY (event_id)
-  REFERENCES public.events (id) MATCH SIMPLE
-  ON DELETE CASCADE
-);
-
-CREATE SEQUENCE images_id_seq
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
-
-ALTER SEQUENCE images_id_seq OWNED BY images.id;
-
-ALTER TABLE ONLY images
-  ALTER COLUMN id SET DEFAULT nextval('images_id_seq' :: REGCLASS);
-
-CREATE UNIQUE INDEX image_source_uindex
-  ON images USING BTREE (image_source);
 DROP TABLE IF EXISTS public.user_role CASCADE;
 DROP TABLE IF EXISTS public.event_tag CASCADE;
 

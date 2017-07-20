@@ -1,1 +1,1 @@
-psql -f InitAll.sql -U postgres -d "dosug"
+psql -f CreateAll.sql -U postgres -d "dosug"

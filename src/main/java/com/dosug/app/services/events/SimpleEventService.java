@@ -67,7 +67,7 @@ public class SimpleEventService implements EventService {
         newEvent.setCreateDate(updatingEvent.getCreateDate());
         newEvent.setAllowed(null);
         newEvent.setParticipantLinks(updatingEvent.getParticipantLinks());
-        newEvent.setImages(updatingEvent.getImages());
+
 
         return eventRepository.save(newEvent).getId();
     }

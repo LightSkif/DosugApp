@@ -2,19 +2,19 @@ DROP SEQUENCE IF EXISTS public.events_id_seq CASCADE;
 DROP TABLE IF EXISTS public.events CASCADE;
 
 CREATE TABLE events (
-  id bigint PRIMARY KEY,
-	creator_id bigint NOT NULL,
-	event_name character varying(256) NOT NULL,
-	content text,
-	event_start_date_time timestamp   NOT NULL,
+  id                    bigint PRIMARY KEY,
+  creator_id            bigint NOT NULL,
+  event_name            character varying(256) NOT NULL,
+  content               CHARACTER VARYING(1024),
+  event_start_date_time timestamp   NOT NULL,
   event_end_date_time   timestamp   NOT NULL,
-	place_name character varying(256),
-	longitude double precision,
-	latitude double precision,
-	avatar character varying(256),
-	like_count int,
-	allowed boolean,
-  create_date timestamp without time zone DEFAULT now(),
+  place_name            character varying(256),
+  longitude             double precision,
+  latitude              double precision,
+  avatar                CHARACTER VARYING(1024),
+  like_count            int,
+  allowed               boolean,
+  create_date           timestamp without time zone DEFAULT now(),
 
 	CONSTRAINT events_creator_id_fk FOREIGN KEY (creator_id)
       REFERENCES public.users (id) MATCH SIMPLE

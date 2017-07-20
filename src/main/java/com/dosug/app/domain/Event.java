@@ -2,11 +2,9 @@ package com.dosug.app.domain;
 
 
 import lombok.Data;
-import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -59,12 +57,6 @@ public class Event {
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
-
-    @OneToMany(targetEntity = Image.class,
-            cascade = CascadeType.ALL,
-            mappedBy = "event",
-            fetch = FetchType.EAGER)
-    private List<Image> images;
 
     @OneToMany(targetEntity = EventParticipant.class,
             cascade = CascadeType.REMOVE,

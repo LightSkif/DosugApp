@@ -3,7 +3,7 @@ package com.dosug.app.form.admin;
 import com.dosug.app.form.ErrorCode;
 import com.dosug.app.response.model.ApiErrorCode;
 import com.dosug.app.utils.Consts;
-import com.dosug.app.utils.LocalDateDeserializer;
+import com.dosug.app.utils.ISOLocalDateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import org.hibernate.validator.constraints.Email;
@@ -53,7 +53,7 @@ public class AdminUpdateUserForm {
     private String description;
 
     @ErrorCode(code = ApiErrorCode.INVALID_USER_BIRTH_DATE)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonDeserialize(using = ISOLocalDateDeserializer.class)
     //@Past
     private LocalDate birthDate;
 

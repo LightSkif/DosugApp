@@ -52,11 +52,15 @@ public class Consts {
 
     public static final int PHONE_MIN_LENGTH = 0;
 
-    public static final int PLACE_NAME_MAX_SYMBOLS = 200;
+    public static final int PLACE_NAME_MAX_SYMBOLS = 256;
 
     public static final int PLACE_NAME_MIN_SYMBOLS = 1;
 
-    public static final int CONTENT_MAX_SYMBOLS = 1000;
+    public static final int CONTENT_MAX_SYMBOLS = 1024;
 
     public static final int CONTENT_MIN_SYMBOLS = 0;
+
+    public static final int MEGABYTE_SIZE = 1048576;
+
+    public static final int MAX_MEGABYTE_COUNT = 10;
 }

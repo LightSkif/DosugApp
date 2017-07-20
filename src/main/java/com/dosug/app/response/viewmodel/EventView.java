@@ -52,9 +52,6 @@ public class EventView {
     private String avatar;
 
     @JsonProperty
-    private List<String> images;
-
-    @JsonProperty
     private List<Long> participants;
 
     @JsonProperty
@@ -86,10 +83,6 @@ public class EventView {
         latitude = event.getLatitude();
         avatar = event.getAvatar();
         likeCount = event.getLikeCount();
-
-        images = event.getImages().stream()
-                .map(s -> s.getImage_source())
-                .collect(Collectors.toList());
 
         participants = event.getParticipantLinks().stream()
                 .map(s -> s.getUser().getId())
